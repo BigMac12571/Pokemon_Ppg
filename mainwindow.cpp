@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setFixedSize(525,480);
+    this->setFixedSize(525,450);
 
     ///////////////////////新增stack/////////////////////////
 
