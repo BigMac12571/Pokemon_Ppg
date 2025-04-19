@@ -12,15 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     ///////////////////////新增stack/////////////////////////
 
     Scene_stack = new QStackedWidget(this);
-    Character_stack = new QStackedWidget(this);
 
 
-    QString imagePaths[4][3] = {
-        {":/new/prefix1/Dataset/Image/player/player_B.png", ":/new/prefix1/Dataset/Image/player/player_BW1.png", ":/new/prefix1/Dataset/Image/player/player_BW2.png"},
-        {":/new/prefix1/Dataset/Image/player/player_F.png", ":/new/prefix1/Dataset/Image/player/player_FW1.png", ":/new/prefix1/Dataset/Image/player/player_FW2.png"},
-        {":/new/prefix1/Dataset/Image/player/player_L.png", ":/new/prefix1/Dataset/Image/player/player_LW1.png", ":/new/prefix1/Dataset/Image/player/player_LW2.png"},
-        {":/new/prefix1/Dataset/Image/player/player_R.png", ":/new/prefix1/Dataset/Image/player/player_RW1.png", ":/new/prefix1/Dataset/Image/player/player_RW2.png"}
-    };
 
 
 
@@ -35,18 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     /////// 初始化每個畫面
 
     /////// 初始化每個角色
-    for(int i=0;i<12;i++){
-        player[i] = new Player(this);
-        player[i]->hide();
-    }
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            playerMatrix[i][j] = new Player(nullptr); // 不指定 parent，避免提前顯示
-            playerMatrix[i][j]->setImage(imagePaths[i][j]); // 設定圖片
-            playerMatrix[i][j]->hide(); // 預設隱藏，之後加到畫面再 show
-        }
-    }
-
+    player = new Player(this);
+    player->hide();
 
 
     /////// 初始化每個角色
@@ -61,14 +44,10 @@ MainWindow::MainWindow(QWidget *parent)
     //Scene_stack->addWidget(grassland);     // index 3
     //Scene_stack->addWidget(battlescene);      // index 4
     /////// 畫面加進 stack
-    for(int i=0;i<12;i++){
-        Character_stack->addWidget(player[i]);
-    }
 
 
 
 
-    /////// 畫面加進 stack
 
 
 
@@ -82,25 +61,22 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(titlescreen, &TitleScreen::Game_Start, this, [=]() {
         Scene_stack->setCurrentIndex(1); // 進入 Town 畫面
-        switch_windowtitle(1); // 換windotitle
-       // Character_stack->setCurrentIndex(0);
-        town->Add_Player_To_Scene(player[0]);
+        switch_windowtitle(1); // 換window title
+
+        town->Add_Player_To_Scene(player);
+        town->SetMainPlayer(player); // <--- 指定主角
 
 
-        town->SetMainPlayer(player[0]); // <--- 指定主角
 
-            for (int i = 0; i < 4; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    town->Add_Player_To_Scene(playerMatrix[i][j]);
-                    playerMatrix[i][j]->move(50 + j * 40, 100 + i * 60);
-                }
-            }
+
+
+
         //for (int i = 0; i < 4; ++i) {
         //    for (int j = 0; j < 3; ++j) {
         //        town->Add_Player_To_Scene(playerMatrix[i][j]);
         //        playerMatrix[i][j]->move(50 + j * 40, 100 + i * 60); // 位置間隔設定
         //    }
-        //}
+        //
     });
 
 
