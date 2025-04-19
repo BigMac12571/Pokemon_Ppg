@@ -10,6 +10,10 @@ Town::Town(QWidget *parent)
     QPixmap backgroundPixmap(":/new/prefix1/Dataset/Image/scene/Town.png");
     background->setPixmap(backgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     background->setGeometry(0, 0, width(), height()); // 填滿整個視窗
+
+
+
+    setFocusPolicy(Qt::StrongFocus);
 }
 void Town::Add_Player_To_Scene(QWidget *player)
 {
@@ -42,4 +46,8 @@ void Town::keyPressEvent(QKeyEvent *event)
     default:
         QWidget::keyPressEvent(event);
     }
+}
+void Town::SetMainPlayer(Player *p) {
+    mainPlayer = p;
+    mainPlayer->setFocus(); // 把焦點給主角，這樣可以吃到鍵盤事件
 }
