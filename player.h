@@ -31,6 +31,8 @@ public:
 
     void setDirection(Direction dir);
     void nextWalkFrame(); // 換走路動畫圖
+    void startWalking();
+    void stopWalking();
 public slots:
     void updateWalkFrame();  // 0.5 秒換腳
 
@@ -41,6 +43,7 @@ private:
 
     Direction currentDirection = DOWN;
     int walkFrame = 0; // 0: 靜止, 1: 走路圖1, 2: 走路圖2
+
     QString imagePaths[4][3] = {
         {":/new/prefix1/Dataset/Image/player/player_B.png", ":/new/prefix1/Dataset/Image/player/player_BW1.png", ":/new/prefix1/Dataset/Image/player/player_BW2.png"},
         {":/new/prefix1/Dataset/Image/player/player_F.png", ":/new/prefix1/Dataset/Image/player/player_FW1.png", ":/new/prefix1/Dataset/Image/player/player_FW2.png"},

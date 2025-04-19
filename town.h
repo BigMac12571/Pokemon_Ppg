@@ -22,13 +22,14 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
-
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
 
     QLabel *background; // 背景圖片
     Player *mainPlayer = nullptr;
-    QPoint mapOffset = QPoint(0, 0); // 地圖的偏移量
+    QPoint mapOffset = QPoint(250, 250); // 地圖的偏移量
+    QSet<int> keysPressed; // 長按
 };
 
 #endif // TITLESCREEN_H

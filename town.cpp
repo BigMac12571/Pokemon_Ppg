@@ -23,45 +23,91 @@ void Town::Add_Player_To_Scene(QWidget *player)
     player->raise(); // 確保角色在背景上方
 }
 
-void Town::keyPressEvent(QKeyEvent *event)
-{
-    if (mainPlayer == nullptr) return;
-
-        int step = 10;
-
-        switch (event->key()) {
-        case Qt::Key_Up:
-            mapOffset.setY(mapOffset.y() - step);
-            mainPlayer->setDirection(UP);
-            mainPlayer->nextWalkFrame();
-            break;
-        case Qt::Key_Down:
-            mapOffset.setY(mapOffset.y() + step);
-            mainPlayer->setDirection(DOWN);
-            mainPlayer->nextWalkFrame();
-            break;
-        case Qt::Key_Left:
-            mapOffset.setX(mapOffset.x() - step);
-            mainPlayer->setDirection(LEFT);
-            mainPlayer->nextWalkFrame();
-            break;
-        case Qt::Key_Right:
-            mapOffset.setX(mapOffset.x() + step);
-            mainPlayer->setDirection(RIGHT);
-            mainPlayer->nextWalkFrame();
-            break;
-        }
-
-        UpdateScene();
-}
-
-
 void Town::SetMainPlayer(Player *p) {
     mainPlayer = p;
 
     mainPlayer->move(525/2, 450/2);
     mainPlayer->raise();
     mainPlayer->setFocus();
+    this->setFocus();
+}
+
+void Town::keyPressEvent(QKeyEvent *event)
+{
+    if (mainPlayer == nullptr) return;
+
+    int key = event->key();
+
+    // 防止 auto-repeat
+    if (keysPressed.contains(key)) return;
+    keysPressed.insert(key);
+
+    int step = 5;
+
+    switch (key) {
+    case Qt::Key_Up:
+        mapOffset.setY(mapOffset.y() - step);
+        mainPlayer->setDirection(UP);
+        mainPlayer->startWalking();
+        break;
+    case Qt::Key_Down:
+        mapOffset.setY(mapOffset.y() + step);
+        mainPlayer->setDirection(DOWN);
+        mainPlayer->startWalking();
+        break;
+    case Qt::Key_Left:
+        mapOffset.setX(mapOffset.x() - step);
+        mainPlayer->setDirection(LEFT);
+        mainPlayer->startWalking();
+        break;
+    case Qt::Key_Right:
+        mapOffset.setX(mapOffset.x() + step);
+        mainPlayer->setDirection(RIGHT);
+        mainPlayer->startWalking();
+        break;
+    }
+
+    UpdateScene();
+}
+void Town::keyReleaseEvent(QKeyEvent *event)
+{
+    if (mainPlayer == nullptr) return;
+
+    int key = event->key();
+    keysPressed.remove(key);
+
+    switch (key) {
+    case Qt::Key_Up:
+        if (keysPressed.isEmpty()) {
+            mainPlayer->stopWalking();
+        } else {
+            mainPlayer->setDirection(UP);
+        }
+        break;
+    case Qt::Key_Down:
+        if (keysPressed.isEmpty()) {
+            mainPlayer->stopWalking();
+        } else {
+            mainPlayer->setDirection(DOWN);
+        }
+        break;
+    case Qt::Key_Left:
+        if (keysPressed.isEmpty()) {
+            mainPlayer->stopWalking();
+        } else {
+            mainPlayer->setDirection(LEFT);
+        }
+        break;
+    case Qt::Key_Right:
+        if (keysPressed.isEmpty()) {
+            mainPlayer->stopWalking();
+        } else {
+            mainPlayer->setDirection(RIGHT);
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void Town::UpdateScene()
