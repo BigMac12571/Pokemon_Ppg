@@ -16,7 +16,7 @@ class Player: public QLabel
 
 public:
     explicit Player(QWidget *parent = nullptr);
-
+    void setImage(const QString &path);
 
 
 private:

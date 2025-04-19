@@ -13,8 +13,33 @@ Town::Town(QWidget *parent)
 }
 void Town::Add_Player_To_Scene(QWidget *player)
 {
-    player->setParent(this); // 把角色放進這個畫面
-    player->setGeometry(200, 300, 64, 64); // 設定顯示位置（你可以再微調）
-    player->show(); // 顯示出來
-    player->raise();
+    player->setParent(this);
+    player->setGeometry(200, 300, 35, 48);
+    player->show();
+    player->raise(); // 確保角色在背景上方
+}
+
+void Town::keyPressEvent(QKeyEvent *event)
+{
+    if (mainPlayer == nullptr) return;
+
+    int step = 10;
+    QPoint currentPos = mainPlayer->pos();
+
+    switch (event->key()) {
+    case Qt::Key_Up:
+        mainPlayer->move(currentPos.x(), currentPos.y() - step);
+        break;
+    case Qt::Key_Down:
+        mainPlayer->move(currentPos.x(), currentPos.y() + step);
+        break;
+    case Qt::Key_Left:
+        mainPlayer->move(currentPos.x() - step, currentPos.y());
+        break;
+    case Qt::Key_Right:
+        mainPlayer->move(currentPos.x() + step, currentPos.y());
+        break;
+    default:
+        QWidget::keyPressEvent(event);
+    }
 }

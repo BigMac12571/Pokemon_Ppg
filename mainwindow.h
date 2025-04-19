@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QKeyEvent>
 #include "titlescreen.h"
 #include "laboratory.h"
 #include "town.h"
@@ -37,7 +38,7 @@ private:
     BattleScene *battlescene;
 
     Player *player[12];
-
+    Player* playerMatrix[3][4];
 
 };
 #endif // MAINWINDOW_H
