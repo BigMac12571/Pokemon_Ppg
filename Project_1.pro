@@ -28,6 +28,7 @@ HEADERS += \
     town.h
 
 FORMS += \
+    battlescene.ui \
     mainwindow.ui \
     player.ui \
     titlescreen.ui

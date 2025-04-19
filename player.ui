@@ -40,6 +40,9 @@
    <property name="pixmap">
     <pixmap resource="data.qrc">:/new/prefix1/Dataset/Image/player/player_F.png</pixmap>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
  </widget>
  <resources>
