@@ -61,9 +61,11 @@ TitleScreen::TitleScreen(QWidget *parent)
 
 
 
-
+    ///////////////////////傳送按鈕指令/////////////////////////
     connect(press_start, &QPushButton::clicked, this, [=]() {
         emit Game_Start();  // ✅ 發出 signal
     });
+    ///////////////////////傳送按鈕指令/////////////////////////
+
 }
 

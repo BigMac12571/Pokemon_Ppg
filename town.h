@@ -18,6 +18,7 @@ public:
     explicit Town(QWidget *parent = nullptr);
     void Add_Player_To_Scene(QWidget *player);
     void SetMainPlayer(Player *p);
+    void UpdateScene() ;//背景移動
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -27,6 +28,7 @@ private:
 
     QLabel *background; // 背景圖片
     Player *mainPlayer = nullptr;
+    QPoint mapOffset = QPoint(0, 0); // 地圖的偏移量
 };
 
 #endif // TITLESCREEN_H

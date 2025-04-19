@@ -37,8 +37,8 @@ private:
     GrassLand *grassland;
     BattleScene *battlescene;
 
-    Player *player[12];
-    Player* playerMatrix[3][4];
+    Player *player;
+
 
 };
 #endif // MAINWINDOW_H
