@@ -12,22 +12,30 @@ Town::Town(QWidget *parent)
     QPixmap backgroundPixmap(":/new/prefix1/Dataset/Image/scene/Town.png");
     background->setPixmap(backgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     background->setGeometry(-Player_Center_X, -Player_Center_X, width(), height()); // 填滿整個視窗
+    background->lower(); //背景在最下
+
 
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
-    Barriers.append(QRect(0, 0, 1000, 50));    // 上邊界
-    Barriers.append(QRect(0, 950, 1000, 50));  // 下邊界
-    Barriers.append(QRect(0, 0, 50, 1000));    // 左邊界
-    Barriers.append(QRect(950, 0, 50, 1000));  // 右邊界
+    Barriers.append(QRect(0, 0, 1000, 80));    // 上邊界
+    Barriers.append(QRect(0, 950, 1000, 30));  // 下邊界
+    Barriers.append(QRect(0, 0, 80, 1000));    // 左邊界
+    Barriers.append(QRect(950, 0, 80, 1000));  // 右邊界
 
     // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
-    //Barriers.append(QRect(255, 85, 200, 180)); // 左上房子
-    //Barriers.append(QRect(545, 85, 200, 180));  // 右上房子
-    //Barriers.append(QRect(530, 320, 315 , 185)); //右下房子
-    //Barriers.append(QRect(310, 425, 170 , 20)); //花旁柵欄
-    //Barriers.append(QRect(535, 585, 295 , 20)); //右下柵欄
-    //Barriers.append(QRect(275, 670, 165 ,120)); //水池
-    //Barriers.append(QRect(225, 200, 25 , 40)); //油箱左
-    //Barriers.append(QRect(515, 200, 25 , 40)); //油箱右
+    Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
+    Barriers.append(QRect(588, 173, 209, 210));  // 右上房子
+    Barriers.append(QRect(542, 474, 284 , 223)); //右下房子
+    Barriers.append(QRect(207, 558, 209 , 32)); //花旁柵欄
+    Barriers.append(QRect(544, 808, 209 , 32)); //右下柵欄
+    Barriers.append(QRect(294, 851, 164 , 149)); //水池
+    Barriers.append(QRect(172, 324, 47 , 63)); //油箱左
+    Barriers.append(QRect(550, 324, 47 , 63)); //油箱右
+
+
+
+
+
+
 
 
 
@@ -39,6 +47,7 @@ void Town::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Pla
     player->setGeometry(525/2, 450/2, 35, 48);
     player->show();
     player->raise(); // 確保角色在背景上方
+
 }
 
 void Town::SetMainPlayer(Player *p) {
@@ -197,42 +206,31 @@ void Town::keyReleaseEvent(QKeyEvent *event)
 
 void Town::UpdateScene()
 {
-    background->move(-Map_Offset.x(), -Map_Offset.y());// 把背景移動相反方向，讓主角看起來有在移動
-
-
+    background->move(-Map_Offset.x(), -Map_Offset.y()); // 移動背景
 }
 bool Town::CanMoveToDirection(Direction dir)
 {
     QRect playerRect = mainPlayer->geometry();
-    int offsetX = Map_Offset.x();
-    int offsetY = Map_Offset.y();
-    int dx = 0, dy = 0;
-    int Step = 3;
+    QRect movedRect = playerRect;
 
-    if (dir == UP) dy = -Step;
-    if (dir == DOWN) dy = Step;
-    if (dir == LEFT) dx = -Step;
-    if (dir == RIGHT) dx = Step;
+    const int Step = 3;
 
-    QRect movedRect(playerRect.x() + dx + offsetX + 2,
-                    playerRect.y() + dy + offsetY + 2,
-                    playerRect.width() - 4,
-                    playerRect.height() - 4);
+    if (dir == UP) movedRect.translate(0, -Step);
+    else if (dir == DOWN) movedRect.translate(0, Step);
+    else if (dir == LEFT) movedRect.translate(-Step, 0);
+    else if (dir == RIGHT) movedRect.translate(Step, 0);
+
+    // 加上 Map_Offset 把它轉換成背景座標
+    movedRect.translate(Map_Offset);
+
+    // 縮小碰撞框讓角色更寬容
+    movedRect.adjust(2, 2, -2, -2);
 
     for (const QRect &barrier : Barriers) {
         if (movedRect.intersects(barrier)) {
             return false;
         }
     }
+
     return true;
-}
-void Town::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
-    painter.setPen(Qt::red);
-    for (int i = 0; i < Barriers.size(); ++i) {
-        const QRect &barrier = Barriers[i];
-        QRect screenRect(barrier.x() - Map_Offset.x(), barrier.y() - Map_Offset.y(), barrier.width(), barrier.height());
-        painter.drawRect(screenRect);
-    }
 }

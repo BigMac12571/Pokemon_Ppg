@@ -13,20 +13,25 @@
 
 
 
+
 class Town: public QWidget
 {
     Q_OBJECT
 
 public:
     explicit Town(QWidget *parent = nullptr);
+
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
-    bool CanMoveToDirection(Direction dir);
+    bool CanMoveToDirection(Direction dir); // 為障礙物設計
+
+
+
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
-    void paintEvent(QPaintEvent *) override;
 
 private:
 
@@ -43,6 +48,8 @@ private:
 
 
     QList<QRect> Barriers;
+
 };
 
 #endif // TITLESCREEN_H
+
