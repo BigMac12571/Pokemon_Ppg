@@ -8,7 +8,10 @@
 #include <QPixmap>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QPainter>
 #include "player.h"
+
+
 
 class Town: public QWidget
 {
@@ -16,20 +19,30 @@ class Town: public QWidget
 
 public:
     explicit Town(QWidget *parent = nullptr);
-    void Add_Player_To_Scene(QWidget *player);
-    void SetMainPlayer(Player *p);
+    void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
+    void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
-
+    bool CanMoveToDirection(Direction dir);
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
+    void paintEvent(QPaintEvent *) override;
 
 private:
 
     QLabel *background; // 背景圖片
     Player *mainPlayer = nullptr;
-    QPoint mapOffset = QPoint(250, 250); // 地圖的偏移量
+    QPoint Map_Offset; // 地圖的偏移量
     QSet<int> keysPressed; // 長按
+    const int Map_Width = 1000; // 背景圖片寬度（例如 Town.png 寬度）
+    const int Map_Height = 1000; // 背景圖片高度
+    const int View_Width = 525; // 視窗寬度
+    const int View_Height = 450; // 視窗高度
+    const int Player_Center_X = View_Width / 2 - 35 / 2;
+    const int Player_Center_Y = View_Height / 2 - 48 / 2;
+
+
+    QList<QRect> Barriers;
 };
 
 #endif // TITLESCREEN_H
