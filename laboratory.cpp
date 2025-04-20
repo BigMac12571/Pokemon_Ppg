@@ -210,3 +210,4 @@ bool Laboratory::CanMoveToDirection(Direction dir)
 
     return true;
 }
+
