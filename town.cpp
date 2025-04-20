@@ -1,10 +1,13 @@
 #include "town.h"
+#include <QPainter>
+#include <QImage>
 
 Town::Town(QWidget *parent)
     : QWidget(parent)
 {
 
     this->setFixedSize(Map_Width,Map_Height);
+
 
     Map_Offset = QPoint(Player_Center_X, Player_Center_X); //Map_Offset位置
 
@@ -16,8 +19,8 @@ Town::Town(QWidget *parent)
 
 
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
-    Barriers.append(QRect(0, 0, 480, 80));    // 上邊界
-    Barriers.append(QRect(600, 0, 400, 80));    // 上邊界2
+    Barriers.append(QRect(0, 0, 488, 80));    // 上邊界
+    Barriers.append(QRect(592, 0, 408, 80));    // 上邊界2
     Barriers.append(QRect(0,980, 1000,20));  // 下邊界
     Barriers.append(QRect(0, 0, 80, 1000));    // 左邊界
     Barriers.append(QRect(920, 0, 80, 1000));  // 右邊界
@@ -26,11 +29,11 @@ Town::Town(QWidget *parent)
     Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
     Barriers.append(QRect(588, 173, 209, 210));  // 右上房子
     Barriers.append(QRect(542, 474, 284 , 210)); //右下房子
-    Barriers.append(QRect(207, 558, 209 , 32)); //花旁柵欄
-    Barriers.append(QRect(544, 808, 209 , 32)); //右下柵欄
+    Barriers.append(QRect(207, 554, 209 , 36)); //花旁柵欄
+    Barriers.append(QRect(544, 804, 209 , 36)); //右下柵欄
     Barriers.append(QRect(294, 851, 164 , 149)); //水池
-    Barriers.append(QRect(172, 340, 47 , 43)); //油箱左
-    Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
+    Barriers.append(QRect(172, 340, 47 , 43)); //郵箱左
+    Barriers.append(QRect(550, 340, 47 , 43)); //郵箱右
 
     Enter_Laboratory_Trigger = QRect(668, 645, 36, 50);  //實驗室大門
 
@@ -38,9 +41,8 @@ Town::Town(QWidget *parent)
 
 
 
-
-
     setFocusPolicy(Qt::StrongFocus);
+
 }
 void Town::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
 {
@@ -59,6 +61,7 @@ void Town::SetMainPlayer(Player *p) {
     mainPlayer->setFocus();
     this->setFocus();
 }
+
 
 void Town::keyPressEvent(QKeyEvent *event)
 {
@@ -218,12 +221,15 @@ void Town::UpdateScene()
 {
     background->move(-Map_Offset.x(), -Map_Offset.y()); // 移動背景
 }
+
+
+
 bool Town::CanMoveToDirection(Direction dir)
 {
     QRect playerRect = mainPlayer->geometry();
     QRect movedRect = playerRect;
 
-    const int Step = 10; //模擬下一步(只有下一步，不是每一步，等於是在正前Step的距離方有個替身
+    const int Step = 5; //模擬下一步(只有下一步，不是每一步，等於是在正前Step的距離方有個替身
 
     if (dir == UP) movedRect.translate(0, -Step);
     else if (dir == DOWN) movedRect.translate(0, Step);

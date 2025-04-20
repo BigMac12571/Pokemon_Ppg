@@ -50,6 +50,8 @@ private:
 
     QList<QRect> Barriers;
     QRect Enter_Laboratory_Trigger; //進入實驗室
+
+
 };
 
 #endif // TITLESCREEN_H
