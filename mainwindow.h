@@ -25,7 +25,8 @@ public:
 
 
     void switch_windowtitle(int index);
-
+    void SwitchToLaboratory();
+    void SwitchToTownFromLab();
 private:
     Ui::MainWindow *ui;
     QStackedWidget *Scene_stack;

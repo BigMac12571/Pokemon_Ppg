@@ -4,7 +4,7 @@ Town::Town(QWidget *parent)
     : QWidget(parent)
 {
 
-    this->setFixedSize(1000,1000);
+    this->setFixedSize(Map_Width,Map_Height);
 
     Map_Offset = QPoint(Player_Center_X, Player_Center_X); //Map_Offset位置
 
@@ -16,22 +16,23 @@ Town::Town(QWidget *parent)
 
 
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
-    Barriers.append(QRect(0, 0, 1000, 80));    // 上邊界
-    Barriers.append(QRect(0, 950, 1000, 30));  // 下邊界
+    Barriers.append(QRect(0, 0, 480, 80));    // 上邊界
+    Barriers.append(QRect(600, 0, 400, 80));    // 上邊界2
+    Barriers.append(QRect(0,980, 1000,20));  // 下邊界
     Barriers.append(QRect(0, 0, 80, 1000));    // 左邊界
-    Barriers.append(QRect(950, 0, 80, 1000));  // 右邊界
+    Barriers.append(QRect(920, 0, 80, 1000));  // 右邊界
 
     // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
     Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
     Barriers.append(QRect(588, 173, 209, 210));  // 右上房子
-    Barriers.append(QRect(542, 474, 284 , 223)); //右下房子
+    Barriers.append(QRect(542, 474, 284 , 210)); //右下房子
     Barriers.append(QRect(207, 558, 209 , 32)); //花旁柵欄
     Barriers.append(QRect(544, 808, 209 , 32)); //右下柵欄
     Barriers.append(QRect(294, 851, 164 , 149)); //水池
-    Barriers.append(QRect(172, 324, 47 , 63)); //油箱左
-    Barriers.append(QRect(550, 324, 47 , 63)); //油箱右
+    Barriers.append(QRect(172, 340, 47 , 43)); //油箱左
+    Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
 
-
+    Enter_Laboratory_Trigger = QRect(668, 645, 36, 50);  //實驗室大門
 
 
 
@@ -44,7 +45,7 @@ Town::Town(QWidget *parent)
 void Town::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
 {
     player->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Town）的 widget 裡，這樣它才會顯示在畫面上。
-    player->setGeometry(525/2, 450/2, 35, 48);
+    player->setGeometry(Player_Center_X, Player_Center_Y, 35, 48);
     player->show();
     player->raise(); // 確保角色在背景上方
 
@@ -72,7 +73,7 @@ void Town::keyPressEvent(QKeyEvent *event)
     int Step = 5;
 
     switch (key) {
-    case Qt::Key_Up:
+    case Qt::Key_Up:{
         if (CanMoveToDirection(UP)) {
             if (Map_Offset.y() > 0) { // 如果背景還能往上捲
                 if (mainPlayer->y() == Player_Center_Y) {
@@ -80,7 +81,7 @@ void Town::keyPressEvent(QKeyEvent *event)
                     Map_Offset.setY(Map_Offset.y() - Step);
                     UpdateScene();
                 } else {
-                    // 角色不在中心，角色移動
+                    // 角色不在中心，角色移動(用於到邊邊要往回走(例如這個就是為了到下邊邊後可以往上走，也符合上捲)
                     mainPlayer->move(mainPlayer->x(), mainPlayer->y() - Step);
                 }
             } else {
@@ -90,9 +91,15 @@ void Town::keyPressEvent(QKeyEvent *event)
                 }
             }
         }
+        QRect playerRect = mainPlayer->geometry();
+        QRect Real_coodinate = playerRect.translated(Map_Offset); // 角色在地圖中的實際位置
+
+        if (Enter_Laboratory_Trigger.intersects(Real_coodinate)) {
+            emit Enter_Laboratory();
+        }
         mainPlayer->setDirection(UP);
         mainPlayer->startWalking();
-        break;
+        break;}
 
     case Qt::Key_Down:
         if (CanMoveToDirection(DOWN)) {
@@ -159,7 +166,10 @@ void Town::keyPressEvent(QKeyEvent *event)
         mainPlayer->setDirection(RIGHT);
         mainPlayer->startWalking();
         break;
+
     }
+
+
 }
 
 
@@ -213,7 +223,7 @@ bool Town::CanMoveToDirection(Direction dir)
     QRect playerRect = mainPlayer->geometry();
     QRect movedRect = playerRect;
 
-    const int Step = 3;
+    const int Step = 10; //模擬下一步(只有下一步，不是每一步，等於是在正前Step的距離方有個替身
 
     if (dir == UP) movedRect.translate(0, -Step);
     else if (dir == DOWN) movedRect.translate(0, Step);

@@ -32,7 +32,8 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
-
+signals:
+    void Enter_Laboratory();
 private:
 
     QLabel *background; // 背景圖片
@@ -48,7 +49,7 @@ private:
 
 
     QList<QRect> Barriers;
-
+    QRect Enter_Laboratory_Trigger; //進入實驗室
 };
 
 #endif // TITLESCREEN_H

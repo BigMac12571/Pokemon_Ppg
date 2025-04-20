@@ -11,7 +11,6 @@
 #include <QVector>
 #include <QGraphicsOpacityEffect>
 
-
 enum Direction {
     UP = 0,
     DOWN = 1,
@@ -25,12 +24,12 @@ enum WalkFrame {
 };
 
 
-
 class Player: public QLabel
 {
     Q_OBJECT
 
 public:
+
     explicit Player(QWidget *parent = nullptr);
 
     void setImage(const QString &path);
@@ -39,6 +38,9 @@ public:
     void nextWalkFrame(); // 換走路動畫圖
     void startWalking(); //開始走路(用於動畫)
     void stopWalking(); //停止走路(用於動畫)
+
+
+
 public slots:
     void updateWalkFrame();  // 0.5 秒換腳
 

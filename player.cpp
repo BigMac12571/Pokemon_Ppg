@@ -22,7 +22,7 @@ Player::Player(QWidget *parent) : QLabel(parent)
     Player_photo->show();
 
     walkTimer = new QTimer(this); //走路換動畫計時器
-    walkTimer->setInterval(500);
+    walkTimer->setInterval(200);
     walkTimer->start();
     connect(walkTimer, &QTimer::timeout, this, &Player::updateWalkFrame);
 

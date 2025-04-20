@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     /////// 初始化每個畫面
     titlescreen = new TitleScreen(this);
     town = new Town(this);
-    //laboratary = new Laboratory(this);
+    laboratary = new Laboratory(this);
     //grassland = new GrassLand(this);
     //battlescene = new BattleScene(this);
     /////// 初始化每個畫面
@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     /////// 畫面加進 stack
     Scene_stack->addWidget(titlescreen);      // index 0
     Scene_stack->addWidget(town);       // index 1
-    //Scene_stack->addWidget(laboratary);   // index 2
+    Scene_stack->addWidget(laboratary);   // index 2
     //Scene_stack->addWidget(grassland);     // index 3
     //Scene_stack->addWidget(battlescene);      // index 4
     /////// 畫面加進 stack
@@ -65,12 +65,6 @@ MainWindow::MainWindow(QWidget *parent)
 
         town->Add_Player_To_Scene(player);
         town->SetMainPlayer(player); // <--- 指定主角
-
-
-
-
-
-
         //for (int i = 0; i < 4; ++i) {
         //    for (int j = 0; j < 3; ++j) {
         //        town->Add_Player_To_Scene(playerMatrix[i][j]);
@@ -78,7 +72,8 @@ MainWindow::MainWindow(QWidget *parent)
         //    }
         //
     });
-
+    connect(town, &Town::Enter_Laboratory, this, &MainWindow::SwitchToLaboratory);
+    connect(laboratary, &Laboratory::Exit_Laboratory, this, &MainWindow::SwitchToTownFromLab);
 
 
 
@@ -107,5 +102,17 @@ void MainWindow::switch_windowtitle(int index) {
     }
 }
 
+void MainWindow::SwitchToLaboratory() {
+    Scene_stack->setCurrentIndex(2); // 切到 laboratory 畫面
+    switch_windowtitle(2);           // 更新視窗標題
 
+    laboratary->Add_Player_To_Scene(player); // 將玩家加進新場景
+    laboratary->SetMainPlayer(player);       // 更新主角控制權
+}
+void MainWindow::SwitchToTownFromLab() {
+    Scene_stack->setCurrentIndex(1); // 回 Town
+    switch_windowtitle(1);
 
+    town->Add_Player_To_Scene(player);
+    town->SetMainPlayer(player);
+}
