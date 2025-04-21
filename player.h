@@ -42,6 +42,9 @@ public:
 public slots:
     void updateWalkFrame();  // 0.5 秒換腳
 
+
+
+
 private:
 
     QLabel *Player_photo; // 角色圖片

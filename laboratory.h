@@ -10,6 +10,9 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include "player.h"
+#include "bag.h"
+
+
 class Laboratory: public QWidget
 {
     Q_OBJECT
@@ -34,6 +37,12 @@ private:
 
     QLabel *background; // 背景圖片
     Player *mainPlayer = nullptr;
+    Bag *bag = nullptr;
+    bool OpenBag;
+
+
+
+
     QPoint Map_Offset; // 地圖的偏移量
     QSet<int> keysPressed; // 長按
     const int Map_Width = 456; // 背景圖片寬度

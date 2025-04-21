@@ -14,6 +14,7 @@ Grassland::Grassland(QWidget *parent)
     background->lower(); //背景在最下
     Map_Offset = QPoint(View_Width/2, Map_Height-View_Height); //Map_Offset位置
 
+    OpenBag = false;
 //<<<<<<< HEAD
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
     //Barriers.append(QRect(0, 0, 480, 80));    // 上邊界
@@ -96,6 +97,8 @@ void Grassland::keyPressEvent(QKeyEvent *event)
     if (keysPressed.contains(key)) return;
     keysPressed.insert(key);
 
+    // 如果背包打開，不允許移動
+    if (OpenBag && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_Left || key == Qt::Key_Right))return;
     int Step = 5;
 
     switch (key) {
@@ -194,6 +197,21 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         }
         mainPlayer->setDirection(RIGHT);
         mainPlayer->startWalking();
+        break;
+    case Qt::Key_B:
+        if (OpenBag) {
+            bag->hide();
+            OpenBag = false;
+        } else {
+            if (bag == nullptr) {
+                bag = new Bag(this); // 設定 parent，這樣它會跟隨 Town 視窗
+            }
+            bag->show();
+            bag->raise(); // 確保在最上層
+            OpenBag = true;
+            mainPlayer->stopWalking();
+        }
+
         break;
 
     }

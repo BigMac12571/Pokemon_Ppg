@@ -16,7 +16,7 @@ Laboratory::Laboratory(QWidget *parent)
 
     Map_Offset = QPoint(View_Coordinate_x-(View_Width-Map_Width)/2, View_Coordinate_y-Player_Center_Y+Map_Height-100); //Map_Offset位置
     //
-
+    OpenBag = false;
 
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
     Barriers.append(QRect(678, 437, Map_Width, 15));    // 上邊界
@@ -73,6 +73,9 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
     // 防止 auto-repeat
     if (keysPressed.contains(key)) return;
     keysPressed.insert(key);
+
+    // 如果背包打開，不允許移動
+    if (OpenBag && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_Left || key == Qt::Key_Right))return;
 
     int Step = 5;
 
@@ -136,6 +139,22 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
             }
         mainPlayer->setDirection(RIGHT);
         mainPlayer->startWalking();
+        break;
+
+    case Qt::Key_B:
+        if (OpenBag) {
+            bag->hide();
+            OpenBag = false;
+        } else {
+            if (bag == nullptr) {
+                bag = new Bag(this); // 設定 parent，這樣它會跟隨 Town 視窗
+            }
+            bag->show();
+            bag->raise(); // 確保在最上層
+            OpenBag = true;
+            mainPlayer->stopWalking();
+        }
+
         break;
 
     }

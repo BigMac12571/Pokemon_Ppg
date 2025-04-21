@@ -10,7 +10,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include "player.h"
-
+#include "bag.h"
 
 
 
@@ -44,8 +44,12 @@ signals:
     void Enter_Grassland();
 private:
 
-    QLabel *background; // 背景圖片
+
     Player *mainPlayer = nullptr;
+    Bag *bag = nullptr;
+    bool OpenBag;
+
+    QLabel *background; // 背景圖片
     QPoint Map_Offset; // 地圖的偏移量
     QSet<int> keysPressed; // 長按
     const int Map_Width = 1000; // 背景圖片寬度（例如 Town.png 寬度）
