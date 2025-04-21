@@ -65,12 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         town->Add_Player_To_Scene(player);
         town->SetMainPlayer(player); // <--- 指定主角
-        //for (int i = 0; i < 4; ++i) {
-        //    for (int j = 0; j < 3; ++j) {
-        //        town->Add_Player_To_Scene(playerMatrix[i][j]);
-        //        playerMatrix[i][j]->move(50 + j * 40, 100 + i * 60); // 位置間隔設定
-        //    }
-        //
+
     });
     connect(town, &Town::Enter_Laboratory, this, &MainWindow::Switch_TownToLaboratory);
     connect(laboratary, &Laboratory::Exit_Laboratory, this, &MainWindow::Switch_LaboratoryToTown);
