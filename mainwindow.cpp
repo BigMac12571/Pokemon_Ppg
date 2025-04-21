@@ -85,6 +85,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+
+
 }
 
 MainWindow::~MainWindow()
@@ -105,36 +107,52 @@ void MainWindow::switch_windowtitle(int index) {
     }
 }
 
+
+
 void MainWindow::Switch_TownToLaboratory() {
+
     Scene_stack->setCurrentIndex(2); // 切到 laboratory 畫面
     switch_windowtitle(2);           // 更新視窗標題
 
     laboratary->Add_Player_To_Scene(player); // 將玩家加進新場景
     laboratary->SetMainPlayer(player);       // 更新主角控制權
+
+
 }
 
 
 
 void MainWindow::Switch_LaboratoryToTown() {
+
+
     Scene_stack->setCurrentIndex(1); // 回 Town
     switch_windowtitle(1);
 
     town->Add_Player_To_Scene(player);
     town->SetMainPlayer(player);
+
 }
 
+
 void MainWindow::Switch_TownToGrassland() {
+
     Scene_stack->setCurrentIndex(3); // 切到 laboratory 畫面
     switch_windowtitle(3);           // 更新視窗標題
 
     grassland->Add_Player_To_Scene(player); // 將玩家加進新場景
     grassland->SetMainPlayer(player);       // 更新主角控制權
+
 }
 
+
 void MainWindow::Switch_GrasslandToTown() {
+
+
     Scene_stack->setCurrentIndex(1); // 回 Town
     switch_windowtitle(1);
 
     town->Add_Player_To_Scene(player);
+    town->SetMainPlayer(player);
     town->SetMainPlayer_GrasslandToTown(player);
+
 }

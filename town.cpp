@@ -59,14 +59,20 @@ void Town::SetMainPlayer(Player *p) {
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
+
+    keysPressed.clear(); // 清空按鍵狀態
+
 }
 void Town::SetMainPlayer_GrasslandToTown(Player *p) {
     mainPlayer = p; //p 指向 mainPlayer 這個物件
 
-    mainPlayer->move(Player_Center_X, Player_Center_Y-200); //要有Player_Center_Y否則因為每一步是3像素所以永遠到不了中央
+    mainPlayer->move(Player_Center_X, Player_Center_Y-200); //要有Player_Center_Y否則因為每一步是5像素所以永遠到不了中央
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
+
+    keysPressed.clear(); // 清空按鍵狀態
+
 }
 
 
@@ -110,9 +116,11 @@ void Town::keyPressEvent(QKeyEvent *event)
         if (Enter_Grassland_Trigger.intersects(Real_coodinate)) {
             emit Enter_Grassland();
         }
+
         mainPlayer->setDirection(UP);
         mainPlayer->startWalking();
-        break;}
+        break;
+    }
 
     case Qt::Key_Down:
         if (CanMoveToDirection(DOWN)) {
@@ -257,3 +265,5 @@ bool Town::CanMoveToDirection(Direction dir)
 
     return true;
 }
+
+

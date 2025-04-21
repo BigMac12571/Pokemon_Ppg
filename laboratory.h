@@ -52,5 +52,5 @@ private:
     QList<QRect> Barriers;
     QRect Exit_Zone;
 };
-
 #endif // TITLESCREEN_H
+

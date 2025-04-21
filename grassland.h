@@ -1,7 +1,6 @@
 #ifndef GRASSLAND_H
 #define GRASSLAND_H
 
-
 #include <QWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -13,14 +12,13 @@
 #include "player.h"
 
 
-
-
 class Grassland: public QWidget
 {
     Q_OBJECT
 
 public:
     explicit Grassland(QWidget *parent = nullptr);
+
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
     void SetMainPlayer(Player *p); //
@@ -30,11 +28,13 @@ public:
 
 
 
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 signals:
     void Exit_Grassland();
+
 private:
 
     QLabel *background; // 背景圖片
@@ -50,6 +50,8 @@ private:
 
 
     QList<QRect> Barriers;
+
+
     QRect Exit_Zone;
 };
 

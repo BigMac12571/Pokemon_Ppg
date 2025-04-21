@@ -25,6 +25,7 @@ public:
 
 
     void switch_windowtitle(int index);
+
     void Switch_TownToLaboratory();
     void Switch_LaboratoryToTown();
 
@@ -32,6 +33,7 @@ public:
 
     void Switch_TownToGrassland();
     void Switch_GrasslandToTown();
+
 
 
 private:

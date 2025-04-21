@@ -61,6 +61,7 @@ void Laboratory::SetMainPlayer(Player *p) {
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
+    keysPressed.clear(); // 清空按鍵狀態
 }
 
 void Laboratory::keyPressEvent(QKeyEvent *event)
@@ -119,6 +120,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
                 }
 
             }
+
         mainPlayer->setDirection(LEFT);
         mainPlayer->startWalking();
         break;
