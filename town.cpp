@@ -1,5 +1,4 @@
 #include "town.h"
-#include "box.h"
 
 Town::Town(QWidget *parent)
     : QWidget(parent)
@@ -34,6 +33,7 @@ Town::Town(QWidget *parent)
     Barriers.append(QRect(294, 851, 164 , 149)); //水池
     Barriers.append(QRect(172, 340, 47 , 43)); //油箱左
     Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
+    Barriers.append(QRect(210, 704, 36 , 32)); //公佈欄
 
     Enter_Laboratory_Trigger = QRect(668, 645, 36, 50);  //實驗室大門
     Enter_Grassland_Trigger = QRect(480,0, 120, 1);
