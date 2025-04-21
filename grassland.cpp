@@ -1,6 +1,5 @@
 #include "grassland.h"
 
-
 Grassland::Grassland(QWidget *parent)
     : QWidget(parent)
 {

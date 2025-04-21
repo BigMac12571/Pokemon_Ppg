@@ -12,13 +12,6 @@
 #include "player.h"
 
 
-
-
-
-
-
-
-
 class Grassland: public QWidget
 {
     Q_OBJECT

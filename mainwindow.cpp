@@ -23,11 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     titlescreen = new TitleScreen(this);
     town = new Town(this);
     laboratary = new Laboratory(this);
-<<<<<<< HEAD
-    grassland = new GrassLand(this);
-=======
     grassland = new Grassland(this);
->>>>>>> 2465ac7ec021dbf923f3507413c6c84004db9a18
     //battlescene = new BattleScene(this);
     /////// 初始化每個畫面
 
@@ -82,8 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland);
     connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
 
-    connect(town, &Town::Enter_Grassland, this, &MainWindow::SwitchToLaboratory);
-    connect(laboratary, &Laboratory::Exit_Laboratory, this, &MainWindow::SwitchToTownFromLab);
+
 
 
 

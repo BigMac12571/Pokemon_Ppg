@@ -52,10 +52,5 @@ private:
     QList<QRect> Barriers;
     QRect Exit_Zone;
 };
-
-<<<<<<< HEAD
-#endif // LABORATORY_H
-
-=======
 #endif // TITLESCREEN_H
->>>>>>> 2465ac7ec021dbf923f3507413c6c84004db9a18
+
