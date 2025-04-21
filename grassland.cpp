@@ -16,21 +16,20 @@ Grassland::Grassland(QWidget *parent)
     Map_Offset = QPoint(View_Width/2, Map_Height-View_Height); //Map_Offset位置
 
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
-    //Barriers.append(QRect(0, 0, 480, 80));    // 上邊界
-    //Barriers.append(QRect(600, 0, 400, 80));    // 上邊界2
-    //Barriers.append(QRect(0,980, 1000,20));  // 下邊界
-    //Barriers.append(QRect(0, 0, 80, 1000));    // 左邊界
-    //Barriers.append(QRect(920, 0, 80, 1000));  // 右邊界
+    Barriers.append(QRect(0, 0, 480, 80));    // 上邊界
+    Barriers.append(QRect(600, 0, 400, 80));    // 上邊界2
+    Barriers.append(QRect(0,Map_Height, 1000,20));  // 下邊界
+    Barriers.append(QRect(0, 0, 80, Map_Height));    // 左邊界
+    Barriers.append(QRect(920, 0, 80, Map_Height));  // 右邊界
 
     // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
-    //Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
-    //Barriers.append(QRect(588, 173, 209, 210));  // 右上房子
-    //Barriers.append(QRect(542, 474, 284 , 210)); //右下房子
-    //Barriers.append(QRect(207, 558, 209 , 32)); //花旁柵欄
-    //Barriers.append(QRect(544, 808, 209 , 32)); //右下柵欄
-    //Barriers.append(QRect(294, 851, 164 , 149)); //水池
-    //Barriers.append(QRect(172, 340, 47 , 43)); //油箱左
-    //Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
+    Barriers.append(QRect(82, 1509, 495-82, 1661-1509)); // 左下柵欄
+    Barriers.append(QRect(586, 1509, 925-586, 1661-1509));  // 右下柵欄
+    Barriers.append(QRect(80, 1013, 494-80 , 1112-1013)); //左下一排樹
+    Barriers.append(QRect(80, 590, 166-80 , 698-590)); //左邊一棵樹
+    Barriers.append(QRect(416, 590, 670-416 , 700-590)); //中間一排樹
+    Barriers.append(QRect(334, 148, 414-334 , 487-148)); //中上一欄樹
+
 
     Exit_Zone = QRect(500, 1620, 585-500, 30); // 自己依照背景圖微調
 
