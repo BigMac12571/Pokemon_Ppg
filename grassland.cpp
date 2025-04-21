@@ -26,6 +26,19 @@ Grassland::Grassland(QWidget *parent)
     Barriers.append(QRect(0,1504, 488,163));  // 下邊界+柵欄
     Barriers.append(QRect(594,1504, 418,163));  // 下邊界+柵欄2
 
+    //加入壁崖
+    Ledges.append(QRect(82,228,250,20));//壁崖(1,1)
+    Ledges.append(QRect(416,228,250,20));//壁崖(1,2)
+    Ledges.append(QRect(82,436,250,20));//壁崖(2,1)
+    Ledges.append(QRect(166,644,250,20));//壁崖(3,1)
+    Ledges.append(QRect(82,852,82,20));//壁崖(4,1)
+    Ledges.append(QRect(208,852,166,20));//壁崖(4,2)
+    Ledges.append(QRect(456,852,458,20));//壁崖(4,3)
+    Ledges.append(QRect(750,1102,166,20));//壁崖(5,1)
+    Ledges.append(QRect(82,1310,166,20));//壁崖(6,1)
+    Ledges.append(QRect(416,1310,500,20));//壁崖(6,2)
+
+
     // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
     //Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
     //Barriers.append(QRect(588, 173, 209, 210));  // 右上房子
@@ -246,6 +259,11 @@ bool Grassland::CanMoveToDirection(Direction dir)
 
     for (const QRect &barrier : Barriers) {
         if (movedRect.intersects(barrier)) {
+            return false;
+        }
+    }
+    for(const QRect &ledge : Ledges){
+        if(dir != DOWN && movedRect.intersects(ledge)){
             return false;
         }
     }

@@ -50,6 +50,7 @@ private:
 
 
     QList<QRect> Barriers;
+    QList<QRect> Ledges;
 
 
     QRect Exit_Zone;
