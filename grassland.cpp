@@ -14,12 +14,17 @@ Grassland::Grassland(QWidget *parent)
     background->lower(); //背景在最下
     Map_Offset = QPoint(View_Width/2, Map_Height-View_Height); //Map_Offset位置
 
-    // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
-    //Barriers.append(QRect(0, 0, 480, 80));    // 上邊界
-    //Barriers.append(QRect(600, 0, 400, 80));    // 上邊界2
-    //Barriers.append(QRect(0,980, 1000,20));  // 下邊界
-    //Barriers.append(QRect(0, 0, 80, 1000));    // 左邊界
-    //Barriers.append(QRect(920, 0, 80, 1000));  // 右邊界
+    // 加入地圖邊界的樹木（以整張背景為 1000x1667 計算）
+    Barriers.append(QRect(0, 0, 414, 80));    // 上邊界
+    Barriers.append(QRect(586, 0, 414, 80));    // 上邊界2
+    Barriers.append(QRect(334,132, 80, 364));  // 上直樹4
+    Barriers.append(QRect(0, 0, 80, 1667));    // 左邊界
+    Barriers.append(QRect(920, 0, 80, 1667));  // 右邊界
+    Barriers.append(QRect(86,590, 80,116));  // 中橫樹1
+    Barriers.append(QRect(418,590, 246,116));  // 中橫樹3
+    Barriers.append(QRect(86,1006, 410,116));  // 下橫樹5
+    Barriers.append(QRect(0,1504, 488,163));  // 下邊界+柵欄
+    Barriers.append(QRect(594,1504, 418,163));  // 下邊界+柵欄2
 
     // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
     //Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
@@ -31,7 +36,7 @@ Grassland::Grassland(QWidget *parent)
     //Barriers.append(QRect(172, 340, 47 , 43)); //油箱左
     //Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
 
-    Exit_Zone = QRect(500, 1620, 585-500, 30); // 自己依照背景圖微調
+    Exit_Zone = QRect(500, 1620, 85, 30); // 自己依照背景圖微調
 
 
 
@@ -57,6 +62,7 @@ void Grassland::SetMainPlayer(Player *p) {
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
+    keysPressed.clear(); // 清空按鍵狀態
 }
 
 void Grassland::keyPressEvent(QKeyEvent *event)

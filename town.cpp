@@ -59,6 +59,9 @@ void Town::SetMainPlayer(Player *p) {
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
+
+    keysPressed.clear(); // 清空按鍵狀態
+
 }
 void Town::SetMainPlayer_GrasslandToTown(Player *p) {
     mainPlayer = p; //p 指向 mainPlayer 這個物件
@@ -67,6 +70,9 @@ void Town::SetMainPlayer_GrasslandToTown(Player *p) {
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
+
+    keysPressed.clear(); // 清空按鍵狀態
+
 }
 
 
@@ -113,7 +119,8 @@ void Town::keyPressEvent(QKeyEvent *event)
 
         mainPlayer->setDirection(UP);
         mainPlayer->startWalking();
-        break;}
+        break;
+    }
 
     case Qt::Key_Down:
         if (CanMoveToDirection(DOWN)) {
@@ -258,3 +265,5 @@ bool Town::CanMoveToDirection(Direction dir)
 
     return true;
 }
+
+
