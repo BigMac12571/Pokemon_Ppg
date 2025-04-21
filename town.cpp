@@ -1,4 +1,5 @@
 #include "town.h"
+#include "box.h"
 
 Town::Town(QWidget *parent)
     : QWidget(parent)
@@ -76,6 +77,7 @@ void Town::SetMainPlayer_GrasslandToTown(Player *p) {
     keysPressed.clear(); // 清空按鍵狀態
 
 }
+
 
 
 void Town::keyPressEvent(QKeyEvent *event)

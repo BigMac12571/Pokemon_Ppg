@@ -30,6 +30,7 @@ public:
 
 
 
+
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
 
@@ -58,6 +59,7 @@ private:
     const int View_Height = 450; // 視窗高度
     const int Player_Center_X = View_Width / 2 - 35 / 2;
     const int Player_Center_Y = View_Height / 2 - 48 / 2;
+
 
 
     QList<QRect> Barriers;
