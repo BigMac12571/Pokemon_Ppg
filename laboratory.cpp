@@ -19,20 +19,21 @@ Laboratory::Laboratory(QWidget *parent)
 
 
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
-    Barriers.append(QRect(678, 437, Map_Width, 1));    // 上邊界
+    Barriers.append(QRect(678, 437, Map_Width, 15));    // 上邊界
     Barriers.append(QRect(680, 875, Map_Width,1));  // 下邊界
     Barriers.append(QRect(678, 437, 1, Map_Height));    // 左邊界
     Barriers.append(QRect(1134, 437, 1, Map_Height));  // 右邊界
 
     // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
-    //Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
-    //Barriers.append(QRect(588, 173, 209, 210));  // 右上房子
-    //Barriers.append(QRect(542, 474, 284 , 223)); //右下房子
-    //Barriers.append(QRect(207, 558, 209 , 32)); //花旁柵欄
-    //Barriers.append(QRect(544, 808, 209 , 32)); //右下柵欄
-    //Barriers.append(QRect(294, 851, 164 , 149)); //水池
-    //Barriers.append(QRect(172, 340, 47 , 43)); //油箱左
-    //Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
+    Barriers.append(QRect(681, 454, 888-681, 490-454)); // 左上一坨
+    Barriers.append(QRect(998, 450, 1134-998, 490-454));  // 右上一坨
+    Barriers.append(QRect(677, 525, 710-677 , 592-525)); //左邊機器一坨
+    Barriers.append(QRect(709, 551, 784-709 , 626-551)); //左邊大機器一坨
+    Barriers.append(QRect(960, 572, 1065-960 , 603-572)); //球桌一坨
+    Barriers.append(QRect(678, 687, 853-678 , 733-687)); //左下一坨
+    Barriers.append(QRect(960, 687, 1132-960 , 733-687)); //右下一坨
+    Barriers.append(QRect(678, 817, 713-678 , 876-817)); //左下花盆一坨
+    Barriers.append(QRect(1101, 817, 713-678 , 876-817)); //左下花盆一坨
 
     Exit_Zone = QRect(879, 863, 50, 30); // 自己依照背景圖微調
 
@@ -210,4 +211,3 @@ bool Laboratory::CanMoveToDirection(Direction dir)
 
     return true;
 }
-

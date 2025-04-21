@@ -42,7 +42,7 @@ private:
     const int View_Height = 450; // 視窗高度
     const int Black_Width = 1840; // 視窗寬度
     const int Black_Height = 1432; // 視窗高度
-    //Map_Offset = QPoint(631, 436); //Map_Offset位置
+
     const int View_Coordinate_x = 678;
     const int View_Coordinate_y = 436;
     const int Player_Center_X = View_Width / 2 - 35 / 2;
@@ -53,5 +53,9 @@ private:
     QRect Exit_Zone;
 };
 
+<<<<<<< HEAD
 #endif // LABORATORY_H
 
+=======
+#endif // TITLESCREEN_H
+>>>>>>> 2465ac7ec021dbf923f3507413c6c84004db9a18

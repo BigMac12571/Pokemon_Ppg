@@ -12,22 +12,36 @@
 #include "player.h"
 
 
-class GrassLand: public QWidget
+
+
+
+
+
+
+
+class Grassland: public QWidget
 {
     Q_OBJECT
+
 public:
-    explicit GrassLand(QWidget *parent = nullptr);
+    explicit Grassland(QWidget *parent = nullptr);
+
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
 
+
+
+
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
-singals:
-    void Enter_Town();
+signals:
+    void Exit_Grassland();
+
 private:
 
     QLabel *background; // 背景圖片
@@ -43,7 +57,9 @@ private:
 
 
     QList<QRect> Barriers;
-    QRect Enter_Town_Trigger;//進入城市
+
+
+    QRect Exit_Zone;
 };
 
-#endif // GRASSLAND_H
+#endif // TITLESCREEN_H
