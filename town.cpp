@@ -33,6 +33,7 @@ Town::Town(QWidget *parent)
     Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
 
     Enter_Laboratory_Trigger = QRect(668, 645, 36, 50);  //實驗室大門
+    Enter_Grassland_Trigger = QRect(480,0, 120, 1);
 
 
 
@@ -59,6 +60,15 @@ void Town::SetMainPlayer(Player *p) {
     mainPlayer->setFocus();
     this->setFocus();
 }
+void Town::SetMainPlayer_GrasslandToTown(Player *p) {
+    mainPlayer = p; //p 指向 mainPlayer 這個物件
+
+    mainPlayer->move(Player_Center_X, Player_Center_Y-200); //要有Player_Center_Y否則因為每一步是3像素所以永遠到不了中央
+    mainPlayer->raise();
+    mainPlayer->setFocus();
+    this->setFocus();
+}
+
 
 void Town::keyPressEvent(QKeyEvent *event)
 {
@@ -96,6 +106,9 @@ void Town::keyPressEvent(QKeyEvent *event)
 
         if (Enter_Laboratory_Trigger.intersects(Real_coodinate)) {
             emit Enter_Laboratory();
+        }
+        if (Enter_Grassland_Trigger.intersects(Real_coodinate)) {
+            emit Enter_Grassland();
         }
         mainPlayer->setDirection(UP);
         mainPlayer->startWalking();

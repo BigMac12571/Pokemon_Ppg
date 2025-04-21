@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     titlescreen = new TitleScreen(this);
     town = new Town(this);
     laboratary = new Laboratory(this);
-    //grassland = new GrassLand(this);
+    grassland = new Grassland(this);
     //battlescene = new BattleScene(this);
     /////// 初始化每個畫面
 
@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     Scene_stack->addWidget(titlescreen);      // index 0
     Scene_stack->addWidget(town);       // index 1
     Scene_stack->addWidget(laboratary);   // index 2
-    //Scene_stack->addWidget(grassland);     // index 3
+    Scene_stack->addWidget(grassland);     // index 3
     //Scene_stack->addWidget(battlescene);      // index 4
     /////// 畫面加進 stack
 
@@ -72,8 +72,11 @@ MainWindow::MainWindow(QWidget *parent)
         //    }
         //
     });
-    connect(town, &Town::Enter_Laboratory, this, &MainWindow::SwitchToLaboratory);
-    connect(laboratary, &Laboratory::Exit_Laboratory, this, &MainWindow::SwitchToTownFromLab);
+    connect(town, &Town::Enter_Laboratory, this, &MainWindow::Switch_TownToLaboratory);
+    connect(laboratary, &Laboratory::Exit_Laboratory, this, &MainWindow::Switch_LaboratoryToTown);
+
+    connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland);
+    connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
 
 
 
@@ -102,17 +105,36 @@ void MainWindow::switch_windowtitle(int index) {
     }
 }
 
-void MainWindow::SwitchToLaboratory() {
+void MainWindow::Switch_TownToLaboratory() {
     Scene_stack->setCurrentIndex(2); // 切到 laboratory 畫面
     switch_windowtitle(2);           // 更新視窗標題
 
     laboratary->Add_Player_To_Scene(player); // 將玩家加進新場景
     laboratary->SetMainPlayer(player);       // 更新主角控制權
 }
-void MainWindow::SwitchToTownFromLab() {
+
+
+
+void MainWindow::Switch_LaboratoryToTown() {
     Scene_stack->setCurrentIndex(1); // 回 Town
     switch_windowtitle(1);
 
     town->Add_Player_To_Scene(player);
     town->SetMainPlayer(player);
+}
+
+void MainWindow::Switch_TownToGrassland() {
+    Scene_stack->setCurrentIndex(3); // 切到 laboratory 畫面
+    switch_windowtitle(3);           // 更新視窗標題
+
+    grassland->Add_Player_To_Scene(player); // 將玩家加進新場景
+    grassland->SetMainPlayer(player);       // 更新主角控制權
+}
+
+void MainWindow::Switch_GrasslandToTown() {
+    Scene_stack->setCurrentIndex(1); // 回 Town
+    switch_windowtitle(1);
+
+    town->Add_Player_To_Scene(player);
+    town->SetMainPlayer_GrasslandToTown(player);
 }

@@ -25,8 +25,15 @@ public:
 
 
     void switch_windowtitle(int index);
-    void SwitchToLaboratory();
-    void SwitchToTownFromLab();
+    void Switch_TownToLaboratory();
+    void Switch_LaboratoryToTown();
+
+
+
+    void Switch_TownToGrassland();
+    void Switch_GrasslandToTown();
+
+
 private:
     Ui::MainWindow *ui;
     QStackedWidget *Scene_stack;
@@ -35,7 +42,7 @@ private:
     TitleScreen *titlescreen;
     Town *town;
     Laboratory *laboratary;
-    GrassLand *grassland;
+    Grassland *grassland;
     BattleScene *battlescene;
 
     Player *player;
