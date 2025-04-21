@@ -34,6 +34,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 signals:
     void Enter_Laboratory();
+    void Enter_Grassland();
 private:
 
     QLabel *background; // 背景圖片
@@ -50,9 +51,9 @@ private:
 
     QList<QRect> Barriers;
     QRect Enter_Laboratory_Trigger; //進入實驗室
-
+    QRect Enter_Grassland_Trigger;//進入草地
 
 };
 
-#endif // TITLESCREEN_H
+#endif // TOWN_H
 

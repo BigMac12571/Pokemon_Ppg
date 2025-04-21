@@ -53,5 +53,5 @@ private:
     QRect Exit_Zone;
 };
 
-#endif // TITLESCREEN_H
+#endif // LABORATORY_H
 

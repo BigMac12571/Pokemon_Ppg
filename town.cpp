@@ -1,6 +1,4 @@
 #include "town.h"
-#include <QPainter>
-#include <QImage>
 
 Town::Town(QWidget *parent)
     : QWidget(parent)
@@ -100,6 +98,10 @@ void Town::keyPressEvent(QKeyEvent *event)
         if (Enter_Laboratory_Trigger.intersects(Real_coodinate)) {
             emit Enter_Laboratory();
         }
+        if (Enter_Grassland_Trigger.intersects(Real_coodinate)) {
+            emit Enter_Grassland();
+        }
+
         mainPlayer->setDirection(UP);
         mainPlayer->startWalking();
         break;}
