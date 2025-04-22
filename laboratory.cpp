@@ -17,7 +17,7 @@ Laboratory::Laboratory(QWidget *parent)
     Map_Offset = QPoint(View_Coordinate_x-(View_Width-Map_Width)/2, View_Coordinate_y-Player_Center_Y+Map_Height-100); //Map_Offset位置
     //
     OpenBag = false;
-
+    OpenDialog = false;
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
     Barriers.append(QRect(678, 437, Map_Width, 15));    // 上邊界
     Barriers.append(QRect(680, 875, Map_Width,1));  // 下邊界
@@ -34,10 +34,12 @@ Laboratory::Laboratory(QWidget *parent)
     Barriers.append(QRect(960, 687, 1132-960 , 733-687)); //右下一坨
     Barriers.append(QRect(678, 817, 713-678 , 876-817)); //左下花盆一坨
     Barriers.append(QRect(1101, 817, 713-678 , 876-817)); //左下花盆一坨
+    Barriers.append(QRect(889, 508, 20, 30)); //Oak哥
+
 
     Exit_Zone = QRect(879, 863, 50, 30); // 自己依照背景圖微調
 
-
+    Talk_With_Oak =QRect(889,508,40, 50);
 
 
 
@@ -53,6 +55,16 @@ void Laboratory::Add_Player_To_Scene(QWidget *player) //可以同時出現Town �
     player->raise(); // 確保角色在背景上方
 
 }
+void Laboratory::Add_NPC_To_Scene(NPC *npc) //可以同時出現Lab 與 NPC
+{
+    npc->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Town）的 widget 裡，這樣它才會顯示在畫面上。
+    npc->setGeometry(-Map_Offset.x()+889, -Map_Offset.x()+508, 35, 48);
+    npc->show();
+    npc->raise(); // 確保角色在背景上方
+    ProfessorOak = npc;
+
+}
+
 
 void Laboratory::SetMainPlayer(Player *p) {
     mainPlayer = p; //p 指向 mainPlayer 這個物件
@@ -156,6 +168,19 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
         }
 
         break;
+    case Qt::Key_A: {
+
+        QRect playerRect = mainPlayer->geometry();
+        QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
+        if(!OpenDialog){
+            if (Talk_With_Oak.intersects(Real_coodinate)) {
+                emit Start_Talk_With_Oak();  // 觸發對話 signal
+                mainPlayer->stopWalking();
+                qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
+        }
+        }
+        break;
+    }
 
     }
 }
@@ -167,6 +192,8 @@ void Laboratory::keyReleaseEvent(QKeyEvent *event)
 
     int key = event->key();
     keysPressed.remove(key);
+    // 背包打開時不處理釋放
+    if (OpenBag && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_Left || key == Qt::Key_Right))return;
 
     switch (key) {
     case Qt::Key_Up:
@@ -205,6 +232,9 @@ void Laboratory::keyReleaseEvent(QKeyEvent *event)
 void Laboratory::UpdateScene()
 {
     background->move(-Map_Offset.x(), -Map_Offset.y()); // 移動背景
+    if (ProfessorOak) {
+            ProfessorOak->move(-Map_Offset.x()+889, -Map_Offset.y()+508);
+        }
 }
 bool Laboratory::CanMoveToDirection(Direction dir)
 {

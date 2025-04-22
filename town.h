@@ -22,6 +22,7 @@ public:
     explicit Town(QWidget *parent = nullptr);
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
+
     void SetMainPlayer(Player *p); //
     void SetMainPlayer_GrasslandToTown(Player *p);
 
@@ -65,6 +66,7 @@ private:
     QList<QRect> Barriers;
     QRect Enter_Laboratory_Trigger; //進入實驗室
     QRect Enter_Grassland_Trigger; //進入草地區
+
 };
 
 #endif // TOWN_H

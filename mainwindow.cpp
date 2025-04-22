@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setFixedSize(525,450);
+    this->setFixedSize(525,450); // 主視窗
 
     ///////////////////////新增stack/////////////////////////
 
@@ -22,25 +22,28 @@ MainWindow::MainWindow(QWidget *parent)
     /////// 初始化每個畫面
     titlescreen = new TitleScreen(this);
     town = new Town(this);
-    laboratary = new Laboratory(this);
+    laboratory = new Laboratory(this);
     grassland = new Grassland(this);
     //battlescene = new BattleScene(this);
     /////// 初始化每個畫面
 
     /////// 初始化每個角色
-    player = new Player(this);
+    player = new Player(this); //主視窗角色指標
     player->hide();
 
-
+    npc = new NPC(this); //npc
+    npc->hide();
     /////// 初始化每個角色
 
+    dialog = new Dialog(this);
+    dialog->hide();
 
 
 
     /////// 畫面加進 stack
     Scene_stack->addWidget(titlescreen);      // index 0
     Scene_stack->addWidget(town);       // index 1
-    Scene_stack->addWidget(laboratary);   // index 2
+    Scene_stack->addWidget(laboratory);   // index 2
     Scene_stack->addWidget(grassland);     // index 3
     //Scene_stack->addWidget(battlescene);      // index 4
     /////// 畫面加進 stack
@@ -68,12 +71,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     });
     connect(town, &Town::Enter_Laboratory, this, &MainWindow::Switch_TownToLaboratory);
-    connect(laboratary, &Laboratory::Exit_Laboratory, this, &MainWindow::Switch_LaboratoryToTown);
+    connect(laboratory, &Laboratory::Exit_Laboratory, this, &MainWindow::Switch_LaboratoryToTown);
 
     connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland);
     connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
 
-
+    connect(laboratory, &Laboratory::Start_Talk_With_Oak, this, &MainWindow::Oak_Dialog);
 
 
 
@@ -109,9 +112,9 @@ void MainWindow::Switch_TownToLaboratory() {
     Scene_stack->setCurrentIndex(2); // 切到 laboratory 畫面
     switch_windowtitle(2);           // 更新視窗標題
 
-    laboratary->Add_Player_To_Scene(player); // 將玩家加進新場景
-    laboratary->SetMainPlayer(player);       // 更新主角控制權
-
+    laboratory->Add_Player_To_Scene(player); // 將玩家加進新場景
+    laboratory->SetMainPlayer(player);       // 更新主角控制權
+    laboratory->Add_NPC_To_Scene(npc);
 
 }
 
@@ -150,4 +153,11 @@ void MainWindow::Switch_GrasslandToTown() {
     town->SetMainPlayer(player);
     town->SetMainPlayer_GrasslandToTown(player);
 
+}
+void MainWindow::Oak_Dialog(){
+    QPoint pos = dialog->pos();
+    qDebug() << "Dialog position: " << pos;
+
+    dialog->show();
+    dialog->Oak_Dialog();
 }

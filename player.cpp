@@ -14,7 +14,7 @@ Player::Player(QWidget *parent) : QLabel(parent)
     Walking = false;
 
     Player_photo = new QLabel(this); // 加入子元件
-    Player_photo->setFixedSize(35, 48); // 設定大小跟 Player 一樣
+    Player_photo->setFixedSize(width(), height()); // 設定大小跟 Player 一樣
     Player_photo->move(0, 0); // 放在 (0, 0) 位置，才會顯示
 
     QPixmap characterPixmap(":/new/prefix1/Dataset/Image/player/player_F.png");

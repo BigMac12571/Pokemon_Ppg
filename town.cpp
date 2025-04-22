@@ -1,5 +1,5 @@
 #include "town.h"
-#include "box.h"
+
 
 Town::Town(QWidget *parent)
     : QWidget(parent)

@@ -10,6 +10,8 @@
 #include "battlescene.h"
 #include "grassland.h"
 #include "player.h"
+#include "npc.h"
+#include "dialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,7 +36,7 @@ public:
     void Switch_TownToGrassland();
     void Switch_GrasslandToTown();
 
-
+    void Oak_Dialog();
 
 private:
     Ui::MainWindow *ui;
@@ -43,12 +45,13 @@ private:
 
     TitleScreen *titlescreen;
     Town *town;
-    Laboratory *laboratary;
+    Laboratory *laboratory;
     Grassland *grassland;
     BattleScene *battlescene;
 
     Player *player;
-
+    NPC *npc;
+    Dialog *dialog;
 
 };
 #endif // MAINWINDOW_H

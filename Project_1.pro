@@ -11,10 +11,12 @@ CONFIG += c++11
 SOURCES += \
     bag.cpp \
     battlescene.cpp \
+    dialog.cpp \
     grassland.cpp \
     laboratory.cpp \
     main.cpp \
     mainwindow.cpp \
+    npc.cpp \
     player.cpp \
     titlescreen.cpp \
     town.cpp
@@ -22,9 +24,11 @@ SOURCES += \
 HEADERS += \
     bag.h \
     battlescene.h \
+    dialog.h \
     grassland.h \
     laboratory.h \
     mainwindow.h \
+    npc.h \
     player.h \
     titlescreen.h \
     town.h

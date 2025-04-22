@@ -11,8 +11,8 @@
 #include <QPainter>
 #include "player.h"
 #include "bag.h"
-
-
+#include "npc.h"
+#include "dialog.h"
 class Laboratory: public QWidget
 {
     Q_OBJECT
@@ -21,6 +21,8 @@ public:
     explicit Laboratory(QWidget *parent = nullptr);
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
+    void Add_NPC_To_Scene(NPC *npc); //按下Press start 後將角色放入視窗
+
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
@@ -33,14 +35,16 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 signals:
     void Exit_Laboratory();
+    void Start_Talk_With_Oak();
 private:
 
     QLabel *background; // 背景圖片
-    Player *mainPlayer = nullptr;
+    Player *mainPlayer = nullptr; //
     Bag *bag = nullptr;
     bool OpenBag;
-
-
+    NPC *ProfessorOak = nullptr ;
+    Dialog *dialog = nullptr;
+    bool OpenDialog;
 
 
     QPoint Map_Offset; // 地圖的偏移量
@@ -60,6 +64,7 @@ private:
 
     QList<QRect> Barriers;
     QRect Exit_Zone;
+    QRect Talk_With_Oak ;
 };
 #endif // TITLESCREEN_H
 

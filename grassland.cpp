@@ -226,6 +226,8 @@ void Grassland::keyReleaseEvent(QKeyEvent *event)
 
     int key = event->key();
     keysPressed.remove(key);
+    // 背包打開時不處理釋放
+    if (OpenBag && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_Left || key == Qt::Key_Right))return;
 
     switch (key) {
     case Qt::Key_Up:
