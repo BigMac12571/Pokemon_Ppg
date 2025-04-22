@@ -76,8 +76,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland);
     connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
 
-    connect(laboratory, &Laboratory::Start_Talk_With_Oak, this, &MainWindow::Oak_Dialog);
-
+    connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog);
+    connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
+    connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
 
 
@@ -159,5 +160,21 @@ void MainWindow::Oak_Dialog(){
     qDebug() << "Dialog position: " << pos;
 
     dialog->show();
+    dialog->setFocus();
     dialog->Oak_Dialog();
+}
+void MainWindow::Sign_Dialog(){
+    QPoint pos = dialog->pos();
+    qDebug() << "Dialog position: " << pos;
+
+    dialog->show();
+    dialog->setFocus();
+    dialog->Sign_Dialog();
+}
+
+
+
+
+void MainWindow::Close_Dialog(){
+    dialog->close();
 }

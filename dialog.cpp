@@ -5,28 +5,51 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
     this->move(5, View_Height - 99);
 
     Oak_dialog << "I am Professor Oak. Welcome to my laboratory!"
-               << "You can choose one from three Poké Balls as your initial\nPokémon in Laboratory."
-               << "這是第三段對話。"
-               << "這是第四段對話。";
+               << "You can choose one from three Poké Balls as your initial\nPokémon in Laboratory.";
+
+    Sign_dialog <<"This is Pallet Town. Begin your adventure!";
 
     CurrentDialog = 0;
     setText(Oak_dialog.at(CurrentDialog));  // 顯示第一段對話
 
     setAlignment(Qt::AlignCenter);  // 文字居中顯示
-    setStyleSheet("color: black; font-size: 25px;");
+    setStyleSheet("color: black; font-size: 20px;");
+
+
 }
-void Dialog::Oak_Dialog()
-{
-    if (CurrentDialog < Oak_dialog.size() - 1) {
-          // 增加對話索引
-        setText(Oak_dialog.at(CurrentDialog));  // 更新顯示的文字
+void Dialog::Oak_Dialog(){
+    if (CurrentDialog < Oak_dialog.size()) {
+
+        setText(Oak_dialog.at(CurrentDialog));
         CurrentDialog++;
     } else {
-        // 選擇性關閉對話框
-        close();  // 如果希望在對話結束後自動關閉窗口
+        emit Close_Dialog();
         CurrentDialog = 0;
     }
 }
+
+void Dialog::Sign_Dialog(){
+    if (CurrentDialog < Sign_dialog.size()) {
+
+        setText(Sign_dialog.at(CurrentDialog));
+        CurrentDialog++;
+    } else {
+        emit Close_Dialog();
+        CurrentDialog = 0;
+    }
+
+
+
+
+
+
+}
+
+
+
+
+
+
 
 void Dialog::paintEvent(QPaintEvent *event)
 {

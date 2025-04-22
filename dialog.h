@@ -25,11 +25,15 @@ public:
 
 
     void Oak_Dialog();
+    void Sign_Dialog();
 
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
+
+signals:
+    void Close_Dialog();
 private:
 
     const int View_Width = 525; // 視窗寬度
@@ -38,8 +42,9 @@ private:
 
 
     QStringList Oak_dialog;
-    int CurrentDialog;
+    QStringList Sign_dialog;
 
+    int CurrentDialog;
 
 
 

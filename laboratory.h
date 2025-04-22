@@ -28,14 +28,12 @@ public:
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
 
 
-
-
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 signals:
     void Exit_Laboratory();
-    void Start_Talk_With_Oak();
+    void Open_Dialog_Oak();
 private:
 
     QLabel *background; // 背景圖片
@@ -44,7 +42,7 @@ private:
     bool OpenBag;
     NPC *ProfessorOak = nullptr ;
     Dialog *dialog = nullptr;
-    bool OpenDialog;
+
 
 
     QPoint Map_Offset; // 地圖的偏移量

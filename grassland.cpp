@@ -35,6 +35,7 @@ Grassland::Grassland(QWidget *parent)
     Barriers.append(QRect(0,1504, 488,163));  // 下邊界+柵欄
     Barriers.append(QRect(594,1504, 418,163));  // 下邊界+柵欄2
 //>>>>>>> 164f8c9cec448dc01ea484cd02425e586659222a
+    Barriers.append(QRect(374,1294, 42,34));  // 公佈欄
 
     //加入壁崖
     Ledges.append(QRect(82,228,250,20));//壁崖(1,1)

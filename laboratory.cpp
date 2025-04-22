@@ -17,7 +17,7 @@ Laboratory::Laboratory(QWidget *parent)
     Map_Offset = QPoint(View_Coordinate_x-(View_Width-Map_Width)/2, View_Coordinate_y-Player_Center_Y+Map_Height-100); //Map_Offset位置
     //
     OpenBag = false;
-    OpenDialog = false;
+
     // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
     Barriers.append(QRect(678, 437, Map_Width, 15));    // 上邊界
     Barriers.append(QRect(680, 875, Map_Width,1));  // 下邊界
@@ -40,6 +40,8 @@ Laboratory::Laboratory(QWidget *parent)
     Exit_Zone = QRect(879, 863, 50, 30); // 自己依照背景圖微調
 
     Talk_With_Oak =QRect(889,508,40, 50);
+
+
 
 
 
@@ -87,7 +89,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
     keysPressed.insert(key);
 
     // 如果背包打開，不允許移動
-    if (OpenBag && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_Left || key == Qt::Key_Right))return;
+    if ((OpenBag) && (key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_Left || key == Qt::Key_Right))return;
 
     int Step = 5;
 
@@ -172,13 +174,12 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
 
         QRect playerRect = mainPlayer->geometry();
         QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
-        if(!OpenDialog){
             if (Talk_With_Oak.intersects(Real_coodinate)) {
-                emit Start_Talk_With_Oak();  // 觸發對話 signal
+                emit Open_Dialog_Oak();  // 觸發對話 signal
                 mainPlayer->stopWalking();
                 qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
         }
-        }
+
         break;
     }
 

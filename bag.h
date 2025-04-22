@@ -16,7 +16,6 @@
 
 class Bag:public QLabel
 {
-    Q_OBJECT
 
 public:
     explicit Bag(QWidget *parent = nullptr);

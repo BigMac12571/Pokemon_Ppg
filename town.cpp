@@ -1,6 +1,16 @@
 #include "town.h"
 
 
+
+#include <QRandomGenerator>
+//#include <QDebug>
+
+Box::Box(QWidget *parent) : QLabel(parent) {
+    QPixmap boxPixmap(":/new/prefix1/Dataset/Image/box.png"); // 假設你有 box 的圖片
+    setPixmap(boxPixmap.scaled(33, 33, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    setFixedSize(33, 33);
+}
+
 Town::Town(QWidget *parent)
     : QWidget(parent)
 {
@@ -26,25 +36,34 @@ Town::Town(QWidget *parent)
     Barriers.append(QRect(920, 0, 80, 1000));  // 右邊界
 
     // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
-    Barriers.append(QRect(207, 173, 209, 210)); // 左上房子
-    Barriers.append(QRect(588, 173, 209, 210));  // 右上房子
-    Barriers.append(QRect(542, 474, 284 , 210)); //右下房子
-    Barriers.append(QRect(207, 558, 209 , 32)); //花旁柵欄
-    Barriers.append(QRect(544, 808, 209 , 32)); //右下柵欄
-    Barriers.append(QRect(294, 851, 164 , 149)); //水池
-    Barriers.append(QRect(172, 340, 47 , 43)); //油箱左
-    Barriers.append(QRect(550, 340, 47 , 43)); //油箱右
+    Barriers.append(QRect(207, 173, 209, 221)); // 左上房子
+    Barriers.append(QRect(584, 173, 208, 221));  // 右上房子
+    Barriers.append(QRect(542, 474, 288 , 222)); //右下房子
+    Barriers.append(QRect(210, 556, 204 , 40)); //花旁柵欄
+    Barriers.append(QRect(544, 806, 244 , 38)); //右下柵欄
+    Barriers.append(QRect(292, 850, 164 , 150)); //水池
+    Barriers.append(QRect(172, 336, 30 , 58)); //油箱左
+    Barriers.append(QRect(547, 336, 30 , 58)); //油箱右
+    //Barriers.append(QRect(210, 704, 36 , 32)); //木製公佈欄
 
-    Enter_Laboratory_Trigger = QRect(668, 645, 36, 50);  //實驗室大門
+    //加入不要生成box的地方
+    NoBoxAreas.append(QRect(514,14,62,188));//Grassland入口
+    NoBoxAreas.append(QRect(548,708,264,52));//lab門口
+    NoBoxAreas.append(QRect(210,600,162,100));//花簇
+    NoBoxAreas.append(QRect(376,600,40,98));//花旁公佈欄前
+    NoBoxAreas.append(QRect(666,850,40,58));//右下公佈欄前
+    NoBoxAreas.append(QRect(205,750,40,106));//木製公佈欄前
+
+    Enter_Laboratory_Trigger = QRect(658, 696, 58, 8);  //實驗室大門
     Enter_Grassland_Trigger = QRect(480,0, 120, 1);
-
-
-
-
-
-
+    Talk_With_Sign.append(QRect(211,704,244-211,737-704));
 
     setFocusPolicy(Qt::StrongFocus);
+    // 隨機生成 Box 物件
+    int numberOfBoxes = 15; // 設定要生成的 Box 數量
+    for (int i = 0; i < numberOfBoxes; ++i) {
+        spawnBox();
+    }
 }
 void Town::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
 {
@@ -214,6 +233,23 @@ void Town::keyPressEvent(QKeyEvent *event)
         }
 
         break;
+    case Qt::Key_A:
+    {
+
+            QRect playerRect = mainPlayer->geometry();
+            QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
+            for(int i=0;i< Talk_With_Sign.size();i++){
+                if (Talk_With_Sign[i].intersects(Real_coodinate)) {
+                    emit Open_Dialog_Sign();  // 觸發對話 signal
+                    mainPlayer->stopWalking();
+                                    }
+            }
+            break;
+        }
+
+
+
+
 
     }
 
@@ -270,6 +306,12 @@ void Town::keyReleaseEvent(QKeyEvent *event)
 void Town::UpdateScene()
 {
     background->move(-Map_Offset.x(), -Map_Offset.y()); // 移動背景
+
+    // 重新定位 Box 物件，使其在視窗中看起來固定在世界座標上
+        for (Box *box : boxes) {
+            QRect boxWorldRect = boxRects[boxes.indexOf(box)]; // 獲取 Box 的世界座標矩形
+            box->move(boxWorldRect.x() - Map_Offset.x(), boxWorldRect.y() - Map_Offset.y());
+        }
 }
 bool Town::CanMoveToDirection(Direction dir)
 {
@@ -295,6 +337,65 @@ bool Town::CanMoveToDirection(Direction dir)
         }
     }
 
+    return true;
+}
+void Town::spawnBox() {
+    int x, y;
+    QRect boxRect(0, 0, 33, 33);
+    int maxAttempts = 100; // 防止無限迴圈
+
+    for (int i = 0; i < maxAttempts; ++i) {
+        // 在野外區域隨機生成座標 (根據你的 Town.png 調整)
+        int minX = 0;
+        int maxX = 1000 - boxRect.width();
+        int minY = 0;
+        int maxY = 1000 - boxRect.height();
+
+        x = QRandomGenerator::global()->bounded(minX, maxX + 1);
+        y = QRandomGenerator::global()->bounded(minY, maxY + 1);
+        boxRect.moveTo(x, y);
+
+        // 檢查新位置是否有效
+        if (isPositionValid(boxRect)) {
+            Box *box = new Box(this);
+            box->move(x - Map_Offset.x(), y - Map_Offset.y()); // 相對於 Town 的位置
+            box->show();
+            box->raise();
+            boxes.append(box);
+            boxRects.append(boxRect);
+
+            //qDebug() << "Box spawned at:" << boxRect;
+            return;
+        }
+        //qDebug() << "Attempt " << i << " failed at:" << boxRect;
+    }
+    //qDebug() << "Failed to spawn box after " << maxAttempts << " attempts.";
+}
+
+bool Town::isPositionValid(const QRect& rect) {
+    // 檢查是否與現有的障礙物重疊
+    for (const QRect &barrier : Barriers) {
+        if (rect.intersects(barrier)) {
+            return false;
+        }
+    }
+    // 檢查是否與已生成的 Box 重疊
+    for (const QRect &existingBoxRect : boxRects) {
+        if (rect.intersects(existingBoxRect)) {
+            return false;
+        }
+    }
+    //檢查是否生在 No Box Areas
+    for (const QRect &noboxArea : NoBoxAreas) {
+            if (rect.intersects(noboxArea)) {
+                return false;
+            }
+        }
+    // 檢查是否與玩家的起始位置重疊
+    QRect playerStartRect(Player_Center_X, Player_Center_Y, 35, 48);
+    if (rect.intersects(playerStartRect)) {
+        return false;
+    }
     return true;
 }
 

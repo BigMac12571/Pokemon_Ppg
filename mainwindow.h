@@ -37,6 +37,8 @@ public:
     void Switch_GrasslandToTown();
 
     void Oak_Dialog();
+    void Sign_Dialog();
+    void Close_Dialog();
 
 private:
     Ui::MainWindow *ui;
