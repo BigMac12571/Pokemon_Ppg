@@ -7,11 +7,10 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
-#include <QDebug>
+//#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
 #include <QStringList>
-#include "player.h"
 
 
 

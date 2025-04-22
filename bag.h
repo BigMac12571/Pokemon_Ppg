@@ -6,10 +6,9 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
-#include <QDebug>
+//#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
-#include "player.h"
 
 
 
@@ -19,23 +18,6 @@ class Bag:public QLabel
 
 public:
     explicit Bag(QWidget *parent = nullptr);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 private:
 

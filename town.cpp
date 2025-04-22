@@ -1,15 +1,6 @@
 #include "town.h"
 
-
-
-#include <QRandomGenerator>
 //#include <QDebug>
-
-Box::Box(QWidget *parent) : QLabel(parent) {
-    QPixmap boxPixmap(":/new/prefix1/Dataset/Image/box.png"); // 假設你有 box 的圖片
-    setPixmap(boxPixmap.scaled(33, 33, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    setFixedSize(33, 33);
-}
 
 Town::Town(QWidget *parent)
     : QWidget(parent)
@@ -54,7 +45,7 @@ Town::Town(QWidget *parent)
     NoBoxAreas.append(QRect(666,850,40,58));//右下公佈欄前
     NoBoxAreas.append(QRect(205,750,40,106));//木製公佈欄前
 
-    Enter_Laboratory_Trigger = QRect(658, 696, 58, 8);  //實驗室大門
+    Enter_Laboratory_Trigger = QRect(684, 696, 4, 8);  //實驗室大門
     Enter_Grassland_Trigger = QRect(480,0, 120, 1);
     Talk_With_Sign.append(QRect(211,704,244-211,737-704));
 

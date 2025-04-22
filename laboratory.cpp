@@ -34,12 +34,12 @@ Laboratory::Laboratory(QWidget *parent)
     Barriers.append(QRect(960, 687, 1132-960 , 733-687)); //右下一坨
     Barriers.append(QRect(678, 817, 713-678 , 876-817)); //左下花盆一坨
     Barriers.append(QRect(1101, 817, 713-678 , 876-817)); //左下花盆一坨
-    Barriers.append(QRect(889, 508, 20, 30)); //Oak哥
+    Barriers.append(QRect(893, 508, 27, 44)); //Oak哥
 
 
-    Exit_Zone = QRect(879, 863, 50, 30); // 自己依照背景圖微調
+    Exit_Zone = QRect(904, 863, 4, 30); // 自己依照背景圖微調
 
-    Talk_With_Oak =QRect(889,508,40, 50);
+    Talk_With_Oak =QRect(889,508,27, 64);
 
 
 
@@ -177,7 +177,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
             if (Talk_With_Oak.intersects(Real_coodinate)) {
                 emit Open_Dialog_Oak();  // 觸發對話 signal
                 mainPlayer->stopWalking();
-                qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
+                //qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
         }
 
         break;

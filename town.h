@@ -6,17 +6,14 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
-#include <QDebug>
+//#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QRandomGenerator>
+
 #include "player.h"
 #include "bag.h"
-
-
-class Box : public QLabel {
-public:
-    Box(QWidget *parent = nullptr);
-};
+#include "box.h"
 
 class Town: public QWidget
 {
@@ -32,23 +29,18 @@ public:
     void spawnBox(); // 新增生成 Box 的函式
     bool isPositionValid(const QRect& rect); // 檢查位置是否有效
 
-
-
-
-
-
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
-
-
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
+
 signals:
     void Enter_Laboratory();
     void Enter_Grassland();
     void Open_Dialog_Sign();
+
 private:
 
 

@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     bag.cpp \
     battlescene.cpp \
+    box.cpp \
     dialog.cpp \
     grassland.cpp \
     laboratory.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 HEADERS += \
     bag.h \
     battlescene.h \
+    box.h \
     dialog.h \
     grassland.h \
     laboratory.h \
