@@ -41,7 +41,9 @@ Laboratory::Laboratory(QWidget *parent)
 
     Talk_With_Oak =QRect(889,508,40, 50);
 
-
+    Pick_Pokeballs_area.append(QRect(966,575,35,60));
+    Pick_Pokeballs_area.append(QRect(997,575,35,60));
+    Pick_Pokeballs_area.append(QRect(1035,575,35,60));
 
 
 
@@ -63,9 +65,49 @@ void Laboratory::Add_NPC_To_Scene(NPC *npc) //可以同時出現Lab 與 NPC
     npc->setGeometry(-Map_Offset.x()+889, -Map_Offset.x()+508, 35, 48);
     npc->show();
     npc->raise(); // 確保角色在背景上方
+    mainPlayer->raise();
     ProfessorOak = npc;
 
 }
+void Laboratory::Add_Pokeball_To_Scene(int id,Pokeball *pokeballx){
+    if (!pokeballx) return;
+
+    pokeballx->setParent(this); // 设置父对象为 Laboratory
+
+    int x = 0;
+    int y = 0;
+
+    // 根据 Pokeball 的 ID 设置它在实验室内地图上的绝对位置 (请根据 lab.png 实际情况修改这些坐标)
+    if (id==0) {
+        x = 966; y = 575;
+    } else if (id==1) {
+        x = 1000; y = 575;
+    } else if (id==2) {
+        x = 1035; y = 575;
+    } else {
+        qDebug() << "Warning: Add_Pokeball_To_Scene received pokeball with unexpected ID:" << pokeballx->ID;
+        pokeballx->hide();
+        return;
+    }
+
+    // 设置 Pokeball Widget 在 Laboratory 视窗中的位置
+    pokeballx->setGeometry(- Map_Offset.x()+x, - Map_Offset.y()+y, pokeballx->width(), pokeballx->height());
+
+    pokeballx->raise();
+    pokeballx->show();
+
+
+    if (!pokeball.contains(pokeballx)) {
+         pokeball.append(pokeballx);
+    }
+}
+
+void Laboratory::Pokeball_get_picked(Pokeball *pokeballx){
+
+    pokeballx->hide();
+}
+
+
 
 
 void Laboratory::SetMainPlayer(Player *p) {
@@ -179,6 +221,12 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
                 mainPlayer->stopWalking();
                 qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
         }
+            for(int i=0;i<Pick_Pokeballs_area.size();i++){
+                if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){
+                    emit Pickup_Pokeballs(i);
+
+                }
+            }
 
         break;
     }
@@ -236,7 +284,16 @@ void Laboratory::UpdateScene()
     if (ProfessorOak) {
             ProfessorOak->move(-Map_Offset.x()+889, -Map_Offset.y()+508);
         }
+    for (int i = 0; i < pokeball.size(); i++) {
+        if (!pokeball[i]) continue; // 保險一點，避免 nullptr crash
+        switch(i){
+        case 0: pokeball[i]->move(-Map_Offset.x() + 966, -Map_Offset.y() + 575); break;
+        case 1: pokeball[i]->move(-Map_Offset.x() + 1000, -Map_Offset.y() + 575); break;
+        case 2: pokeball[i]->move(-Map_Offset.x() + 1035, -Map_Offset.y() + 575); break;
+        }
+    }
 }
+
 bool Laboratory::CanMoveToDirection(Direction dir)
 {
     QRect playerRect = mainPlayer->geometry();

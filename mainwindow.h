@@ -12,6 +12,7 @@
 #include "player.h"
 #include "npc.h"
 #include "dialog.h"
+#include "pokeball.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,7 +26,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
+public slots:
     void switch_windowtitle(int index);
 
     void Switch_TownToLaboratory();
@@ -40,6 +41,7 @@ public:
     void Sign_Dialog();
     void Close_Dialog();
 
+    void Pickup_Pokeballs_slot(int id);
 private:
     Ui::MainWindow *ui;
     QStackedWidget *Scene_stack;
@@ -54,6 +56,8 @@ private:
     Player *player;
     NPC *npc;
     Dialog *dialog;
-
+    Pokeball *pokeball0;
+    Pokeball *pokeball1;
+    Pokeball *pokeball2;
 };
 #endif // MAINWINDOW_H

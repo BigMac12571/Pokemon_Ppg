@@ -42,8 +42,9 @@ private:
 
 
     QStringList Oak_dialog;
+    bool Oak_dialog_start;
     QStringList Sign_dialog;
-
+    bool Sign_dialog_start;
     int CurrentDialog;
 
 

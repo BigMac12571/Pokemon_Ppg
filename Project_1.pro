@@ -18,6 +18,7 @@ SOURCES += \
     mainwindow.cpp \
     npc.cpp \
     player.cpp \
+    pokeball.cpp \
     titlescreen.cpp \
     town.cpp
 
@@ -30,6 +31,7 @@ HEADERS += \
     mainwindow.h \
     npc.h \
     player.h \
+    pokeball.h \
     titlescreen.h \
     town.h
 

@@ -13,6 +13,7 @@
 #include "bag.h"
 #include "npc.h"
 #include "dialog.h"
+#include "pokeball.h"
 class Laboratory: public QWidget
 {
     Q_OBJECT
@@ -22,6 +23,8 @@ public:
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
     void Add_NPC_To_Scene(NPC *npc); //按下Press start 後將角色放入視窗
+    void Add_Pokeball_To_Scene(int id,Pokeball *pokeballx);
+    void Pokeball_get_picked(Pokeball *pokeballx);
 
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
@@ -34,14 +37,16 @@ protected:
 signals:
     void Exit_Laboratory();
     void Open_Dialog_Oak();
+    void Pickup_Pokeballs(int id);
 private:
 
     QLabel *background; // 背景圖片
     Player *mainPlayer = nullptr; //
     Bag *bag = nullptr;
     bool OpenBag;
-    NPC *ProfessorOak = nullptr ;
-    Dialog *dialog = nullptr;
+    NPC *ProfessorOak = nullptr ; //存取Oak座標
+    //Dialog *dialog = nullptr;
+    QList<Pokeball*> pokeball; //存取寶貝球座標
 
 
 
@@ -63,6 +68,8 @@ private:
     QList<QRect> Barriers;
     QRect Exit_Zone;
     QRect Talk_With_Oak ;
+
+    QList<QRect> Pick_Pokeballs_area; //撿寶貝球的區域
 };
 #endif // TITLESCREEN_H
 

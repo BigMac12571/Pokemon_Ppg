@@ -35,10 +35,17 @@ MainWindow::MainWindow(QWidget *parent)
     npc->hide();
     /////// 初始化每個角色
 
-    dialog = new Dialog(this);
+    dialog = new Dialog(this); //對話
     dialog->hide();
 
+    pokeball0 = new Pokeball(0,this);
+    pokeball0->hide();
 
+    pokeball1 = new Pokeball(1,this);
+    pokeball1->hide();
+
+    pokeball2 = new Pokeball(2,this);
+    pokeball2->hide();
 
     /////// 畫面加進 stack
     Scene_stack->addWidget(titlescreen);      // index 0
@@ -70,17 +77,17 @@ MainWindow::MainWindow(QWidget *parent)
         town->SetMainPlayer(player); // <--- 指定主角
 
     });
-    connect(town, &Town::Enter_Laboratory, this, &MainWindow::Switch_TownToLaboratory);
+    connect(town, &Town::Enter_Laboratory, this, &MainWindow::Switch_TownToLaboratory); //進出lab
     connect(laboratory, &Laboratory::Exit_Laboratory, this, &MainWindow::Switch_LaboratoryToTown);
 
-    connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland);
+    connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland); //進出grassland
     connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
 
-    connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog);
+    connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
     connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
-
+    connect(laboratory, &Laboratory::Pickup_Pokeballs, this, &MainWindow::Pickup_Pokeballs_slot);
 
 
 
@@ -116,6 +123,9 @@ void MainWindow::Switch_TownToLaboratory() {
     laboratory->Add_Player_To_Scene(player); // 將玩家加進新場景
     laboratory->SetMainPlayer(player);       // 更新主角控制權
     laboratory->Add_NPC_To_Scene(npc);
+    laboratory->Add_Pokeball_To_Scene(0,pokeball0);
+    laboratory->Add_Pokeball_To_Scene(1,pokeball1);
+    laboratory->Add_Pokeball_To_Scene(2,pokeball2);
 
 }
 
@@ -177,4 +187,16 @@ void MainWindow::Sign_Dialog(){
 
 void MainWindow::Close_Dialog(){
     dialog->close();
+    player->stopWalking();
+}
+
+
+void MainWindow::Pickup_Pokeballs_slot(int id){
+
+    if(id==0) laboratory->Pokeball_get_picked(pokeball0);
+    else if(id==1) laboratory->Pokeball_get_picked(pokeball1);
+    else if(id==2) laboratory->Pokeball_get_picked(pokeball2);
+
+
+
 }

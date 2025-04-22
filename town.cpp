@@ -39,12 +39,12 @@ Town::Town(QWidget *parent)
     Barriers.append(QRect(207, 173, 209, 221)); // 左上房子
     Barriers.append(QRect(584, 173, 208, 221));  // 右上房子
     Barriers.append(QRect(542, 474, 288 , 222)); //右下房子
-    Barriers.append(QRect(210, 556, 204 , 40)); //花旁柵欄
-    Barriers.append(QRect(544, 806, 244 , 38)); //右下柵欄
+    Barriers.append(QRect(210, 556, 204 , 20)); //花旁柵欄
+    Barriers.append(QRect(544, 806, 244 , 20)); //右下柵欄
     Barriers.append(QRect(292, 850, 164 , 150)); //水池
     Barriers.append(QRect(172, 336, 30 , 58)); //油箱左
     Barriers.append(QRect(547, 336, 30 , 58)); //油箱右
-    //Barriers.append(QRect(210, 704, 36 , 32)); //木製公佈欄
+    Barriers.append(QRect(210, 704, 36 , 20)); //木製公佈欄
 
     //加入不要生成box的地方
     NoBoxAreas.append(QRect(514,14,62,188));//Grassland入口
@@ -55,8 +55,10 @@ Town::Town(QWidget *parent)
     NoBoxAreas.append(QRect(205,750,40,106));//木製公佈欄前
 
     Enter_Laboratory_Trigger = QRect(658, 696, 58, 8);  //實驗室大門
-    Enter_Grassland_Trigger = QRect(480,0, 120, 1);
-    Talk_With_Sign.append(QRect(211,704,244-211,737-704));
+    Enter_Grassland_Trigger = QRect(480,0, 120, 1); //草地入口
+    Talk_With_Sign.append(QRect(210,690,244-211,60)); //木Sign
+    Talk_With_Sign.append(QRect(372,538,244-211,60)); //花旁柵欄Sign
+    Talk_With_Sign.append(QRect(666,788,244-211,60)); //右下Sign
 
     setFocusPolicy(Qt::StrongFocus);
     // 隨機生成 Box 物件
@@ -242,7 +244,7 @@ void Town::keyPressEvent(QKeyEvent *event)
                 if (Talk_With_Sign[i].intersects(Real_coodinate)) {
                     emit Open_Dialog_Sign();  // 觸發對話 signal
                     mainPlayer->stopWalking();
-                                    }
+                }
             }
             break;
         }
