@@ -8,12 +8,12 @@ Town::Town(QWidget *parent)
 
     this->setFixedSize(Map_Width,Map_Height);
 
-    Map_Offset = QPoint(Player_Center_X, Player_Center_X); //Map_Offset位置
+    Map_Offset = QPoint(Player_Center_X-240, Player_Center_Y-2); //Map_Offset位置
 
     background = new QLabel(this);
     QPixmap backgroundPixmap(":/new/prefix1/Dataset/Image/scene/Town.png");
     background->setPixmap(backgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    background->setGeometry(-Player_Center_X, -Player_Center_X, width(), height()); // 填滿整個視窗
+    background->setGeometry(-Player_Center_X+240, -Player_Center_Y+2, width(), height()); // 填滿整個視窗
     background->lower(); //背景在最下
 
 

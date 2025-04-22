@@ -7,6 +7,7 @@
 
 
 class Box : public QLabel {
+
 public:
     Box(QWidget *parent = nullptr);
 };

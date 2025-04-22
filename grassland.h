@@ -9,6 +9,7 @@
 //#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
+
 #include "player.h"
 #include "bag.h"
 
@@ -46,7 +47,7 @@ private:
 
     QPoint Map_Offset; // 地圖的偏移量
     QSet<int> keysPressed; // 長按
-    const int Map_Width = 1000; // 背景圖片寬度（例如 Town.png 寬度）
+    const int Map_Width = 1000; // 背景圖片寬度
     const int Map_Height = 1667; // 背景圖片高度
     const int View_Width = 525; // 視窗寬度
     const int View_Height = 450; // 視窗高度
