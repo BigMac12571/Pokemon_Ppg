@@ -54,3 +54,21 @@ void Squirtle::HideFormImage(Form form){
 
 }
 
+QLabel* Squirtle::GetFormImage(Form form){ //回傳Label元件
+    switch(form) {
+    case First: return FirstForm_Image; break;
+    case Second: return SecondForm_Image; break;
+    case Third: return ThirdForm_Image; break;
+     }
+
+}
+QPixmap Squirtle::GetIconPixmap(const QSize& iconSize) { //回傳圖片
+    QLabel* Current_Image_Label = GetFormImage(Current_form);
+
+    if (Current_Image_Label && Current_Image_Label->pixmap()) {
+        return Current_Image_Label->pixmap()->scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+
+    return QPixmap();
+}
+
