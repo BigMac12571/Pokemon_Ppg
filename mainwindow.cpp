@@ -115,6 +115,10 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(dialog, &Dialog::Pickup_Pokeballs, this , &MainWindow::Pickup_Pokeballs_slot); //按Y撿起
+    connect(dialog, &Dialog::Get_pokeball, this, &MainWindow::Add_pokeball);//記錄獲得的pokeball
+    connect(dialog, &Dialog::Get_potion, this, &MainWindow::Add_potion);//記錄獲得的potion
+    connect(dialog, &Dialog::Get_ether, this, &MainWindow::Add_ether);//記錄獲得的ether
+    connect(town, &Town::Refresh_bag, this , &MainWindow::Refresh_bag);//刷新背包
 
     connect(town, &Town::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
     connect(grassland, &Grassland::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
@@ -297,10 +301,29 @@ void MainWindow::Pickup_Pokeballs_slot(int id){
 
     }
 }
+
+void MainWindow::Add_pokeball(){
+    bag->Add_pokeball();
+}
+
+void MainWindow::Add_potion(){
+    bag->Add_potion();
+}
+
+void MainWindow::Add_ether(){
+    bag->Add_ether();
+}
+
+void MainWindow::Refresh_bag(){
+    bag->Refresh_bag(0);
+    bag->Refresh_bag(1);
+    bag->Refresh_bag(2);
+}
 ///////////////////實驗室拿pokeball
 
 ///////////////////背包
 
 void MainWindow::Open_Bag_slot(){
     bag->Open_bag();
+
 }

@@ -223,6 +223,7 @@ void Town::keyPressEvent(QKeyEvent *event)
             if(OpenBag) OpenBag = false;
             else {OpenBag = true;}
             emit Open_Bag_Signal();
+            emit Refresh_bag();
             mainPlayer->stopWalking();
         break;
     case Qt::Key_A:
@@ -236,7 +237,7 @@ void Town::keyPressEvent(QKeyEvent *event)
                 emit Open_Dialog_Sign();  // 觸發對話 signal
                 mainPlayer->stopWalking();
             }
-
+        }
         for(int i=0;i< boxRects.size();i++){
             if (boxRects[i].intersects(Real_coodinate)) {
                 emit Open_Dialog_Box();  // 觸發對話 signal
@@ -252,28 +253,20 @@ void Town::keyPressEvent(QKeyEvent *event)
 
             break;
 
-}
-
-        // ✅ 撿取箱子（如果與玩家碰撞）
-        for (int i = 0; i < boxes.size(); ++i) {
-            if (!boxes[i]->isPicked() && boxRects[i].intersects(Real_coodinate)) {
-                boxes[i]->pick();  // 箱子撿起來並消失
-                break; // 一次只撿一個箱子
-            }
-        }
-
-        break;
     }
 
 
 
-
-
     }
-
-
-
 }
+
+
+
+
+
+
+
+
 
 
 void Town::keyReleaseEvent(QKeyEvent *event)

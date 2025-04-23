@@ -1,4 +1,5 @@
 #include "bag.h"
+#include "dialog.h"
 
 Bag::Bag(QWidget *parent) : QWidget(parent)
 {
@@ -11,6 +12,13 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
 
     open = false;
 
+
+}
+
+Bag::~Bag() {
+    delete pokeballLabel;
+    delete potionLabel;
+    delete etherLabel;
 }
 
 void Bag::Open_bag(){
@@ -54,5 +62,68 @@ void Bag::Add_pokemon(const QPixmap& IconPixmap, const QString& name) {
         NameLabel->show();
         NameLabel->raise();
 
+}
+void Bag::Add_pokeball(){
+    pokeball++;
+}
+void Bag::Add_potion(){
+    potion++;
+}
+void Bag::Add_ether(){
+    ether++;
+}
+void Bag::Refresh_bag(int id) {
+    QString res = "x";
+    int x, y;
+
+    QLabel* currentLabel = nullptr;
+
+    switch (id) {
+    case 0:
+        res += QString::number(pokeball);
+        x = 92;
+        y = 52;
+        currentLabel = pokeballLabel;
+        break;
+    case 1:
+        res += QString::number(potion);
+        x = 176;
+        y = 52;
+        currentLabel = potionLabel;
+        break;
+    case 2:
+        res += QString::number(ether);
+        x = 272;
+        y = 52;
+        currentLabel = etherLabel;
+        break;
+    default:
+        return;
+    }
+
+    if (currentLabel) {
+        // 如果標籤已經存在，則更新文字
+        currentLabel->setText(res);
+    } else {
+        // 如果標籤不存在，則創建新的標籤並儲存指標
+        QLabel* NameLabel = new QLabel(this);
+        NameLabel->setText(res);
+        NameLabel->move(x, y);
+        NameLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
+        NameLabel->show();
+        NameLabel->raise();
+
+        switch (id) {
+        case 0:
+            pokeballLabel = NameLabel;
+            break;
+        case 1:
+            potionLabel = NameLabel;
+            break;
+        case 2:
+            etherLabel = NameLabel;
+            break;
+        }
+    }
 }
 

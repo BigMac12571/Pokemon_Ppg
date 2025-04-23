@@ -34,6 +34,8 @@ public:
     //void Setup_Shared_pokeball_ID(int id);
 
 
+
+
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
@@ -42,6 +44,9 @@ signals:
     void Close_Dialog();
 
     void Pickup_Pokeballs(int id);
+    void Get_pokeball();
+    void Get_potion();
+    void Get_ether();
 private:
 
     const int View_Width = 525; // 視窗寬度

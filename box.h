@@ -11,14 +11,7 @@ class Box : public QLabel {
 public:
     explicit Box(QWidget *parent = nullptr);
 
-    // 檢查是否已被撿取
-    bool isPicked() const;
 
-    // 撿取箱子（隱藏顯示，標記狀態）
-    void pick();
-
-private:
-    bool picked = false;  // 是否已被撿取
 };
 
 #endif // BOX_H

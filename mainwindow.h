@@ -50,6 +50,11 @@ public slots:
     void Show_Pokeballs_Dialog_slot(int id);
     void Close_Dialog();
 
+    void Add_pokeball();
+    void Add_potion();
+    void Add_ether();
+    void Refresh_bag();
+
 
     void Show_Pokeballs_slot(int id);
     void Pickup_Pokeballs_slot(int id);

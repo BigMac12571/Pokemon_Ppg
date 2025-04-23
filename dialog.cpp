@@ -97,8 +97,7 @@ void Dialog::Grassland_Dialog(){
         CurrentDialog++;
     } else {
         emit Close_Dialog();
-        CurrentDialog = 0;
-        Grassland_dialog_start = false;
+        Reset_Dialog_State();
     }
 }
 
@@ -112,9 +111,20 @@ void Dialog::Box_Dialog(){
         CurrentDialog++;
     } else {
         emit Close_Dialog();
-        CurrentDialog = 0;
-        Box_dialog_start = false;
+        Reset_Dialog_State();
     }
+    switch(id){
+    case 0:
+        emit Get_pokeball();
+        break;
+    case 1:
+        emit Get_potion();
+        break;
+    case 2:
+        emit Get_ether();
+        break;
+    }
+
 }
 
 
@@ -163,7 +173,10 @@ void Dialog::keyPressEvent(QKeyEvent *event)
         if(Oak_dialog_start) Oak_Dialog();
         else if(Sign_dialog_start) Sign_Dialog();
         else if(Grassland_dialog_start) Grassland_Dialog();
-        else if(Box_dialog_start) Box_Dialog();
+        else if(Box_dialog_start) {
+                    emit Close_Dialog();
+                    Reset_Dialog_State();
+                }
         else if(Pickup_Pokeballs_dialog_start && !Waiting_For_YesNo) Show_Pokeballs_Dialog(Shared_pokeball_ID);
         break;
     case Qt::Key_Y:

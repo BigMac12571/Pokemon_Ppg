@@ -14,6 +14,7 @@
 #include "player.h"
 #include "bag.h"
 #include "box.h"
+#include "dialog.h"
 
 class Town: public QWidget
 {
@@ -44,6 +45,7 @@ signals:
     void Open_Dialog_Sign();
     void Open_Dialog_Box();
     void Open_Bag_Signal();
+    void Refresh_bag();
 
 private:
 
