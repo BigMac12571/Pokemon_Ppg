@@ -44,11 +44,9 @@ public slots:
 
     void Oak_Dialog();
     void Sign_Dialog();
-
     void Grassland_Dialog();
 
     void Show_Pokeballs_Dialog_slot(int id);
-
     void Close_Dialog();
 
 

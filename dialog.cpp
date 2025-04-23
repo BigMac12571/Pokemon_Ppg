@@ -11,6 +11,7 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 
     Grassland_dialog <<"In this place, there might be a wild Pokémon\nhiding in the tallgrass."
                      <<"Be careful!!!";
+
     Pickup_Pokeballs_dialog = {
             {
                 "這是妙蛙種子（Bulbasaur）！",
@@ -78,6 +79,9 @@ void Dialog::Grassland_Dialog(){
         Grassland_dialog_start = false;
     }
 }
+
+
+
 void Dialog::Show_Pokeballs_Dialog(int id){
     Pickup_Pokeballs_dialog_start = true;
 
@@ -123,7 +127,6 @@ void Dialog::keyPressEvent(QKeyEvent *event)
         if(Oak_dialog_start) Oak_Dialog();
         else if(Sign_dialog_start) Sign_Dialog();
         else if(Grassland_dialog_start) Grassland_Dialog();
-
         else if(Sign_dialog_start) Sign_Dialog();
         else if(Pickup_Pokeballs_dialog_start && !Waiting_For_YesNo) Show_Pokeballs_Dialog(Shared_pokeball_ID);
         break;

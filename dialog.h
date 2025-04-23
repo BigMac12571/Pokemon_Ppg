@@ -25,7 +25,6 @@ public:
 
     void Oak_Dialog();
     void Sign_Dialog();
-
     void Grassland_Dialog();
 
 
@@ -56,9 +55,8 @@ private:
     QStringList Grassland_dialog;
     bool Grassland_dialog_start = false;
 
-
     QList<QStringList> Pickup_Pokeballs_dialog;
-    bool Pickup_Pokeballs_dialog_start;
+    bool Pickup_Pokeballs_dialog_start = false;
     int Shared_pokeball_ID;
     bool Waiting_For_YesNo;
 

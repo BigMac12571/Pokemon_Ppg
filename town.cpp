@@ -234,13 +234,6 @@ void Town::keyPressEvent(QKeyEvent *event)
 
                 }
             }
-//            for(int i=0;i< boxRects.size();i++){
-//                if (boxRects[i].intersects(Real_coodinate)) {
-//                    emit Open_Dialog_Sign();  // 觸發對話 signal
-//                    mainPlayer->stopWalking();
-
-//                }
-//            }
 
             break;
         }
@@ -390,7 +383,7 @@ bool Town::isPositionValid(const QRect& rect) {
             }
         }
     // 檢查是否與玩家的起始位置重疊
-    QRect playerStartRect(Player_Center_X, Player_Center_Y, 35, 48);
+    QRect playerStartRect(2*Player_Center_X-240, 2*Player_Center_Y-2, 35, 48);
     if (rect.intersects(playerStartRect)) {
         return false;
     }
