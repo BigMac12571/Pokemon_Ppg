@@ -25,6 +25,7 @@ public:
 
     void Oak_Dialog();
     void Sign_Dialog();
+    void Grassland_Dialog();
 
 
 protected:
@@ -41,9 +42,11 @@ private:
 
 
     QStringList Oak_dialog;
-    bool Oak_dialog_start;
+    bool Oak_dialog_start = false;
     QStringList Sign_dialog;
-    bool Sign_dialog_start;
+    bool Sign_dialog_start = false;
+    QStringList Grassland_dialog;
+    bool Grassland_dialog_start = false;
     int CurrentDialog;
 
 

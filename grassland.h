@@ -26,15 +26,12 @@ public:
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
 
-
-
-
-
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
 signals:
     void Exit_Grassland();
+    void Open_Dialog_Grassland_Sign();
 
 private:
 
@@ -57,6 +54,7 @@ private:
 
     QList<QRect> Barriers;
     QList<QRect> Ledges;
+    QList<QRect> Talk_With_Sign;
 
 
     QRect Exit_Zone;

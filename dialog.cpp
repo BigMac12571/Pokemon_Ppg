@@ -9,8 +9,11 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 
     Sign_dialog <<"This is Pallet Town. Begin your adventure!";
 
+    Grassland_dialog <<"In this place, there might be a wild Pokémon\nhiding in the tallgrass."
+                     <<"Be careful!!!";
+
     CurrentDialog = 0;
-    //setText(Oak_dialog.at(CurrentDialog));  // 顯示第一段對話
+
 
     setAlignment(Qt::AlignCenter);  // 文字居中顯示
     setStyleSheet("color: black; font-size: 20px;");
@@ -42,10 +45,19 @@ void Dialog::Sign_Dialog(){
         Sign_dialog_start = false;
     }
 
+}
 
+void Dialog::Grassland_Dialog(){
+    Grassland_dialog_start = true;
+    if (CurrentDialog < Grassland_dialog.size()) {
 
-
-
+        setText(Grassland_dialog.at(CurrentDialog));
+        CurrentDialog++;
+    } else {
+        emit Close_Dialog();
+        CurrentDialog = 0;
+        Grassland_dialog_start = false;
+    }
 
 }
 
@@ -71,7 +83,8 @@ void Dialog::keyPressEvent(QKeyEvent *event)
     // 如果按下的是 A 鍵，顯示下一段對話
     if (event->key() == Qt::Key_A) {
         if(Oak_dialog_start) Oak_Dialog();
-        if(Sign_dialog_start) Sign_Dialog();
+        else if(Sign_dialog_start) Sign_Dialog();
+        else if(Grassland_dialog_start) Grassland_Dialog();
 
     }
 }

@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
+    connect(grassland, &Grassland::Open_Dialog_Grassland_Sign, this, &MainWindow::Grassland_Dialog);
     connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
     connect(laboratory, &Laboratory::Pickup_Pokeballs, this, &MainWindow::Pickup_Pokeballs_slot);
@@ -180,6 +181,14 @@ void MainWindow::Sign_Dialog(){
     dialog->show();
     dialog->setFocus();
     dialog->Sign_Dialog();
+}
+void MainWindow::Grassland_Dialog(){
+    //QPoint pos = dialog->pos();
+    //qDebug() << "Dialog position: " << pos;
+
+    dialog->show();
+    dialog->setFocus();
+    dialog->Grassland_Dialog();
 }
 
 
