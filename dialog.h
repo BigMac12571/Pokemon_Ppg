@@ -25,8 +25,13 @@ public:
 
     void Oak_Dialog();
     void Sign_Dialog();
+
+    void Grassland_Dialog();
+
+
     void Show_Pokeballs_Dialog(int id);
     //void Setup_Shared_pokeball_ID(int id);
+
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -44,13 +49,19 @@ private:
 
 
     QStringList Oak_dialog;
-    bool Oak_dialog_start;
+    bool Oak_dialog_start = false;
     QStringList Sign_dialog;
-    bool Sign_dialog_start;
+
+    bool Sign_dialog_start = false;
+    QStringList Grassland_dialog;
+    bool Grassland_dialog_start = false;
+
+
     QList<QStringList> Pickup_Pokeballs_dialog;
     bool Pickup_Pokeballs_dialog_start;
     int Shared_pokeball_ID;
     bool Waiting_For_YesNo;
+
 
     int CurrentDialog;
 

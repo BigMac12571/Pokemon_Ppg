@@ -48,9 +48,9 @@ Town::Town(QWidget *parent)
 
     Enter_Laboratory_Trigger = QRect(658, 696, 58, 8);  //實驗室大門
     Enter_Grassland_Trigger = QRect(480,0, 120, 1); //草地入口
-    Talk_With_Sign.append(QRect(210,690,244-211,60)); //木Sign
-    Talk_With_Sign.append(QRect(372,538,244-211,60)); //花旁柵欄Sign
-    Talk_With_Sign.append(QRect(666,788,244-211,60)); //右下Sign
+    Talk_With_Sign.append(QRect(210,700,33,50)); //木Sign
+    Talk_With_Sign.append(QRect(372,548,42,50)); //花旁柵欄Sign
+    Talk_With_Sign.append(QRect(666,798,42,50)); //右下Sign
 
     //Enter_Laboratory_Trigger = QRect(684, 696, 4, 8);  //實驗室大門
     //Enter_Grassland_Trigger = QRect(480,0, 120, 1);
@@ -217,19 +217,10 @@ void Town::keyPressEvent(QKeyEvent *event)
         break;
 
     case Qt::Key_B:
-        if (OpenBag) {
-            bag->hide();
-            OpenBag = false;
-        } else {
-            if (bag == nullptr) {
-                bag = new Bag(this); // 設定 parent，這樣它會跟隨 Town 視窗
-            }
-            bag->show();
-            bag->raise(); // 確保在最上層
-            OpenBag = true;
+            if(OpenBag) OpenBag = false;
+            else {OpenBag = true;}
+            emit Open_Bag_Signal();
             mainPlayer->stopWalking();
-        }
-
         break;
     case Qt::Key_A:
     {
@@ -240,9 +231,17 @@ void Town::keyPressEvent(QKeyEvent *event)
                 if (Talk_With_Sign[i].intersects(Real_coodinate)) {
                     emit Open_Dialog_Sign();  // 觸發對話 signal
                     mainPlayer->stopWalking();
-                    keysPressed.clear(); // 清空按鍵狀態
+
                 }
             }
+//            for(int i=0;i< boxRects.size();i++){
+//                if (boxRects[i].intersects(Real_coodinate)) {
+//                    emit Open_Dialog_Sign();  // 觸發對話 signal
+//                    mainPlayer->stopWalking();
+
+//                }
+//            }
+
             break;
         }
 

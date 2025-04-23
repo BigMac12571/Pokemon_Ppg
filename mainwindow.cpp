@@ -56,8 +56,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     /////// 初始化寶可夢
 
-
-
+    bag = new Bag(this);
+    bag->hide();
 
 
 
@@ -105,13 +105,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
+    connect(grassland, &Grassland::Open_Dialog_Grassland_Sign, this, &MainWindow::Grassland_Dialog);
     connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
-    connect(laboratory, &Laboratory::Show_Pokeballs, this, [=](int id){
+    connect(laboratory, &Laboratory::Show_Pokeballs, this, [=](int id){ //顯示寶可夢圖片
         Show_Pokeballs_slot(id);
         Show_Pokeballs_Dialog_slot(id);
     });
-    connect(dialog, &Dialog::Pickup_Pokeballs, this , &MainWindow::Pickup_Pokeballs_slot);
+    connect(dialog, &Dialog::Pickup_Pokeballs, this , &MainWindow::Pickup_Pokeballs_slot); //按Y撿起
+
+    connect(town, &Town::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
+    connect(grassland, &Grassland::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
+    connect(laboratory, &Laboratory::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
+
 
 
 
@@ -205,6 +211,14 @@ void MainWindow::Sign_Dialog(){
     dialog->setFocus();
     dialog->Sign_Dialog();
 }
+void MainWindow::Grassland_Dialog(){
+    //QPoint pos = dialog->pos();
+    //qDebug() << "Dialog position: " << pos;
+
+    dialog->show();
+    dialog->setFocus();
+    dialog->Grassland_Dialog();
+}
 
 
 
@@ -253,3 +267,10 @@ void MainWindow::Pickup_Pokeballs_slot(int id){
     else if(id==2) {laboratory->Pokeball_get_picked(pokeball2);charmander->HideFormImage(Charmander::First);}
 }
 ///////////////////實驗室拿pokeball
+
+///////////////////背包
+
+void MainWindow::Open_Bag_slot(){
+    bag->Open_bag();
+
+}

@@ -40,6 +40,9 @@ signals:
     void Enter_Laboratory();
     void Enter_Grassland();
     void Open_Dialog_Sign();
+    //void Open_Dialog_Box();
+
+    void Open_Bag_Signal();
 
 private:
 

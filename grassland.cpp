@@ -27,7 +27,7 @@ Grassland::Grassland(QWidget *parent)
     Barriers.append(QRect(86,1006, 410,116));  // 下橫樹5
     Barriers.append(QRect(0,1504, 488,163));  // 下邊界+柵欄
     Barriers.append(QRect(594,1504, 418,163));  // 下邊界+柵欄2
-    Barriers.append(QRect(374,1294, 42,34));  // 公佈欄
+    Barriers.append(QRect(374,1294, 42,20));  // 公佈欄
 
     //加入壁崖
     Ledges.append(QRect(82,228,250,20));//壁崖(1,1)
@@ -42,6 +42,7 @@ Grassland::Grassland(QWidget *parent)
     Ledges.append(QRect(416,1310,500,20));//壁崖(6,2)
 
     Exit_Zone = QRect(500, 1642, 84, 24); // 自己依照背景圖微調
+    Talk_With_Sign.append(QRect(374,1294,42,50)); //高草旁Sign
 
 
 
@@ -182,29 +183,35 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         mainPlayer->startWalking();
         break;
     case Qt::Key_B:
-        if (OpenBag) {
-            bag->hide();
-            OpenBag = false;
-        } else {
-            if (bag == nullptr) {
-                bag = new Bag(this); // 設定 parent，這樣它會跟隨 Town 視窗
-            }
-            bag->show();
-            bag->raise(); // 確保在最上層
-            OpenBag = true;
-            mainPlayer->stopWalking();
-        }
+        if(OpenBag) OpenBag = false;
+        else {OpenBag = true;}
+        emit Open_Bag_Signal();
+        mainPlayer->stopWalking();
 
         break;
 
+
+    case Qt::Key_A:
+    {
+
+            QRect playerRect = mainPlayer->geometry();
+            QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
+            for(int i=0;i< Talk_With_Sign.size();i++){
+                if (Talk_With_Sign[i].intersects(Real_coodinate)) {
+                    emit Open_Dialog_Grassland_Sign();  // 觸發對話 signal
+                    mainPlayer->stopWalking();
+
+                }
+            }
+            break;
+        }
+
+
     }
-
-
 }
 
 
-void Grassland::keyReleaseEvent(QKeyEvent *event)
-{
+void Grassland::keyReleaseEvent(QKeyEvent *event){
     if (mainPlayer == nullptr) return;
 
     int key = event->key();

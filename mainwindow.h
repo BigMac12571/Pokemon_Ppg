@@ -16,6 +16,7 @@
 #include "bulbasaur.h"
 #include "charmander.h"
 #include "squirtle.h"
+#include "bag.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,12 +44,18 @@ public slots:
 
     void Oak_Dialog();
     void Sign_Dialog();
+
+    void Grassland_Dialog();
+
     void Show_Pokeballs_Dialog_slot(int id);
+
     void Close_Dialog();
 
 
     void Show_Pokeballs_slot(int id);
     void Pickup_Pokeballs_slot(int id);
+
+    void Open_Bag_slot();
 private:
     Ui::MainWindow *ui;
     QStackedWidget *Scene_stack;
@@ -70,6 +77,8 @@ private:
     Bulbasaur *bulbasaur;
     Squirtle *squirtle;
     Charmander *charmander;
+
+    Bag *bag;
 
 };
 #endif // MAINWINDOW_H
