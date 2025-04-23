@@ -46,6 +46,7 @@ public slots:
     void Sign_Dialog();
     void Grassland_Dialog();
 
+    void Box_Dialog();
     void Show_Pokeballs_Dialog_slot(int id);
     void Close_Dialog();
 

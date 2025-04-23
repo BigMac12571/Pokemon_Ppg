@@ -106,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
     connect(grassland, &Grassland::Open_Dialog_Grassland_Sign, this, &MainWindow::Grassland_Dialog);
-
+    connect(town, &Town::Open_Dialog_Box, this, &MainWindow::Box_Dialog);
     connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
     connect(laboratory, &Laboratory::Show_Pokeballs, this, [=](int id){ //顯示寶可夢圖片
@@ -220,6 +220,14 @@ void MainWindow::Grassland_Dialog(){
     dialog->show();
     dialog->setFocus();
     dialog->Grassland_Dialog();
+}
+void MainWindow::Box_Dialog(){
+    //QPoint pos = dialog->pos();
+    //qDebug() << "Dialog position: " << pos;
+
+    dialog->show();
+    dialog->setFocus();
+    dialog->Box_Dialog();
 }
 
 

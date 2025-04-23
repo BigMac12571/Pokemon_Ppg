@@ -7,7 +7,7 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
     QPixmap pixmap(":/new/prefix1/Dataset/Image/bag.png");
     bag_image->setPixmap(pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-    this->move(0, 0);
+    this->move(115, 36);
 
     open = false;
 
@@ -35,7 +35,7 @@ void Bag::Add_pokemon(const QPixmap& IconPixmap, const QString& name) {
         QLabel* IconLabel = new QLabel(this); // 创建新的 QLabel，父对象是 Bag
         IconLabel->setPixmap(IconPixmap); // 设置接收到的缩放后的图片
         IconLabel->setFixedSize(IconPixmap.size());
-        int Icon_x = 210 ; // 固定 X 坐标
+        int Icon_x = 200 ; // 固定 X 坐标
         int Icon_y = 94 + Pokemon_List.size() * 70;
         IconLabel->move(Icon_x, Icon_y);
 
@@ -43,7 +43,7 @@ void Bag::Add_pokemon(const QPixmap& IconPixmap, const QString& name) {
         QLabel* NameLabel = new QLabel(this); // 创建新的 QLabel 用于显示名字，父对象也是 Bag
         NameLabel->setText(name);
         int Name_x = 40;
-        int Name_y = 100 + Pokemon_List.size() * 70;
+        int Name_y = 102 + Pokemon_List.size() * 70;
         NameLabel->move(Name_x, Name_y);
         NameLabel->setStyleSheet("font-size: 32px; color: black;");
 

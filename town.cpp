@@ -237,6 +237,18 @@ void Town::keyPressEvent(QKeyEvent *event)
 
                 }
             }
+            for(int i=0;i< boxRects.size();i++){
+                if (boxRects[i].intersects(Real_coodinate)) {
+                    emit Open_Dialog_Box();  // 觸發對話 signal
+                    mainPlayer->stopWalking();
+                    Box *remove_box = boxes[i];
+                    boxes.removeAt(i);
+                    boxRects.removeAt(i);
+                    remove_box->hide();
+                    remove_box->deleteLater();
+                    break;
+                }
+            }
 
             break;
         }
