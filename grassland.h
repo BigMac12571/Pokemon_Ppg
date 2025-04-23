@@ -38,6 +38,8 @@ signals:
 
     void Open_Bag_Signal();
 
+    void Refresh_bag();
+
     void Enter_BattleScene(); // 在草叢裡遇到敵人時觸發
 
 

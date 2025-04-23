@@ -119,6 +119,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(dialog, &Dialog::Get_potion, this, &MainWindow::Add_potion);//記錄獲得的potion
     connect(dialog, &Dialog::Get_ether, this, &MainWindow::Add_ether);//記錄獲得的ether
     connect(town, &Town::Refresh_bag, this , &MainWindow::Refresh_bag);//刷新背包
+    connect(laboratory, &Laboratory::Refresh_bag, this , &MainWindow::Refresh_bag);//刷新背包
+    connect(grassland, &Grassland::Refresh_bag, this , &MainWindow::Refresh_bag);//刷新背包
 
     connect(town, &Town::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
     connect(grassland, &Grassland::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包

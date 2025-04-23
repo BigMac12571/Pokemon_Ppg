@@ -43,6 +43,7 @@ signals:
     void Show_Pokeballs(int id);
 
     void Open_Bag_Signal();
+    void Refresh_bag();
 private:
 
     QLabel *background; // 背景圖片

@@ -189,6 +189,7 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         if(OpenBag) OpenBag = false;
         else {OpenBag = true;}
         emit Open_Bag_Signal();
+        emit Refresh_bag();
         mainPlayer->stopWalking();
 
         break;
