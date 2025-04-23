@@ -41,9 +41,9 @@ Laboratory::Laboratory(QWidget *parent)
 
     Talk_With_Oak =QRect(889,508,27, 64);
 
-    Pick_Pokeballs_area.append(QRect(966,575,35,60));
-    Pick_Pokeballs_area.append(QRect(997,575,35,60));
-    Pick_Pokeballs_area.append(QRect(1035,575,35,60));
+    Pick_Pokeballs_area.append(QRect(966,575,2,60));
+    Pick_Pokeballs_area.append(QRect(1000,575,2,60));
+    Pick_Pokeballs_area.append(QRect(1055,575,2,60));
 
 
 
@@ -69,11 +69,15 @@ void Laboratory::Add_NPC_To_Scene(NPC *npc) //可以同時出現Lab 與 NPC
     ProfessorOak = npc;
 
 }
-void Laboratory::Add_Pokeball_To_Scene(int id,Pokeball *pokeballx){
+void Laboratory::Add_Pokeball_To_Scene(int id,Pokeball *pokeballx){ //存取pokeball 的座標
     if (!pokeballx) return;
 
     pokeballx->setParent(this); // 设置父对象为 Laboratory
+    if (!pokeball.contains(pokeballx)) {
+         pokeball.append(pokeballx);
+         picked.append(false);
 
+    }
     int x = 0;
     int y = 0;
 
@@ -90,21 +94,22 @@ void Laboratory::Add_Pokeball_To_Scene(int id,Pokeball *pokeballx){
         return;
     }
 
+
     // 设置 Pokeball Widget 在 Laboratory 视窗中的位置
     pokeballx->setGeometry(- Map_Offset.x()+x, - Map_Offset.y()+y, pokeballx->width(), pokeballx->height());
-
-    pokeballx->raise();
-    pokeballx->show();
-
-
-    if (!pokeball.contains(pokeballx)) {
-         pokeball.append(pokeballx);
+    if(!picked[id]){
+        pokeballx->raise();
+        pokeballx->show();
     }
+
+
+
+
 }
 
 void Laboratory::Pokeball_get_picked(Pokeball *pokeballx){
-
     pokeballx->hide();
+    picked[pokeballx->ID] = true;
 }
 
 
@@ -213,7 +218,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
 
         break;
     case Qt::Key_A: {
-
+        ///////////////////對話框
         QRect playerRect = mainPlayer->geometry();
         QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
             if (Talk_With_Oak.intersects(Real_coodinate)) {
@@ -221,13 +226,23 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
                 mainPlayer->stopWalking();
                 //qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
         }
+        ///////////////////對話框
+
+        ///////////////////撿起寶貝球
+        bool one_of_pokeball_get_picked = false;
+        for(int i=0;i<picked.size();i++){
+            if(picked[i]) one_of_pokeball_get_picked = true;
+        }
+
+        if(!one_of_pokeball_get_picked){
             for(int i=0;i<Pick_Pokeballs_area.size();i++){
                 if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){
-                    emit Pickup_Pokeballs(i);
-
+                    emit Show_Pokeballs(i);
+                    //emit Open_Dialog_Showing_Pokemons(i);
                 }
             }
-
+        }
+        ///////////////////撿起寶貝球
         break;
     }
 

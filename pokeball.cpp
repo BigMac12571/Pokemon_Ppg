@@ -7,9 +7,6 @@ Pokeball::Pokeball(int id, QWidget *parent)
     QPixmap PokeballPixmap(":/new/prefix1/Dataset/Image/ball.png");
     this->setFixedSize(35, 35);
     this->setPixmap(PokeballPixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
-
-
 }
 
 

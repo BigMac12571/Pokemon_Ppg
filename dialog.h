@@ -7,7 +7,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
-//#include <QDebug>
+#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
 #include <QStringList>
@@ -25,7 +25,8 @@ public:
 
     void Oak_Dialog();
     void Sign_Dialog();
-
+    void Show_Pokeballs_Dialog(int id);
+    //void Setup_Shared_pokeball_ID(int id);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -33,6 +34,8 @@ protected:
 
 signals:
     void Close_Dialog();
+
+    void Pickup_Pokeballs(int id);
 private:
 
     const int View_Width = 525; // 視窗寬度
@@ -44,6 +47,11 @@ private:
     bool Oak_dialog_start;
     QStringList Sign_dialog;
     bool Sign_dialog_start;
+    QList<QStringList> Pickup_Pokeballs_dialog;
+    bool Pickup_Pokeballs_dialog_start;
+    int Shared_pokeball_ID;
+    bool Waiting_For_YesNo;
+
     int CurrentDialog;
 
 

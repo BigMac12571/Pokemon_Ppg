@@ -9,6 +9,25 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 
     Sign_dialog <<"This is Pallet Town. Begin your adventure!";
 
+    Pickup_Pokeballs_dialog = {
+            {
+                "這是妙蛙種子（Bulbasaur）！",
+                "它是草系的寶可夢，非常適合新手！",
+                "Yes/No"
+            },
+            {
+                "這是傑尼龜（Squirtle）！",
+                "它是水系的寶可夢，冷靜又可靠！",
+                "Yes/No"
+            },
+            {
+                "這是小火龍（Charmander）！",
+                "它是火系的寶可夢，有著燃燒的鬥志！",
+                "Yes/No"
+            }
+        };
+
+
     CurrentDialog = 0;
     //setText(Oak_dialog.at(CurrentDialog));  // 顯示第一段對話
 
@@ -41,12 +60,24 @@ void Dialog::Sign_Dialog(){
         CurrentDialog = 0;
         Sign_dialog_start = false;
     }
+}
 
+void Dialog::Show_Pokeballs_Dialog(int id){
+    Pickup_Pokeballs_dialog_start = true;
 
+    Shared_pokeball_ID = id;
 
+    if (CurrentDialog < Pickup_Pokeballs_dialog[id].size() - 1) {
+            setText(Pickup_Pokeballs_dialog[id].at(CurrentDialog));
+            CurrentDialog++;
 
+        } else if (CurrentDialog == Pickup_Pokeballs_dialog[id].size() - 1) {
 
+            setText(Pickup_Pokeballs_dialog[id].at(CurrentDialog));
+            CurrentDialog++;
+            Waiting_For_YesNo = true;
 
+        }
 }
 
 
@@ -69,9 +100,33 @@ void Dialog::paintEvent(QPaintEvent *event)
 void Dialog::keyPressEvent(QKeyEvent *event)
 {
     // 如果按下的是 A 鍵，顯示下一段對話
-    if (event->key() == Qt::Key_A) {
+    int key = event->key();
+    switch(key){
+    case Qt::Key_A:
         if(Oak_dialog_start) Oak_Dialog();
         if(Sign_dialog_start) Sign_Dialog();
+        if(Pickup_Pokeballs_dialog_start && !Waiting_For_YesNo) Show_Pokeballs_Dialog(Shared_pokeball_ID);
+        break;
+    case Qt::Key_Y:
+            if (Waiting_For_YesNo) {
+                emit Pickup_Pokeballs(Shared_pokeball_ID);
+                CurrentDialog = 0;
+                Pickup_Pokeballs_dialog_start = false;
+                Waiting_For_YesNo = false;
+                emit Close_Dialog();
+            }
+            break;
 
+    case Qt::Key_N:
+            if (Waiting_For_YesNo) {
+                // 取消選擇，重新顯示選擇畫面或關閉
+                CurrentDialog = 0;
+                Pickup_Pokeballs_dialog_start = false;
+                Waiting_For_YesNo = false;
+                emit Close_Dialog();
+            }
+            break;
     }
+
+
 }
