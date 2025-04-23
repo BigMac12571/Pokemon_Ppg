@@ -30,7 +30,7 @@ public:
 
     void Show_Pokeballs_Dialog(int id);
     void Reset_Dialog_State();
-
+    //void Setup_Shared_pokeball_ID(int id);
 
 
 protected:
@@ -48,16 +48,17 @@ private:
 
 
 
+
     QStringList Oak_dialog;
-    bool Oak_dialog_start = false;
+    bool Oak_dialog_start;
     QStringList Sign_dialog;
 
-    bool Sign_dialog_start = false;
+    bool Sign_dialog_start;
     QStringList Grassland_dialog;
-    bool Grassland_dialog_start = false;
+    bool Grassland_dialog_start;
 
     QList<QStringList> Pickup_Pokeballs_dialog;
-    bool Pickup_Pokeballs_dialog_start = false;
+    bool Pickup_Pokeballs_dialog_start;
     int Shared_pokeball_ID;
     bool Waiting_For_YesNo;
 

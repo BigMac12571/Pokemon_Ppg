@@ -25,6 +25,8 @@ public:
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
+public slots:
+    void clearPressedKeys();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

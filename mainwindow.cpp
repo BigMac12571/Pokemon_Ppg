@@ -236,6 +236,9 @@ void MainWindow::Close_Dialog(){
     squirtle->HideFormImage(Squirtle::First);
     charmander->HideFormImage(Charmander::First);
 
+    town->clearPressedKeys();
+    laboratory->clearPressedKeys();
+    grassland->clearPressedKeys();
 
 }
 
@@ -262,6 +265,7 @@ void MainWindow::Show_Pokeballs_Dialog_slot(int id){
 
     dialog->show();
     dialog->setFocus();
+
 }
 void MainWindow::Pickup_Pokeballs_slot(int id){
 
