@@ -240,6 +240,7 @@ void Town::keyPressEvent(QKeyEvent *event)
                 if (Talk_With_Sign[i].intersects(Real_coodinate)) {
                     emit Open_Dialog_Sign();  // 觸發對話 signal
                     mainPlayer->stopWalking();
+                    keysPressed.clear(); // 清空按鍵狀態
                 }
             }
             break;
