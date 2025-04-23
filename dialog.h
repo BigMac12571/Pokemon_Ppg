@@ -26,7 +26,8 @@ public:
     void Oak_Dialog();
     void Sign_Dialog();
     void Show_Pokeballs_Dialog(int id);
-    //void Setup_Shared_pokeball_ID(int id);
+    void Reset_Dialog_State();
+
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

@@ -21,6 +21,9 @@ public:
 
     void SetForm(Form form);
     Form GetForm() ;
+    QLabel *GetFormImage(Form form);
+    QPixmap GetIconPixmap(const QSize& iconSize);
+
 
     void ShowFormImage(Form form, int x, int y);
     void HideFormImage(Form form);

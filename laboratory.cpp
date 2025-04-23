@@ -41,9 +41,9 @@ Laboratory::Laboratory(QWidget *parent)
 
     Talk_With_Oak =QRect(889,508,27, 64);
 
-    Pick_Pokeballs_area.append(QRect(966,575,2,60));
-    Pick_Pokeballs_area.append(QRect(1000,575,2,60));
-    Pick_Pokeballs_area.append(QRect(1055,575,2,60));
+    Pick_Pokeballs_area.append(QRect(966,575,10,60));
+    Pick_Pokeballs_area.append(QRect(1000,575,10,60));
+    Pick_Pokeballs_area.append(QRect(1055,575,10,60));
 
 
 
@@ -222,18 +222,28 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
 
         ///////////////////撿起寶貝球
         bool one_of_pokeball_get_picked = false;
+
         for(int i=0;i<picked.size();i++){
             if(picked[i]) one_of_pokeball_get_picked = true;
         }
 
         if(!one_of_pokeball_get_picked){
-            for(int i=0;i<Pick_Pokeballs_area.size();i++){
-                if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){
-                    emit Show_Pokeballs(i);
-                    //emit Open_Dialog_Showing_Pokemons(i);
+                    for(int i=0;i<Pick_Pokeballs_area.size();i++){
+                        if (i < Pick_Pokeballs_area.size()) {
+
+                            if(Pick_Pokeballs_area.at(i).intersects(Real_coodinate)){
+
+                                emit Show_Pokeballs(i);
+
+
+                                mainPlayer->stopWalking();
+
+
+                                break;
+                            }
+                        }
+                    }
                 }
-            }
-        }
         ///////////////////撿起寶貝球
         break;
     }

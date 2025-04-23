@@ -26,30 +26,38 @@ Bulbasaur::Bulbasaur(QWidget* parent) : QWidget(parent), Current_form(First)
 
 
 }
-void Bulbasaur::ShowFormImage(Form form, int x, int y) {
+void Bulbasaur::ShowFormImage(Form form, int x, int y) { //用於開場選擇寶貝球時
 
-    QLabel* target = nullptr;
-    switch(form) {
-        case First: target = FirstForm_Image; break;
-        case Second: target = SecondForm_Image; break;
-        case Third: target = ThirdForm_Image; break;
-     }
-    qDebug() << "Bulbasaur widget size:" << this->size();
-    qDebug() << "Target image size:" << target->size();
-    qDebug() << "Target image pos:" << target->pos();
-
-
+    QLabel* target = GetFormImage(form);
     if (target) {
         target->move(x, y);
         target->show();
         target->raise();
     }
+    Current_form = form;
 }
 void Bulbasaur::HideFormImage(Form form){
-    switch(form) {
-    case First: FirstForm_Image->hide(); break;
-    case Second: SecondForm_Image->hide(); break;
-    case Third: ThirdForm_Image->hide(); break;
+    QLabel* target = GetFormImage(form);
+         if (target) {
+             target->hide();
      }
 
+}
+
+QLabel* Bulbasaur::GetFormImage(Form form){ //回傳Label元件
+    switch(form) {
+    case First: return FirstForm_Image; break;
+    case Second: return SecondForm_Image; break;
+    case Third: return ThirdForm_Image; break;
+     }
+
+}
+QPixmap Bulbasaur::GetIconPixmap(const QSize& iconSize) { //回傳圖片
+    QLabel* Current_Image_Label = GetFormImage(Current_form);
+
+    if (Current_Image_Label && Current_Image_Label->pixmap()) {
+        return Current_Image_Label->pixmap()->scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+
+    return QPixmap();
 }

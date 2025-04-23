@@ -111,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent)
         Show_Pokeballs_slot(id);
         Show_Pokeballs_Dialog_slot(id);
     });
+
     connect(dialog, &Dialog::Pickup_Pokeballs, this , &MainWindow::Pickup_Pokeballs_slot); //按Y撿起
 
     connect(town, &Town::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
@@ -253,9 +254,25 @@ void MainWindow::Show_Pokeballs_Dialog_slot(int id){
 }
 void MainWindow::Pickup_Pokeballs_slot(int id){
 
-    if(id==0) {laboratory->Pokeball_get_picked(pokeball0); bulbasaur->HideFormImage(Bulbasaur::First);}
-    else if(id==1){ laboratory->Pokeball_get_picked(pokeball1); squirtle->HideFormImage(Squirtle::First);}
-    else if(id==2) {laboratory->Pokeball_get_picked(pokeball2);charmander->HideFormImage(Charmander::First);}
+    if(id==0) {
+        laboratory->Pokeball_get_picked(pokeball0); bulbasaur->HideFormImage(Bulbasaur::First); //寶貝球消失
+        QPixmap icon = bulbasaur->GetIconPixmap(QSize(60, 60)); //獲取圖標
+        bag->Add_pokemon(icon,"Bulbasaur"); //傳送圖標到bag
+    }
+    else if(id==1){
+        laboratory->Pokeball_get_picked(pokeball1); squirtle->HideFormImage(Squirtle::First);
+        QPixmap icon = squirtle->GetIconPixmap(QSize(60, 60)); //獲取圖標
+        bag->Add_pokemon(icon,"Squirtle"); //傳送圖標到bag
+
+    }
+    else if(id==2) {
+        laboratory->Pokeball_get_picked(pokeball2);charmander->HideFormImage(Charmander::First);
+        QPixmap icon = charmander->GetIconPixmap(QSize(60, 60)); //獲取圖標
+        bag->Add_pokemon(icon,"Charmander"); //傳送圖標到bag
+
+
+
+    }
 }
 ///////////////////實驗室拿pokeball
 
@@ -263,5 +280,4 @@ void MainWindow::Pickup_Pokeballs_slot(int id){
 
 void MainWindow::Open_Bag_slot(){
     bag->Open_bag();
-
 }
