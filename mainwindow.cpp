@@ -17,8 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-
-
     /////// 初始化每個畫面
     titlescreen = new TitleScreen(this);
     town = new Town(this);
@@ -37,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     dialog = new Dialog(this); //對話
     dialog->hide();
-
+    /////// 初始化寶貝球
     pokeball0 = new Pokeball(0,this);
     pokeball0->hide();
 
@@ -46,6 +44,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     pokeball2 = new Pokeball(2,this);
     pokeball2->hide();
+    /////// 初始化寶貝球
+
+
+    /////// 初始化寶可夢
+    bulbasaur = new Bulbasaur(this);
+    squirtle = new Squirtle(this);
+    charmander = new Charmander(this);
+
+
+
+    /////// 初始化寶可夢
+
+    bag = new Bag(this);
+    bag->hide();
+
+
+
+
+
 
     /////// 畫面加進 stack
     Scene_stack->addWidget(titlescreen);      // index 0
@@ -54,6 +71,9 @@ MainWindow::MainWindow(QWidget *parent)
     Scene_stack->addWidget(grassland);     // index 3
     //Scene_stack->addWidget(battlescene);      // index 4
     /////// 畫面加進 stack
+
+
+
 
 
 
@@ -88,7 +108,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(grassland, &Grassland::Open_Dialog_Grassland_Sign, this, &MainWindow::Grassland_Dialog);
     connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
-    connect(laboratory, &Laboratory::Pickup_Pokeballs, this, &MainWindow::Pickup_Pokeballs_slot);
+    connect(laboratory, &Laboratory::Show_Pokeballs, this, [=](int id){ //顯示寶可夢圖片
+        Show_Pokeballs_slot(id);
+        Show_Pokeballs_Dialog_slot(id);
+    });
+    connect(dialog, &Dialog::Pickup_Pokeballs, this , &MainWindow::Pickup_Pokeballs_slot); //按Y撿起
+
+    connect(town, &Town::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
+    connect(grassland, &Grassland::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
+    connect(laboratory, &Laboratory::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
+
 
 
 
@@ -197,15 +226,51 @@ void MainWindow::Grassland_Dialog(){
 void MainWindow::Close_Dialog(){
     dialog->close();
     player->stopWalking();
+
+
+
+    bulbasaur->HideFormImage(Bulbasaur::First);
+    squirtle->HideFormImage(Squirtle::First);
+    charmander->HideFormImage(Charmander::First);
+
+
 }
 
 
+///////////////////實驗室拿pokeball
+void MainWindow::Show_Pokeballs_slot(int id){
+    if(id==0) {
+        bulbasaur->ShowFormImage(Bulbasaur::First, width()/2-110/2, height()/2-80);
+    }
+    else if(id==1){
+        squirtle->ShowFormImage(Squirtle::First, width()/2-110/2, height()/2-80);
+    }
+    else if(id==2){
+        charmander->ShowFormImage(Charmander::First, width()/2-110/2, height()/2-80);
+    }
+
+
+
+}
+void MainWindow::Show_Pokeballs_Dialog_slot(int id){
+    if(id==0) dialog->Show_Pokeballs_Dialog(id);
+    else if(id==1) dialog->Show_Pokeballs_Dialog(id);
+    else if(id==2) dialog->Show_Pokeballs_Dialog(id);
+
+    dialog->show();
+    dialog->setFocus();
+}
 void MainWindow::Pickup_Pokeballs_slot(int id){
 
-    if(id==0) laboratory->Pokeball_get_picked(pokeball0);
-    else if(id==1) laboratory->Pokeball_get_picked(pokeball1);
-    else if(id==2) laboratory->Pokeball_get_picked(pokeball2);
+    if(id==0) {laboratory->Pokeball_get_picked(pokeball0); bulbasaur->HideFormImage(Bulbasaur::First);}
+    else if(id==1){ laboratory->Pokeball_get_picked(pokeball1); squirtle->HideFormImage(Squirtle::First);}
+    else if(id==2) {laboratory->Pokeball_get_picked(pokeball2);charmander->HideFormImage(Charmander::First);}
+}
+///////////////////實驗室拿pokeball
 
+///////////////////背包
 
+void MainWindow::Open_Bag_slot(){
+    bag->Open_bag();
 
 }

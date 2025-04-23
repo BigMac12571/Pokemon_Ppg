@@ -42,6 +42,8 @@ signals:
     void Open_Dialog_Sign();
     //void Open_Dialog_Box();
 
+    void Open_Bag_Signal();
+
 private:
 
 

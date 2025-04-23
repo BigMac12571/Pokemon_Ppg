@@ -13,6 +13,10 @@
 #include "npc.h"
 #include "dialog.h"
 #include "pokeball.h"
+#include "bulbasaur.h"
+#include "charmander.h"
+#include "squirtle.h"
+#include "bag.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +27,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -39,14 +44,21 @@ public slots:
 
     void Oak_Dialog();
     void Sign_Dialog();
+
     void Grassland_Dialog();
+
+    void Show_Pokeballs_Dialog_slot(int id);
+
     void Close_Dialog();
 
+
+    void Show_Pokeballs_slot(int id);
     void Pickup_Pokeballs_slot(int id);
+
+    void Open_Bag_slot();
 private:
     Ui::MainWindow *ui;
     QStackedWidget *Scene_stack;
-    QStackedWidget *Character_stack;
 
     TitleScreen *titlescreen;
     Town *town;
@@ -60,5 +72,13 @@ private:
     Pokeball *pokeball0;
     Pokeball *pokeball1;
     Pokeball *pokeball2;
+
+
+    Bulbasaur *bulbasaur;
+    Squirtle *squirtle;
+    Charmander *charmander;
+
+    Bag *bag;
+
 };
 #endif // MAINWINDOW_H

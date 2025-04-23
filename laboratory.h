@@ -38,7 +38,9 @@ protected:
 signals:
     void Exit_Laboratory();
     void Open_Dialog_Oak();
-    void Pickup_Pokeballs(int id);
+    void Show_Pokeballs(int id);
+
+    void Open_Bag_Signal();
 private:
 
     QLabel *background; // 背景圖片
@@ -70,7 +72,9 @@ private:
     QRect Exit_Zone;
     QRect Talk_With_Oak ;
 
+
     QList<QRect> Pick_Pokeballs_area; //撿寶貝球的區域
+    QList<bool>picked;
 };
 #endif // TITLESCREEN_H
 

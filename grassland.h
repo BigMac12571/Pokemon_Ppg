@@ -31,7 +31,11 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 signals:
     void Exit_Grassland();
+
     void Open_Dialog_Grassland_Sign();
+
+    void Open_Bag_Signal();
+
 
 private:
 
