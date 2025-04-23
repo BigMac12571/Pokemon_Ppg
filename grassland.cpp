@@ -15,14 +15,7 @@ Grassland::Grassland(QWidget *parent)
     Map_Offset = QPoint(View_Width/2, Map_Height-View_Height); //Map_Offset位置
 
     OpenBag = false;
-//<<<<<<< HEAD
-    // 加入地圖邊界的樹木（以整張背景為 1000x1000 計算）
-    //Barriers.append(QRect(0, 0, 480, 80));    // 上邊界
-    //Barriers.append(QRect(600, 0, 400, 80));    // 上邊界2
-    //Barriers.append(QRect(0,Map_Height, 1000,20));  // 下邊界
-    //Barriers.append(QRect(0, 0, 80, Map_Height));    // 左邊界
-    //Barriers.append(QRect(920, 0, 80, Map_Height));  // 右邊界
-//=======
+
     // 加入地圖邊界的樹木（以整張背景為 1000x1667 計算）
     Barriers.append(QRect(0, 0, 414, 80));    // 上邊界
     Barriers.append(QRect(586, 0, 414, 80));    // 上邊界2
@@ -34,7 +27,6 @@ Grassland::Grassland(QWidget *parent)
     Barriers.append(QRect(86,1006, 410,116));  // 下橫樹5
     Barriers.append(QRect(0,1504, 488,163));  // 下邊界+柵欄
     Barriers.append(QRect(594,1504, 418,163));  // 下邊界+柵欄2
-//>>>>>>> 164f8c9cec448dc01ea484cd02425e586659222a
     Barriers.append(QRect(374,1294, 42,34));  // 公佈欄
 
     //加入壁崖
@@ -49,17 +41,7 @@ Grassland::Grassland(QWidget *parent)
     Ledges.append(QRect(82,1310,166,20));//壁崖(6,1)
     Ledges.append(QRect(416,1310,500,20));//壁崖(6,2)
 
-
-    // 加入中間的房子、柵欄等（你可以根據 Town.png 的實際位置微調）
-    //Barriers.append(QRect(82, 1509, 495-82, 1661-1509)); // 左下柵欄
-    //Barriers.append(QRect(586, 1509, 925-586, 1661-1509));  // 右下柵欄
-    //Barriers.append(QRect(80, 1013, 494-80 , 1112-1013)); //左下一排樹
-    //Barriers.append(QRect(80, 590, 166-80 , 698-590)); //左邊一棵樹
-    //Barriers.append(QRect(416, 590, 670-416 , 700-590)); //中間一排樹
-    //Barriers.append(QRect(334, 148, 414-334 , 487-148)); //中上一欄樹
-
-
-    Exit_Zone = QRect(500, 1620, 85, 30); // 自己依照背景圖微調
+    Exit_Zone = QRect(500, 1642, 84, 24); // 自己依照背景圖微調
 
 
 
@@ -81,7 +63,7 @@ void Grassland::Add_Player_To_Scene(QWidget *player) //可以同時出現Town �
 void Grassland::SetMainPlayer(Player *p) {
     mainPlayer = p; //p 指向 mainPlayer 這個物件
 
-    mainPlayer->move(Player_Center_X+20, Player_Center_Y+100);
+    mainPlayer->move(Player_Center_X+20, Player_Center_Y+175);
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();

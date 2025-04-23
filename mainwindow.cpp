@@ -166,16 +166,16 @@ void MainWindow::Switch_GrasslandToTown() {
 
 }
 void MainWindow::Oak_Dialog(){
-    QPoint pos = dialog->pos();
-    qDebug() << "Dialog position: " << pos;
+    //QPoint pos = dialog->pos();
+    //qDebug() << "Dialog position: " << pos;
 
     dialog->show();
     dialog->setFocus();
     dialog->Oak_Dialog();
 }
 void MainWindow::Sign_Dialog(){
-    QPoint pos = dialog->pos();
-    qDebug() << "Dialog position: " << pos;
+    //QPoint pos = dialog->pos();
+    //qDebug() << "Dialog position: " << pos;
 
     dialog->show();
     dialog->setFocus();

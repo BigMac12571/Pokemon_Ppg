@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
-#include <QDebug>
+//#include <QDebug>
 #include <QTimer>
 #include <QVector>
 #include <QGraphicsOpacityEffect>

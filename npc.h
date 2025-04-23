@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
-#include <QDebug>
+//#include <QDebug>
 #include <QTimer>
 #include <QVector>
 #include <QGraphicsOpacityEffect>
@@ -20,22 +20,7 @@ public:
 
     explicit NPC(QWidget *parent = nullptr);
 
-
-
-
-
-
-
-
-
 private:
-
-
-
-
-
-
-
 
 };
 

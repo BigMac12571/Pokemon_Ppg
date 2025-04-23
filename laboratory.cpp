@@ -34,12 +34,12 @@ Laboratory::Laboratory(QWidget *parent)
     Barriers.append(QRect(960, 687, 1132-960 , 733-687)); //右下一坨
     Barriers.append(QRect(678, 817, 713-678 , 876-817)); //左下花盆一坨
     Barriers.append(QRect(1101, 817, 713-678 , 876-817)); //左下花盆一坨
-    Barriers.append(QRect(889, 508, 20, 30)); //Oak哥
+    Barriers.append(QRect(893, 508, 27, 44)); //Oak哥
 
 
-    Exit_Zone = QRect(879, 863, 50, 30); // 自己依照背景圖微調
+    Exit_Zone = QRect(904, 863, 4, 30); // 自己依照背景圖微調
 
-    Talk_With_Oak =QRect(889,508,40, 50);
+    Talk_With_Oak =QRect(889,508,27, 64);
 
     Pick_Pokeballs_area.append(QRect(966,575,35,60));
     Pick_Pokeballs_area.append(QRect(997,575,35,60));
@@ -51,9 +51,9 @@ Laboratory::Laboratory(QWidget *parent)
 
     setFocusPolicy(Qt::StrongFocus);
 }
-void Laboratory::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
+void Laboratory::Add_Player_To_Scene(QWidget *player) //可以同時出現Lab 與 Player
 {
-    player->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Town）的 widget 裡，這樣它才會顯示在畫面上。
+    player->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Lab）的 widget 裡，這樣它才會顯示在畫面上。
     player->setGeometry(Player_Center_X, Player_Center_Y, 35, 48);
     player->show();
     player->raise(); // 確保角色在背景上方
@@ -61,7 +61,7 @@ void Laboratory::Add_Player_To_Scene(QWidget *player) //可以同時出現Town �
 }
 void Laboratory::Add_NPC_To_Scene(NPC *npc) //可以同時出現Lab 與 NPC
 {
-    npc->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Town）的 widget 裡，這樣它才會顯示在畫面上。
+    npc->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Lab）的 widget 裡，這樣它才會顯示在畫面上。
     npc->setGeometry(-Map_Offset.x()+889, -Map_Offset.x()+508, 35, 48);
     npc->show();
     npc->raise(); // 確保角色在背景上方
@@ -219,7 +219,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
             if (Talk_With_Oak.intersects(Real_coodinate)) {
                 emit Open_Dialog_Oak();  // 觸發對話 signal
                 mainPlayer->stopWalking();
-                qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
+                //qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
         }
             for(int i=0;i<Pick_Pokeballs_area.size();i++){
                 if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){

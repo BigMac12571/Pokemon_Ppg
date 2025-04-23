@@ -2,7 +2,7 @@
 Dialog::Dialog(QWidget *parent) : QLabel(parent)
 {
     this->setFixedSize(525, 99);
-    this->move(5, View_Height - 99);
+    this->move(0, View_Height - 99);
 
     Oak_dialog << "I am Professor Oak. Welcome to my laboratory!"
                << "You can choose one from three Poké Balls as your initial\nPokémon in Laboratory.";
