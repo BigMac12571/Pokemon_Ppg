@@ -9,6 +9,7 @@
 //#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
+
 #include "player.h"
 #include "bag.h"
 #include "npc.h"

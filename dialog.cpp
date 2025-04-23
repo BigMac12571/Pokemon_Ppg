@@ -9,6 +9,9 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 
     Sign_dialog <<"This is Pallet Town. Begin your adventure!";
 
+    Grassland_dialog <<"In this place, there might be a wild Pokémon\nhiding in the tallgrass."
+                     <<"Be careful!!!";
+
     Pickup_Pokeballs_dialog = {
             {
                 "這是妙蛙種子（Bulbasaur）！",
@@ -28,6 +31,10 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
         };
 
     Reset_Dialog_State();
+
+
+
+    CurrentDialog = 0;
 
 
     setAlignment(Qt::AlignCenter);  // 文字居中顯示
@@ -67,6 +74,22 @@ void Dialog::Sign_Dialog(){
     }
 }
 
+
+void Dialog::Grassland_Dialog(){
+    Grassland_dialog_start = true;
+    if (CurrentDialog < Grassland_dialog.size()) {
+
+        setText(Grassland_dialog.at(CurrentDialog));
+        CurrentDialog++;
+    } else {
+        emit Close_Dialog();
+        CurrentDialog = 0;
+        Grassland_dialog_start = false;
+    }
+}
+
+
+
 void Dialog::Show_Pokeballs_Dialog(int id){
     Pickup_Pokeballs_dialog_start = true;
 
@@ -81,6 +104,7 @@ void Dialog::Show_Pokeballs_Dialog(int id){
             setText(Pickup_Pokeballs_dialog[id].at(CurrentDialog));
             CurrentDialog++;
             Waiting_For_YesNo = true;
+
 
         }
 }
@@ -109,6 +133,11 @@ void Dialog::keyPressEvent(QKeyEvent *event)
     case Qt::Key_A:
         if(Oak_dialog_start) Oak_Dialog();
         else if(Sign_dialog_start) Sign_Dialog();
+
+
+        else if(Grassland_dialog_start) Grassland_Dialog();
+        else if(Sign_dialog_start) Sign_Dialog();
+
         else if(Pickup_Pokeballs_dialog_start && !Waiting_For_YesNo) Show_Pokeballs_Dialog(Shared_pokeball_ID);
         break;
     case Qt::Key_Y:
@@ -118,6 +147,7 @@ void Dialog::keyPressEvent(QKeyEvent *event)
                 Reset_Dialog_State();
             }
             break;
+
 
     case Qt::Key_N:
             if (Waiting_For_YesNo) {

@@ -6,7 +6,8 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
     bag_image = new QLabel(this);
     QPixmap pixmap(":/new/prefix1/Dataset/Image/bag.png");
     bag_image->setPixmap(pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    bag_image->move(0,0);
+
+    this->move(0, 0);
 
     open = false;
 
