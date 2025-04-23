@@ -38,6 +38,8 @@ signals:
 
     void Open_Bag_Signal();
 
+    void Enter_BattleScene(); // 在草叢裡遇到敵人時觸發
+
 
 private:
 
@@ -57,6 +59,9 @@ private:
     const int Player_Center_X = View_Width / 2 - 35 / 2;
     const int Player_Center_Y = View_Height / 2 - 48 / 2;
 
+
+    QRect Battle_Trigger_Zone;  // 草叢區域（進入會觸發戰鬥）
+        bool Encountered = false;   // 是否已觸發過戰鬥，避免重複觸發
 
     QList<QRect> Barriers;
     QList<QRect> Ledges;

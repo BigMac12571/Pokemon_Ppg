@@ -227,31 +227,43 @@ void Town::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_A:
     {
+        QRect playerRect = mainPlayer->geometry();
+        QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
 
-            QRect playerRect = mainPlayer->geometry();
-            QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
-            for(int i=0;i< Talk_With_Sign.size();i++){
-                if (Talk_With_Sign[i].intersects(Real_coodinate)) {
-                    emit Open_Dialog_Sign();  // 觸發對話 signal
-                    mainPlayer->stopWalking();
+        // ✅ 處理與 Sign 對話
+        for(int i = 0; i < Talk_With_Sign.size(); i++) {
+            if (Talk_With_Sign[i].intersects(Real_coodinate)) {
+                emit Open_Dialog_Sign();  // 觸發對話 signal
+                mainPlayer->stopWalking();
+            }
 
-                }
+        for(int i=0;i< boxRects.size();i++){
+            if (boxRects[i].intersects(Real_coodinate)) {
+                emit Open_Dialog_Box();  // 觸發對話 signal
+                mainPlayer->stopWalking();
+                Box *remove_box = boxes[i];
+                boxes.removeAt(i);
+                boxRects.removeAt(i);
+                remove_box->hide();
+                remove_box->deleteLater();
+                break;
             }
-            for(int i=0;i< boxRects.size();i++){
-                if (boxRects[i].intersects(Real_coodinate)) {
-                    emit Open_Dialog_Box();  // 觸發對話 signal
-                    mainPlayer->stopWalking();
-                    Box *remove_box = boxes[i];
-                    boxes.removeAt(i);
-                    boxRects.removeAt(i);
-                    remove_box->hide();
-                    remove_box->deleteLater();
-                    break;
-                }
-            }
+        }
 
             break;
+
+}
+
+        // ✅ 撿取箱子（如果與玩家碰撞）
+        for (int i = 0; i < boxes.size(); ++i) {
+            if (!boxes[i]->isPicked() && boxRects[i].intersects(Real_coodinate)) {
+                boxes[i]->pick();  // 箱子撿起來並消失
+                break; // 一次只撿一個箱子
+            }
         }
+
+        break;
+    }
 
 
 

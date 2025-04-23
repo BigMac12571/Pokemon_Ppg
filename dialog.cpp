@@ -14,7 +14,7 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 
     Box_dialog = {
         {
-            "You get a Poké Ball!",":/new/prefix1/Dataset/Image/pokeball.png" // 寶貝球圖片路徑
+            "You get a Poké Ball!"
         },
         {
             "You get a Potion!"
