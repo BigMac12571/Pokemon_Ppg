@@ -19,7 +19,7 @@ public:
     enum Form { First, Second, Third };
 
     explicit Charmander(QWidget* parent = nullptr);
-     ~Charmander();
+
     void SetForm(Form form);
     Form GetForm() ;
 

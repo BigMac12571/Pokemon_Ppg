@@ -38,7 +38,8 @@ signals:
     void Exit_Laboratory();
     void Open_Dialog_Oak();
     void Show_Pokeballs(int id);
-    //void Open_Dialog_Showing_Pokemons(int id);
+
+    void Open_Bag_Signal();
 private:
 
     QLabel *background; // 背景圖片

@@ -41,6 +41,8 @@ signals:
     void Enter_Grassland();
     void Open_Dialog_Sign();
 
+    void Open_Bag_Signal();
+
 private:
 
 

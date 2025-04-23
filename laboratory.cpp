@@ -203,18 +203,10 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
         break;
 
     case Qt::Key_B:
-        if (OpenBag) {
-            bag->hide();
-            OpenBag = false;
-        } else {
-            if (bag == nullptr) {
-                bag = new Bag(this); // 設定 parent，這樣它會跟隨 Town 視窗
-            }
-            bag->show();
-            bag->raise(); // 確保在最上層
-            OpenBag = true;
-            mainPlayer->stopWalking();
-        }
+        if(OpenBag) OpenBag = false;
+        else {OpenBag = true;}
+        emit Open_Bag_Signal();
+        mainPlayer->stopWalking();
 
         break;
     case Qt::Key_A: {

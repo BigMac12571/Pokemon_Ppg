@@ -53,6 +53,4 @@ void Charmander::HideFormImage(Form form){
      }
 
 }
-Charmander::~Charmander() {
-    // 在此處釋放內部資源（如果有）
-}
+
