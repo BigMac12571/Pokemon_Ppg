@@ -47,6 +47,7 @@ private:
 
 
 
+
     QStringList Oak_dialog;
     bool Oak_dialog_start = false;
     QStringList Sign_dialog;

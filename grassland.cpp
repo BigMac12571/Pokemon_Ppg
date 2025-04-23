@@ -70,6 +70,9 @@ void Grassland::SetMainPlayer(Player *p) {
     this->setFocus();
     keysPressed.clear(); // 清空按鍵狀態
 }
+void Grassland::clearPressedKeys() {
+    keysPressed.clear();
+}
 
 void Grassland::keyPressEvent(QKeyEvent *event)
 {

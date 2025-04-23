@@ -94,6 +94,9 @@ void Town::SetMainPlayer_GrasslandToTown(Player *p) {
     keysPressed.clear(); // 清空按鍵狀態
 
 }
+void Town::clearPressedKeys() {
+    keysPressed.clear();
+}
 
 
 

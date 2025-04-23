@@ -124,6 +124,9 @@ void Laboratory::SetMainPlayer(Player *p) {
     this->setFocus();
     keysPressed.clear(); // 清空按鍵狀態
 }
+void Laboratory::clearPressedKeys() {
+    keysPressed.clear();
+}
 
 void Laboratory::keyPressEvent(QKeyEvent *event)
 {
@@ -230,6 +233,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
             for(int i=0;i<Pick_Pokeballs_area.size();i++){
                 if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){
                     emit Show_Pokeballs(i);
+
                     //emit Open_Dialog_Showing_Pokemons(i);
                 }
             }
