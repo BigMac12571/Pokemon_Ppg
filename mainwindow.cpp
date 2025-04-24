@@ -187,8 +187,7 @@ void MainWindow::Switch_TownToGrassland() {
     switch_windowtitle(3);           // 更新視窗標題
 
     grassland->Add_Player_To_Scene(player); // 將玩家加進新場景
-    grassland->SetMainPlayer(player);       // 更新主角控制權
-
+    grassland->SetMainPlayer(player);// 更新主角控制權
 }
 
 

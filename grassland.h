@@ -6,7 +6,8 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
-//#include <QDebug>
+#include <QDebug>
+#include <QRandomGenerator>
 #include <QKeyEvent>
 #include <QPainter>
 
@@ -25,6 +26,8 @@ public:
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
+    void EncounterBattle();
+
 public slots:
     void clearPressedKeys();
 
@@ -40,7 +43,7 @@ signals:
 
     void Refresh_bag();
 
-    void Enter_BattleScene(); // 在草叢裡遇到敵人時觸發
+    void Battle(); // 在草叢裡遇到敵人時觸發
 
 
 private:
@@ -49,6 +52,7 @@ private:
     Player *mainPlayer = nullptr;
     Bag *bag = nullptr;
     bool OpenBag;
+    bool Grass;
 
 
 
@@ -62,12 +66,14 @@ private:
     const int Player_Center_Y = View_Height / 2 - 48 / 2;
 
 
-    QRect Battle_Trigger_Zone;  // 草叢區域（進入會觸發戰鬥）
-        bool Encountered = false;   // 是否已觸發過戰鬥，避免重複觸發
+
+    bool Encountered = false;   // 是否已觸發過戰鬥，避免重複觸發
 
     QList<QRect> Barriers;
     QList<QRect> Ledges;
+    QList<QRect> TallGrasses;// 草叢區域（進入會觸發戰鬥）
     QList<QRect> Talk_With_Sign;
+
 
 
     QRect Exit_Zone;

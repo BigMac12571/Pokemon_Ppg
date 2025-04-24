@@ -38,6 +38,7 @@ public:
     void nextWalkFrame(); // 換走路動畫圖
     void startWalking(); //開始走路(用於動畫)
     void stopWalking(); //停止走路(用於動畫)
+    bool isWalking();
 
 public slots:
     void updateWalkFrame();  // 0.5 秒換腳
