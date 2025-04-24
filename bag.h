@@ -42,7 +42,7 @@ private:
     QLabel* pokeballLabel = nullptr;
     QLabel* potionLabel = nullptr;
     QLabel* etherLabel = nullptr;
-
+    QLabel* maxPokeballLabel = nullptr;
 
 
 

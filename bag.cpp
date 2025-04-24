@@ -112,14 +112,16 @@ void Bag::Refresh_bag(int id) {
     if (currentLabel) {
         // 如果標籤已經存在，則更新文字
         //qDebug() << "更新 pokeballLabel: " << currentLabel << "，設定文字為：" << res;
-        if(pokeball == 3 && id == 0){
-            QLabel* NameLabel = new QLabel(this);
-            NameLabel->setText("(max)");
-            NameLabel->move(82, 56);
-            NameLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
-            NameLabel->show();
-            NameLabel->raise();
-        }
+        if (id == 0 && pokeball == 3 && maxPokeballLabel == nullptr) {
+                        maxPokeballLabel = new QLabel("(max)", this);
+                        maxPokeballLabel->move(82, 56);
+                        maxPokeballLabel->setStyleSheet("font-size: 16px; color: black; font-weight: bold;");
+                        maxPokeballLabel->show();
+                        maxPokeballLabel->raise();
+                    } else if (id == 0 && pokeball < 3 && maxPokeballLabel != nullptr) {
+                        delete maxPokeballLabel;
+                        maxPokeballLabel = nullptr;
+                    }
         currentLabel->setText(res);
         currentLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
 
