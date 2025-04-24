@@ -64,15 +64,24 @@ void Bag::Add_pokemon(const QPixmap& IconPixmap, const QString& name) {
 
 }
 void Bag::Add_pokeball(){
-    pokeball++;
+    if(pokeball < 3){
+        pokeball++;
+        //qDebug() << "pokeball 的值現在是：" << pokeball;
+    }
+    Refresh_bag(0);
+    //qDebug() << "Add_pokeball() 執行後，Refresh_bag(0) 被呼叫";
 }
+
 void Bag::Add_potion(){
     potion++;
+    Refresh_bag(1);
 }
 void Bag::Add_ether(){
     ether++;
+    Refresh_bag(2);
 }
 void Bag::Refresh_bag(int id) {
+    //qDebug() << "Bag::Refresh_bag(" << id << ") 被呼叫，pokeball 的值是：" << pokeball;
     QString res = "x";
     int x, y;
 
@@ -80,30 +89,40 @@ void Bag::Refresh_bag(int id) {
 
     switch (id) {
     case 0:
-        res += QString::number(pokeball);
+        res = res + QString::number(pokeball);
         x = 92;
-        y = 52;
+        y = 40;
         currentLabel = pokeballLabel;
         break;
     case 1:
         res += QString::number(potion);
         x = 176;
-        y = 52;
+        y = 40;
         currentLabel = potionLabel;
         break;
     case 2:
         res += QString::number(ether);
         x = 272;
-        y = 52;
+        y = 40;
         currentLabel = etherLabel;
         break;
-    default:
-        return;
+
     }
 
     if (currentLabel) {
         // 如果標籤已經存在，則更新文字
+        //qDebug() << "更新 pokeballLabel: " << currentLabel << "，設定文字為：" << res;
+        if(pokeball == 3 && id == 0){
+            QLabel* NameLabel = new QLabel(this);
+            NameLabel->setText("(max)");
+            NameLabel->move(82, 56);
+            NameLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
+            NameLabel->show();
+            NameLabel->raise();
+        }
         currentLabel->setText(res);
+        currentLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
+
     } else {
         // 如果標籤不存在，則創建新的標籤並儲存指標
         QLabel* NameLabel = new QLabel(this);
