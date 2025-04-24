@@ -327,8 +327,8 @@ void Grassland::EncounterBattle(){
             //2%觸發戰鬥
             int random = QRandomGenerator::global()->generate() % 50;
             if (random == 0) {
-                qDebug() << "fight!!!";
-                //emit Battle();
+                //qDebug() << "fight!!!";
+                emit Battle();
                 mainPlayer->stopWalking();
                 Encountered = true;
                 return; // 觸發戰鬥後直接返回，避免在同一步中多次觸發

@@ -37,10 +37,10 @@ public slots:
     void Switch_TownToLaboratory();
     void Switch_LaboratoryToTown();
 
-
-
     void Switch_TownToGrassland();
     void Switch_GrasslandToTown();
+
+    void Switch_GrasslandToBattle();
 
     void Oak_Dialog();
     void Sign_Dialog();

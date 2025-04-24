@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     town = new Town(this);
     laboratory = new Laboratory(this);
     grassland = new Grassland(this);
-    //battlescene = new BattleScene(this);
+    battlescene = new BattleScene(this);
     /////// 初始化每個畫面
 
     /////// 初始化每個角色
@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     Scene_stack->addWidget(town);       // index 1
     Scene_stack->addWidget(laboratory);   // index 2
     Scene_stack->addWidget(grassland);     // index 3
-    //Scene_stack->addWidget(battlescene);      // index 4
+    Scene_stack->addWidget(battlescene);      // index 4
     /////// 畫面加進 stack
 
 
@@ -102,6 +102,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland); //進出grassland
     connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
+
+    connect(grassland, &Grassland::Battle, this, &MainWindow::Switch_GrasslandToBattle);
 
     connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
@@ -202,6 +204,12 @@ void MainWindow::Switch_GrasslandToTown() {
     town->SetMainPlayer_GrasslandToTown(player);
 
 }
+
+void MainWindow::Switch_GrasslandToBattle(){
+    Scene_stack->setCurrentIndex(4); // 進入battle
+    switch_windowtitle(4);
+}
+
 void MainWindow::Oak_Dialog(){
     //QPoint pos = dialog->pos();
     //qDebug() << "Dialog position: " << pos;
