@@ -25,6 +25,8 @@ public:
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
+public slots:
+    void clearPressedKeys();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -35,6 +37,10 @@ signals:
     void Open_Dialog_Grassland_Sign();
 
     void Open_Bag_Signal();
+
+    void Refresh_bag();
+
+    void Enter_BattleScene(); // 在草叢裡遇到敵人時觸發
 
 
 private:
@@ -55,6 +61,9 @@ private:
     const int Player_Center_X = View_Width / 2 - 35 / 2;
     const int Player_Center_Y = View_Height / 2 - 48 / 2;
 
+
+    QRect Battle_Trigger_Zone;  // 草叢區域（進入會觸發戰鬥）
+        bool Encountered = false;   // 是否已觸發過戰鬥，避免重複觸發
 
     QList<QRect> Barriers;
     QList<QRect> Ledges;

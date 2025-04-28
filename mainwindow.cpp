@@ -106,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
     connect(grassland, &Grassland::Open_Dialog_Grassland_Sign, this, &MainWindow::Grassland_Dialog);
-
+    connect(town, &Town::Open_Dialog_Box, this, &MainWindow::Box_Dialog);
     connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
     connect(laboratory, &Laboratory::Show_Pokeballs, this, [=](int id){ //顯示寶可夢圖片
@@ -115,6 +115,12 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(dialog, &Dialog::Pickup_Pokeballs, this , &MainWindow::Pickup_Pokeballs_slot); //按Y撿起
+    connect(dialog, &Dialog::Get_pokeball, this, &MainWindow::Add_pokeball);//記錄獲得的pokeball
+    connect(dialog, &Dialog::Get_potion, this, &MainWindow::Add_potion);//記錄獲得的potion
+    connect(dialog, &Dialog::Get_ether, this, &MainWindow::Add_ether);//記錄獲得的ether
+    connect(town, &Town::Refresh_bag, this , &MainWindow::Refresh_bag);//刷新背包
+    connect(laboratory, &Laboratory::Refresh_bag, this , &MainWindow::Refresh_bag);//刷新背包
+    connect(grassland, &Grassland::Refresh_bag, this , &MainWindow::Refresh_bag);//刷新背包
 
     connect(town, &Town::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
     connect(grassland, &Grassland::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
@@ -221,6 +227,14 @@ void MainWindow::Grassland_Dialog(){
     dialog->setFocus();
     dialog->Grassland_Dialog();
 }
+void MainWindow::Box_Dialog(){
+    //QPoint pos = dialog->pos();
+    //qDebug() << "Dialog position: " << pos;
+
+    dialog->show();
+    dialog->setFocus();
+    dialog->Box_Dialog();
+}
 
 
 
@@ -236,6 +250,9 @@ void MainWindow::Close_Dialog(){
     squirtle->HideFormImage(Squirtle::First);
     charmander->HideFormImage(Charmander::First);
 
+    town->clearPressedKeys();
+    laboratory->clearPressedKeys();
+    grassland->clearPressedKeys();
 
 }
 
@@ -262,6 +279,7 @@ void MainWindow::Show_Pokeballs_Dialog_slot(int id){
 
     dialog->show();
     dialog->setFocus();
+
 }
 void MainWindow::Pickup_Pokeballs_slot(int id){
 
@@ -285,10 +303,29 @@ void MainWindow::Pickup_Pokeballs_slot(int id){
 
     }
 }
+
+void MainWindow::Add_pokeball(){
+    bag->Add_pokeball();
+}
+
+void MainWindow::Add_potion(){
+    bag->Add_potion();
+}
+
+void MainWindow::Add_ether(){
+    bag->Add_ether();
+}
+
+void MainWindow::Refresh_bag(){
+    bag->Refresh_bag(0);
+    bag->Refresh_bag(1);
+    bag->Refresh_bag(2);
+}
 ///////////////////實驗室拿pokeball
 
 ///////////////////背包
 
 void MainWindow::Open_Bag_slot(){
     bag->Open_bag();
+
 }

@@ -18,11 +18,15 @@ class Bag:public QWidget
 
 public:
     explicit Bag(QWidget *parent = nullptr);
+    ~Bag();
 
     void Open_bag();
 
     void Add_pokemon(const QPixmap& IconPixmap, const QString& name);
-
+    void Add_pokeball();
+    void Add_potion();
+    void Add_ether();
+    void Refresh_bag(int id);
 
 
 private:
@@ -34,7 +38,10 @@ private:
     const int View_Height = 450; // 視窗高度
 
     bool open;
-
+    int pokeball = 0, potion = 0, ether = 0;
+    QLabel* pokeballLabel = nullptr;
+    QLabel* potionLabel = nullptr;
+    QLabel* etherLabel = nullptr;
 
 
 

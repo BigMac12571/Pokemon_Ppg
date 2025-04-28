@@ -94,6 +94,9 @@ void Town::SetMainPlayer_GrasslandToTown(Player *p) {
     keysPressed.clear(); // 清空按鍵狀態
 
 }
+void Town::clearPressedKeys() {
+    keysPressed.clear();
+}
 
 
 
@@ -220,33 +223,50 @@ void Town::keyPressEvent(QKeyEvent *event)
             if(OpenBag) OpenBag = false;
             else {OpenBag = true;}
             emit Open_Bag_Signal();
+            emit Refresh_bag();
             mainPlayer->stopWalking();
         break;
     case Qt::Key_A:
     {
+        QRect playerRect = mainPlayer->geometry();
+        QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
 
-            QRect playerRect = mainPlayer->geometry();
-            QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
-            for(int i=0;i< Talk_With_Sign.size();i++){
-                if (Talk_With_Sign[i].intersects(Real_coodinate)) {
-                    emit Open_Dialog_Sign();  // 觸發對話 signal
-                    mainPlayer->stopWalking();
-
-                }
+        // ✅ 處理與 Sign 對話
+        for(int i = 0; i < Talk_With_Sign.size(); i++) {
+            if (Talk_With_Sign[i].intersects(Real_coodinate)) {
+                emit Open_Dialog_Sign();  // 觸發對話 signal
+                mainPlayer->stopWalking();
             }
-
-            break;
+        }
+        for(int i=0;i< boxRects.size();i++){
+            if (boxRects[i].intersects(Real_coodinate)) {
+                emit Open_Dialog_Box();  // 觸發對話 signal
+                mainPlayer->stopWalking();
+                Box *remove_box = boxes[i];
+                boxes.removeAt(i);
+                boxRects.removeAt(i);
+                remove_box->hide();
+                remove_box->deleteLater();
+                break;
+            }
         }
 
-
-
-
+            break;
 
     }
 
 
 
+    }
 }
+
+
+
+
+
+
+
+
 
 
 void Town::keyReleaseEvent(QKeyEvent *event)

@@ -70,6 +70,9 @@ void Grassland::SetMainPlayer(Player *p) {
     this->setFocus();
     keysPressed.clear(); // 清空按鍵狀態
 }
+void Grassland::clearPressedKeys() {
+    keysPressed.clear();
+}
 
 void Grassland::keyPressEvent(QKeyEvent *event)
 {
@@ -186,6 +189,7 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         if(OpenBag) OpenBag = false;
         else {OpenBag = true;}
         emit Open_Bag_Signal();
+        emit Refresh_bag();
         mainPlayer->stopWalking();
 
         break;

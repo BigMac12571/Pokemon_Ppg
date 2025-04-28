@@ -3,13 +3,17 @@
 
 #include <QLabel>
 #include <QWidget>
-#include <QRect>
 
-
+// 簡單的箱子：用來顯示圖片、記錄是否已撿取
 class Box : public QLabel {
 
+
 public:
-    Box(QWidget *parent = nullptr);
+    explicit Box(QWidget *parent = nullptr);
+
+
 };
 
 #endif // BOX_H
+
+

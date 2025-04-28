@@ -124,6 +124,9 @@ void Laboratory::SetMainPlayer(Player *p) {
     this->setFocus();
     keysPressed.clear(); // 清空按鍵狀態
 }
+void Laboratory::clearPressedKeys() {
+    keysPressed.clear();
+}
 
 void Laboratory::keyPressEvent(QKeyEvent *event)
 {
@@ -206,6 +209,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
         if(OpenBag) OpenBag = false;
         else {OpenBag = true;}
         emit Open_Bag_Signal();
+        emit Refresh_bag();
         mainPlayer->stopWalking();
 
         break;
@@ -228,23 +232,19 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
         }
 
         if(!one_of_pokeball_get_picked){
-                    for(int i=0;i<Pick_Pokeballs_area.size();i++){
-                        if (i < Pick_Pokeballs_area.size()) {
 
-                            if(Pick_Pokeballs_area.at(i).intersects(Real_coodinate)){
+            for(int i=0;i<Pick_Pokeballs_area.size();i++){
+                if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){
+                    emit Show_Pokeballs(i);
 
-                                emit Show_Pokeballs(i);
-
-
-                                mainPlayer->stopWalking();
+                    //emit Open_Dialog_Showing_Pokemons(i);
 
 
-                                break;
-                            }
                         }
                     }
+
                 }
-        ///////////////////撿起寶貝球
+
         break;
     }
 

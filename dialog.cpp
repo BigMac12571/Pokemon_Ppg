@@ -12,21 +12,33 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
     Grassland_dialog <<"In this place, there might be a wild Pokémon\nhiding in the tallgrass."
                      <<"Be careful!!!";
 
+    Box_dialog = {
+        {
+            "You get a Poké Ball!"
+        },
+        {
+            "You get a Potion!"
+        },
+        {
+            "You get an Ether!"
+        }
+    };
+
     Pickup_Pokeballs_dialog = {
             {
-                "這是妙蛙種子（Bulbasaur）！",
-                "它是草系的寶可夢，非常適合新手！",
-                "Yes/No"
+                "This is Bulbasaur!",
+                "It's a grass type Pokémon and very suitable for beginners!",
+                "    Yes    /    No    "
             },
             {
-                "這是傑尼龜（Squirtle）！",
-                "它是水系的寶可夢，冷靜又可靠！",
-                "Yes/No"
+                "This is Squirtle!",
+                "It's a water type Pokémon. Cool and Reliable!",
+                "    Yes    /    No    "
             },
             {
-                "這是小火龍（Charmander）！",
-                "它是火系的寶可夢，有著燃燒的鬥志！",
-                "Yes/No"
+                "This is Charmander!",
+                "It's a fire type Pokémon, with burning fighting spirit!",
+                "    Yes    /    No    "
             }
         };
 
@@ -45,6 +57,8 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 void Dialog::Reset_Dialog_State() {
     Oak_dialog_start = false;
     Sign_dialog_start = false;
+    Grassland_dialog_start = false;
+    Box_dialog_start = false;
     Pickup_Pokeballs_dialog_start = false;
     Waiting_For_YesNo = false;
     CurrentDialog = 0; // 重置对话索引
@@ -83,9 +97,34 @@ void Dialog::Grassland_Dialog(){
         CurrentDialog++;
     } else {
         emit Close_Dialog();
-        CurrentDialog = 0;
-        Grassland_dialog_start = false;
+        Reset_Dialog_State();
     }
+}
+
+void Dialog::Box_Dialog(){
+    Box_dialog_start = true;
+
+    int id = QRandomGenerator::global()->generate() % 3;
+    if (CurrentDialog < Box_dialog[id].size()) {
+
+        setText(Box_dialog[id].at(CurrentDialog));
+        CurrentDialog++;
+    } else {
+        emit Close_Dialog();
+        Reset_Dialog_State();
+    }
+    switch(id){
+    case 0:
+        emit Get_pokeball();
+        break;
+    case 1:
+        emit Get_potion();
+        break;
+    case 2:
+        emit Get_ether();
+        break;
+    }
+
 }
 
 
@@ -133,11 +172,11 @@ void Dialog::keyPressEvent(QKeyEvent *event)
     case Qt::Key_A:
         if(Oak_dialog_start) Oak_Dialog();
         else if(Sign_dialog_start) Sign_Dialog();
-
-
         else if(Grassland_dialog_start) Grassland_Dialog();
-        else if(Sign_dialog_start) Sign_Dialog();
-
+        else if(Box_dialog_start) {
+                    emit Close_Dialog();
+                    Reset_Dialog_State();
+                }
         else if(Pickup_Pokeballs_dialog_start && !Waiting_For_YesNo) Show_Pokeballs_Dialog(Shared_pokeball_ID);
         break;
     case Qt::Key_Y:
