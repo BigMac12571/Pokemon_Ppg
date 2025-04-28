@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QKeyEvent>
+#include <QStackedWidget>
 #include "titlescreen.h"
 #include "laboratory.h"
 #include "town.h"

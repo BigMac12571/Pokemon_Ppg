@@ -33,6 +33,11 @@ private:
     QLabel* FirstForm_Image;
     QLabel* SecondForm_Image;
     QLabel* ThirdForm_Image;
+
+    int Level = 1;
+    int ATK = 5;
+    int DEF = 5;
+    int maxHP = 30;
 };
 
 

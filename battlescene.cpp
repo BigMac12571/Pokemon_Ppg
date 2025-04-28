@@ -20,10 +20,10 @@ void BattleScene::SetupUI() {
     runButton = new QPushButton("RUN", this);
 
     // 位置模擬 GBA 排列
-    fightButton->setGeometry(290, 360, 100, 30);
-    bagButton->setGeometry(400, 360, 100, 30);
-    pokemonButton->setGeometry(290, 400, 100, 30);
-    runButton->setGeometry(400, 400, 100, 30);
+    fightButton->setGeometry(290, 345, 100, 30);
+    bagButton->setGeometry(400, 345, 100, 30);
+    pokemonButton->setGeometry(290, 385, 100, 30);
+    runButton->setGeometry(400, 385, 100, 30);
 
     connect(runButton, &QPushButton::clicked, this, &BattleScene::RunAway);
     connect(fightButton, &QPushButton::clicked, [this]() {
