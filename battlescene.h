@@ -29,8 +29,15 @@ public:
 
     PokemonData GenerateRandomEnemy();
     PokemonData GetPokemon_From_List(int id);
-signals:
+
+    void UpdateHPBar(QLabel* barLabel, int currentHP, int maxHP, QSize size);
     void BattleEnd(bool playerWon);
+
+
+
+
+
+
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -60,6 +67,10 @@ private:
 
     PokemonData myPokemon;
     PokemonData EnemyPokemon;
+    QLabel* myHpBarLabel;
+    QLabel* enemyHpBarLabel;
+
+    QWidget* SkillMenu;
 };
 
 #endif // BATTLESCENE_H

@@ -15,33 +15,34 @@
 class PokemonData
 {
 public:
-    PokemonData() : id_(0), form_(0) {}
-    PokemonData(int id, int form);
+    PokemonData() : id_(0), level_(1) {}
+    PokemonData(int id, int level);
     void LevelUp();
 
     // Getter
-      QString GetName() const { return name; }
-      QString GetType1() const { return type1; }
-      QString GetType2() const { return type2; }
-      int GetAttack() const { return attack; }
-      int GetDefense() const { return defense; }
-      int GetMaxHp() const { return max_hp; }
-      int GetLevel() const { return level; }
-      QString GetImagePath() const { return ImagePath; }
-      QString GetBackImagaePath() const { return BackImagePath;}
-      int GetDamage(int movePower, int opponentDefense) const;
-
+    QString GetName() const { return name; }
+    QString GetType1() const { return type1; }
+    QString GetType2() const { return type2; }
+    int GetAttack() const { return attack; }
+    int GetDefense() const { return defense; }
+    int GetCurrentHp() const { return current_hp;}
+    int GetMaxHp() const { return max_hp; }
+    int GetLevel() const { return level_; }
+    QString GetImagePath() const { return ImagePath; }
+    QString GetBackImagaePath() const { return BackImagePath;}
+    int GetDamage(const PokemonData& opponent, int MoveIndex) const;
+    void TakeDamage(int damage);
 
 
 
 private:
 
     int id_;
-    int form_;
-    int level;
+    int level_;
     int attack;
     int defense;
     int max_hp;
+    int current_hp;
     QString name;
     QString type1;
     QString type2;
@@ -66,10 +67,10 @@ private:
         QString imagePath;
         QString BackImagePath;
         };
-    static QMap<QPair<int, int>, PokemonBaseData> baseDataMap;  // (id, form) -> 資料
+    static QMap<QPair<int, int>, PokemonBaseData> baseDataMap;  // (id, level) -> 資料
     static void InitializeBaseData(); // 初始設定
 
-    void UpdateForm(); // 自動改變form
+    void UpdateData(); // 自動改變form
 };
 
 #endif // POKEMONDATA_H

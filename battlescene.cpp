@@ -33,14 +33,80 @@ void BattleScene::SetupUI() {
     runButton->setGeometry(400, 385, 100, 30);
 
     connect(runButton, &QPushButton::clicked, this, &BattleScene::RunAway);
-    connect(fightButton, &QPushButton::clicked, [=]() {
+    connect(fightButton, &QPushButton::clicked,this, [=]() {
         qDebug() << "選擇 FIGHT";
+        fightButton->hide();
+        bagButton->hide();
+        pokemonButton->hide();
+        runButton->hide();
+        SkillMenu->show();
     });
-    connect(bagButton, &QPushButton::clicked, [=]() {
+    connect(bagButton, &QPushButton::clicked,this, [=]() {
         qDebug() << "選擇 BAG";
     });
-    connect(pokemonButton, &QPushButton::clicked, [=]() {
+    connect(pokemonButton, &QPushButton::clicked,this, [=]() {
         qDebug() << "選擇 POKEMON";
+    });
+
+    // 技能選單區
+    SkillMenu = new QWidget(this);
+    SkillMenu->setGeometry(0, 314, 525, 136); // 與原本按鈕區域重疊
+    SkillMenu->hide(); // 一開始先隱藏
+    QLabel* SkillMenuBackground = new QLabel(SkillMenu);
+    SkillMenuBackground->setPixmap(QPixmap(":/your/image/path.png"));
+    SkillMenuBackground->setGeometry(0, 0, 525, 136);
+    SkillMenuBackground->raise();
+
+
+    QPushButton* normalAttackButton = new QPushButton("Attack", SkillMenu);
+    QPushButton* Power1Button = new QPushButton("Power 1", SkillMenu);
+    QPushButton* Power2Button = new QPushButton("Power 2", SkillMenu);
+    QPushButton* backButton = new QPushButton("Back", SkillMenu);
+
+    normalAttackButton->setGeometry(15, 15, 100, 30);
+    Power1Button->setGeometry(145, 15, 100, 30);
+    Power2Button->setGeometry(15, 55, 100, 30);
+    backButton->setGeometry(145, 55, 100, 30);
+
+    connect(backButton, &QPushButton::clicked,this, [=]() {
+        SkillMenu->hide();
+        fightButton->show();
+        bagButton->show();
+        pokemonButton->show();
+        runButton->show();
+    });
+
+    connect(normalAttackButton, &QPushButton::clicked,this, [=]() {
+        EnemyPokemon.TakeDamage(myPokemon.GetDamage(EnemyPokemon,0)); // 普通攻擊傷害 10
+        UpdateHPBar(enemyHpBarLabel,EnemyPokemon.GetCurrentHp(), myPokemon.GetMaxHp(), QSize(108, 10));
+
+        SkillMenu->hide();
+        fightButton->show();
+        bagButton->show();
+        pokemonButton->show();
+        runButton->show();
+    });
+
+    connect(Power1Button, &QPushButton::clicked,this, [=]() {
+        EnemyPokemon.TakeDamage(myPokemon.GetDamage(EnemyPokemon,1)); // 技能1 傷害 20
+        UpdateHPBar(enemyHpBarLabel,EnemyPokemon.GetCurrentHp(), myPokemon.GetMaxHp(), QSize(108, 10));
+
+        SkillMenu->hide();
+        fightButton->show();
+        bagButton->show();
+        pokemonButton->show();
+        runButton->show();
+    });
+
+    connect(Power2Button, &QPushButton::clicked,this, [=]() {
+        EnemyPokemon.TakeDamage(myPokemon.GetDamage(EnemyPokemon,2)); // 技能2 傷害 30
+        UpdateHPBar(enemyHpBarLabel,EnemyPokemon.GetCurrentHp(), myPokemon.GetMaxHp(), QSize(108, 10));
+
+        SkillMenu->hide();
+        fightButton->show();
+        bagButton->show();
+        pokemonButton->show();
+        runButton->show();
     });
 }
 
@@ -54,10 +120,19 @@ void BattleScene::StartBattle() {
     EnemyImage->show();
 
     QLabel* EnemyName = new QLabel(EnemyPokemon.GetName(), this);
-    EnemyName->move(47, 61);
-    EnemyName->setStyleSheet("font-weight: bold; font-size: 30px;");
+    EnemyName->move(47, 54);
+    EnemyName->setStyleSheet("font-weight: bold; font-size: 25px;");
     EnemyName->show();
 
+    QLabel* EnemyLevel = new QLabel("Lv:"+QString::number(EnemyPokemon.GetLevel()), this);
+    EnemyLevel->move(170, 58);
+    EnemyLevel->setStyleSheet("font-weight: bold; font-size: 25px;");
+    EnemyLevel->show();
+
+    enemyHpBarLabel = new QLabel(this);
+    UpdateHPBar(enemyHpBarLabel,myPokemon.GetCurrentHp(), myPokemon.GetMaxHp(), QSize(108, 10));
+    enemyHpBarLabel->move(112, 92); // 調整位置
+    enemyHpBarLabel->show();
 
     myPokemon = GetPokemon_From_List(0);
 
@@ -69,11 +144,39 @@ void BattleScene::StartBattle() {
 
     QLabel* MyPokemonName = new QLabel(myPokemon.GetName(), this);
     MyPokemonName->move(311, 225);
-    MyPokemonName->setStyleSheet("font-weight: bold; font-size: 30px;");
+    MyPokemonName->setStyleSheet("font-weight: bold; font-size: 25px;");
     MyPokemonName->show();
 
+    QLabel* MyLevel = new QLabel("Lv:"+QString::number(myPokemon.GetLevel()), this);
+    MyLevel->move(443, 225);
+    MyLevel->setStyleSheet("font-weight: bold; font-size: 25px;");
+    MyLevel->show();
+
+    myHpBarLabel = new QLabel(this);
+    UpdateHPBar(myHpBarLabel,myPokemon.GetCurrentHp(), myPokemon.GetMaxHp(), QSize(108, 10));
+    myHpBarLabel->move(381, 258);
+    myHpBarLabel->show();
 
 
+}
+void BattleScene::UpdateHPBar(QLabel* barLabel, int currentHP, int maxHP, QSize size)
+{
+    if (!barLabel || maxHP <= 0) return;
+
+    QPixmap barPixmap(size);
+    barPixmap.fill(Qt::transparent);
+
+    QPainter painter(&barPixmap);
+    painter.setBrush(Qt::gray);  // 背景灰
+    painter.drawRect(0, 0, size.width(), size.height());
+
+    double ratio = static_cast<double>(currentHP) / maxHP;
+    int greenWidth = static_cast<int>(size.width() * ratio);
+
+    painter.setBrush(Qt::green);  // 血條綠
+    painter.drawRect(0, 0, greenWidth, size.height());
+
+    barLabel->setPixmap(barPixmap);
 }
 
 void BattleScene::UpdateBattleInfo() {
@@ -96,6 +199,15 @@ void BattleScene::RunAway() {
         emit BattleEnd(false); // false = 沒有贏，是逃跑
     });
 }
+void BattleScene::BattleEnd(bool win) {
+    if (win) {
+        qDebug() << "You win!";
+    } else {
+        qDebug() << "You lose!";
+    }
+    // 你可以在這裡結束戰鬥畫面、切換場景、恢復狀態等
+}
+
 
 void BattleScene::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
@@ -107,11 +219,18 @@ void BattleScene::ShowBattleMessage(const QString &msg) {
 }
 
 PokemonData BattleScene::GenerateRandomEnemy() {
+<<<<<<< HEAD
+    int EnemyId = QRandomGenerator::global()->bounded(0, 2); // 假設 1~151 是合法寶可夢ID
+    int EnemyLevel = QRandomGenerator::global()->bounded(1, 6); // 假設每隻最多有3種型態 (1~3)
+    PokemonData enemy(EnemyId, EnemyLevel);
+    qDebug() << "🎯 生成敵人 ID:" << EnemyId << " Level:" << EnemyLevel;
+=======
     int enemyId = QRandomGenerator::global()->bounded(0, 2); // 假設 0-2 是合法寶可夢ID
     int enemyForm = 0; // 初始等級皆為1(只有初始型態)
 
     PokemonData enemy(enemyId, enemyForm);
     qDebug() << "🎯 生成敵人 ID:" << enemyId << " Form:" << enemyForm;
+>>>>>>> e4159a39c795426bf81af995c230960173b5942e
     return enemy;
 }
 

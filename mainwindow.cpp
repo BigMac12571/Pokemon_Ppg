@@ -251,14 +251,13 @@ void MainWindow::Box_Dialog(){
 
 
 void MainWindow::Close_Dialog(){
+
+
+    dialog->Reset_Dialog_State();
     dialog->close();
     player->stopWalking();
 
 
-
-    bulbasaur->HideFormImage(Bulbasaur::First);
-    squirtle->HideFormImage(Squirtle::First);
-    charmander->HideFormImage(Charmander::First);
 
     town->clearPressedKeys();
     laboratory->clearPressedKeys();
@@ -279,15 +278,15 @@ void MainWindow::Pickup_Pokeballs_slot(int id){
 
     if(id==0) {
         laboratory->Pokeball_get_picked(pokeball0);
-        mybag->Add_Pokemon(id,0);
+        mybag->Add_Pokemon(id,1);
     }
     else if(id==1){
         laboratory->Pokeball_get_picked(pokeball1);
-        mybag->Add_Pokemon(id,0);
+        mybag->Add_Pokemon(id,1);
     }
     else if(id==2) {
         laboratory->Pokeball_get_picked(pokeball2);
-        mybag->Add_Pokemon(id,0);
+        mybag->Add_Pokemon(id,1);
     }
     qDebug() << "Bag 裡有" << mybag->Pokemon_List.size() << "隻";
 }
