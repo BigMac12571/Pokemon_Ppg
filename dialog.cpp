@@ -70,6 +70,9 @@ void Dialog::Reset_Dialog_State() {
     Pickup_Pokeballs_dialog_start = false;
     Waiting_For_YesNo = false;
     CurrentDialog = 0; // 重置对话索引
+    if (Pokemon) {
+            Pokemon->hide();
+        }
 }
 
 void Dialog::Oak_Dialog(){

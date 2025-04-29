@@ -112,7 +112,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(dialog, &Dialog::Close_Dialog, this , &MainWindow::Close_Dialog);
 
     connect(laboratory, &Laboratory::Show_Pokeballs, this, [=](int id){ //顯示寶可夢圖片與對話
-        //Show_Pokeballs_slot(id);
         Show_Pokeballs_Dialog_slot(id);
     });
 
