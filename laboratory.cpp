@@ -41,9 +41,9 @@ Laboratory::Laboratory(QWidget *parent)
 
     Talk_With_Oak =QRect(889,508,27, 64);
 
-    Pick_Pokeballs_area.append(QRect(966,575,10,60));
-    Pick_Pokeballs_area.append(QRect(1000,575,10,60));
-    Pick_Pokeballs_area.append(QRect(1055,575,10,60));
+    Pick_Pokeballs_area.append(QRect(974,575,2,60));
+    Pick_Pokeballs_area.append(QRect(1012,575,2,60));
+    Pick_Pokeballs_area.append(QRect(1048,575,2,60));
 
 
 
