@@ -107,8 +107,8 @@ void BattleScene::ShowBattleMessage(const QString &msg) {
 }
 
 PokemonData BattleScene::GenerateRandomEnemy() {
-    int enemyId = QRandomGenerator::global()->bounded(0, 2); // 假設 1~151 是合法寶可夢ID
-    int enemyForm = QRandomGenerator::global()->bounded(0, 2); // 假設每隻最多有3種型態 (1~3)
+    int enemyId = QRandomGenerator::global()->bounded(0, 2); // 假設 0-2 是合法寶可夢ID
+    int enemyForm = 0; // 初始等級皆為1(只有初始型態)
 
     PokemonData enemy(enemyId, enemyForm);
     qDebug() << "🎯 生成敵人 ID:" << enemyId << " Form:" << enemyForm;

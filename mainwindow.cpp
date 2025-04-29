@@ -103,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(town, &Town::Enter_Grassland, this, &MainWindow::Switch_TownToGrassland); //進出grassland
     connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
 
-    connect(grassland, &Grassland::Battle, this, &MainWindow::Switch_GrasslandToBattle);
+    connect(grassland, &Grassland::Battle, this, &MainWindow::Switch_GrasslandToBattle);//觸發戰鬥
 
     connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
@@ -206,6 +206,7 @@ void MainWindow::Switch_GrasslandToTown() {
 }
 
 void MainWindow::Switch_GrasslandToBattle(){
+    //要觸發戰鬥至少要有一隻寶可夢
     if(!mybag->Pokemon_List.isEmpty()){
     Scene_stack->setCurrentIndex(4); // 進入battle
     switch_windowtitle(4);
@@ -236,6 +237,7 @@ void MainWindow::Grassland_Dialog(){
     dialog->setFocus();
     dialog->Grassland_Dialog();
 }
+
 void MainWindow::Box_Dialog(){
     //QPoint pos = dialog->pos();
     //qDebug() << "Dialog position: " << pos;

@@ -33,19 +33,23 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
             {
                 "This is Bulbasaur!",
                 "It's a grass type Pokémon and very suitable for beginners!",
-                "    Yes    /    No    "
+                "Are you sure to choose this Pokémon?",
+                "Yes(Y)     /     No(N)",
             },
             {
                 "This is Squirtle!",
                 "It's a water type Pokémon. Cool and Reliable!",
-                "    Yes    /    No    "
+                "Are you sure to choose this Pokémon?",
+                "Yes(Y)     /     No(N)"
             },
             {
                 "This is Charmander!",
                 "It's a fire type Pokémon, with burning fighting spirit!",
-                "    Yes    /    No    "
+                "Are you sure to choose this Pokémon?",
+                "Yes(Y)     /     No(N)"
             }
         };
+
 
     Reset_Dialog_State();
 
@@ -139,8 +143,6 @@ void Dialog::Box_Dialog(){
 
 }
 
-
-
 void Dialog::Show_Pokeballs_Dialog(int id){
     Pickup_Pokeballs_dialog_start = true;
 
@@ -218,12 +220,14 @@ void Dialog::keyPressEvent(QKeyEvent *event)
                 emit Pickup_Pokeballs(Shared_pokeball_ID);
                 emit Close_Dialog();
                 Reset_Dialog_State();
+
+
             }
             break;
 
 
     case Qt::Key_N:
-            if (Waiting_For_YesNo) {
+            if (Waiting_For_YesNo) {                
                 emit Close_Dialog();
                 Reset_Dialog_State();
             }

@@ -67,15 +67,6 @@ void Bag::Add_Pokemon(int id, int form) {
 
 }
 
-
-
-
-
-
-
-
-
-
 void Bag::Add_pokeball(){
     if(pokeball < 3){
         pokeball++;

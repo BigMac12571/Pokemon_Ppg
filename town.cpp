@@ -117,7 +117,7 @@ void Town::keyPressEvent(QKeyEvent *event)
 
 
 
-    int Step = 20;
+    int Step = 5;
 
     switch (key) {
     case Qt::Key_Up:{
