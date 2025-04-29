@@ -69,9 +69,6 @@ void Dialog::Reset_Dialog_State() {
     Pickup_Pokeballs_dialog_start = false;
     Waiting_For_YesNo = false;
     CurrentDialog = 0; // 重置对话索引
-    if (Pokemon) {
-            Pokemon->hide();
-        }
 }
 
 void Dialog::Oak_Dialog(){
@@ -220,12 +217,8 @@ void Dialog::keyPressEvent(QKeyEvent *event)
                 emit Pickup_Pokeballs(Shared_pokeball_ID);
                 emit Close_Dialog();
                 Reset_Dialog_State();
-<<<<<<< HEAD
                 delete Pokemon;
-=======
 
-
->>>>>>> e4159a39c795426bf81af995c230960173b5942e
             }
             break;
 
