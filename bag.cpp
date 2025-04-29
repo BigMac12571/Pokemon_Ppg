@@ -57,8 +57,8 @@ void Bag::Open_bag(){
     open = !open;
 }
 
-void Bag::Add_Pokemon(int id, int form) {
-    PokemonData new_pokemon(id,form);
+void Bag::Add_Pokemon(int id, int level) {
+    PokemonData new_pokemon(id,level);
     Pokemon_List.append(new_pokemon);
     QPixmap image = new_pokemon.GetImagePath();
     Pokemon_image.at(id)->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));

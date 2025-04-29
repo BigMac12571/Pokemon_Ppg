@@ -52,7 +52,6 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 
 
     CurrentDialog = 0;
-    Pokemon = nullptr;
 
 
 
@@ -167,10 +166,6 @@ void Dialog::Show_Pokeballs_Dialog(int id){
 }
 
 void Dialog::Show_Pokemon(int id){
-    if (Pokemon) {
-         delete Pokemon;
-        Pokemon = nullptr;
-     }
     Pokemon = new QLabel(this);
     QPixmap pokemon_image;
     switch(id){
@@ -211,13 +206,16 @@ void Dialog::keyPressEvent(QKeyEvent *event)
                     emit Close_Dialog();
                     Reset_Dialog_State();
                 }
-        else if(Pickup_Pokeballs_dialog_start && !Waiting_For_YesNo) Show_Pokeballs_Dialog(Shared_pokeball_ID);
+        else if(Pickup_Pokeballs_dialog_start && !Waiting_For_YesNo){
+            Show_Pokeballs_Dialog(Shared_pokeball_ID);
+        }
         break;
     case Qt::Key_Y:
             if (Waiting_For_YesNo) {
                 emit Pickup_Pokeballs(Shared_pokeball_ID);
                 emit Close_Dialog();
                 Reset_Dialog_State();
+                delete Pokemon;
             }
             break;
 
@@ -226,6 +224,7 @@ void Dialog::keyPressEvent(QKeyEvent *event)
             if (Waiting_For_YesNo) {
                 emit Close_Dialog();
                 Reset_Dialog_State();
+                delete Pokemon;
             }
             break;
     }
