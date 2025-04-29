@@ -22,6 +22,7 @@ SOURCES += \
     npc.cpp \
     player.cpp \
     pokeball.cpp \
+    pokemondata.cpp \
     squirtle.cpp \
     titlescreen.cpp \
     town.cpp
@@ -39,6 +40,7 @@ HEADERS += \
     npc.h \
     player.h \
     pokeball.h \
+    pokemondata.h \
     squirtle.h \
     titlescreen.h \
     town.h

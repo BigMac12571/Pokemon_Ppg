@@ -75,3 +75,7 @@ void Player::startWalking() {
 void Player::stopWalking() {
     Walking = false;
 }
+
+bool Player::isWalking(){
+    return Walking;
+}

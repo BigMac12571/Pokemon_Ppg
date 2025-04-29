@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QKeyEvent>
+#include <QStackedWidget>
 #include "titlescreen.h"
 #include "laboratory.h"
 #include "town.h"
@@ -37,10 +38,10 @@ public slots:
     void Switch_TownToLaboratory();
     void Switch_LaboratoryToTown();
 
-
-
     void Switch_TownToGrassland();
     void Switch_GrasslandToTown();
+
+    void Switch_GrasslandToBattle();
 
     void Oak_Dialog();
     void Sign_Dialog();
@@ -56,7 +57,7 @@ public slots:
     void Refresh_bag();
 
 
-    void Show_Pokeballs_slot(int id);
+    //void Show_Pokeballs_slot(int id);
     void Pickup_Pokeballs_slot(int id);
 
     void Open_Bag_slot();
@@ -82,7 +83,8 @@ private:
     Squirtle *squirtle;
     Charmander *charmander;
 
-    Bag *bag;
+    Bag *mybag;
+    QList<QLabel*> Pokemon_List;
 
 };
 #endif // MAINWINDOW_H

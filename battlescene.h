@@ -11,6 +11,7 @@
 #include "bulbasaur.h"
 #include "squirtle.h"
 #include "charmander.h"
+#include "pokemondata.h"
 #include "bag.h"
 
 class BattleScene : public QWidget
@@ -18,14 +19,16 @@ class BattleScene : public QWidget
     Q_OBJECT
 
 public:
-    explicit BattleScene(QWidget *parent = nullptr);
+    explicit BattleScene(Bag *mybag,QWidget *parent = nullptr);
 
-    void StartBattle(Bulbasaur* playerPokemon, Bulbasaur* enemyPokemon);
+    void StartBattle();
     void UpdateBattleInfo();
     void UseMove(int moveIndex);
     void UseItem(int itemIndex);
     void RunAway();
 
+    PokemonData GenerateRandomEnemy();
+    PokemonData GetPokemon_From_List(int id);
 signals:
     void BattleEnd(bool playerWon);
 
@@ -53,6 +56,10 @@ private:
 
     void SetupUI();
     void ShowBattleMessage(const QString &msg);
+
+
+    PokemonData myPokemon;
+    PokemonData EnemyPokemon;
 };
 
 #endif // BATTLESCENE_H

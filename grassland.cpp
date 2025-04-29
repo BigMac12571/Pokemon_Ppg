@@ -1,7 +1,7 @@
 #include "grassland.h"
 
-Grassland::Grassland(QWidget *parent)
-    : QWidget(parent)
+Grassland::Grassland(Bag *mybag,QWidget *parent)
+    : QWidget(parent),bag(mybag)
 {
     this->setFixedSize(Map_Width,Map_Height);
 
@@ -41,6 +41,14 @@ Grassland::Grassland(QWidget *parent)
     Ledges.append(QRect(82,1310,166,20));//壁崖(6,1)
     Ledges.append(QRect(416,1310,500,20));//壁崖(6,2)
 
+    //加入高草區
+    TallGrasses.append(QRect(416, 250,500,206));//上長高草
+    TallGrasses.append(QRect(666, 542,248,206));//上短高草
+    TallGrasses.append(QRect(500, 1000,248,206));//中短高草
+    TallGrasses.append(QRect(84, 1334,372,164));//左階梯形高草
+    TallGrasses.append(QRect(624, 1334,292,164));//右階梯型高草
+    TallGrasses.append(QRect(500, 1458,82,206));//下長高草
+
     Exit_Zone = QRect(500, 1642, 84, 24); // 自己依照背景圖微調
     Talk_With_Sign.append(QRect(374,1294,42,50)); //高草旁Sign
 
@@ -64,11 +72,12 @@ void Grassland::Add_Player_To_Scene(QWidget *player) //可以同時出現Town �
 void Grassland::SetMainPlayer(Player *p) {
     mainPlayer = p; //p 指向 mainPlayer 這個物件
 
-    mainPlayer->move(Player_Center_X+20, Player_Center_Y+175);
+    mainPlayer->move(Player_Center_X, Player_Center_Y+175);
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
     keysPressed.clear(); // 清空按鍵狀態
+
 }
 void Grassland::clearPressedKeys() {
     keysPressed.clear();
@@ -111,6 +120,7 @@ void Grassland::keyPressEvent(QKeyEvent *event)
 
         mainPlayer->setDirection(UP);
         mainPlayer->startWalking();
+        EncounterBattle();
         break;}
 
     case Qt::Key_Down:{
@@ -139,6 +149,7 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         }
         mainPlayer->setDirection(DOWN);
         mainPlayer->startWalking();
+        EncounterBattle();
         break;
     }
 
@@ -162,6 +173,7 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         }
         mainPlayer->setDirection(LEFT);
         mainPlayer->startWalking();
+        EncounterBattle();
         break;
 
     case Qt::Key_Right:
@@ -184,6 +196,7 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         }
         mainPlayer->setDirection(RIGHT);
         mainPlayer->startWalking();
+        EncounterBattle();
         break;
     case Qt::Key_B:
         if(OpenBag) OpenBag = false;
@@ -292,4 +305,37 @@ bool Grassland::CanMoveToDirection(Direction dir)
 
     return true;
 
+}
+
+void Grassland::EncounterBattle(){
+
+    QRect playerRect = mainPlayer->geometry();
+    QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
+
+    if(mainPlayer->isWalking()){
+
+        bool isInGrass = false;
+        for (const QRect &tallgrass : TallGrasses) {
+            if (tallgrass.intersects(Real_coodinate)) {
+                isInGrass = true;
+                break; // 只要與任何一個草叢相交，就認為在草叢中
+            }
+        }
+
+        if (isInGrass && !Encountered) {
+            Grass = true;
+            //2%觸發戰鬥
+            int random = QRandomGenerator::global()->generate() % 50;
+            if (random == 0) {
+                //qDebug() << "fight!!!";
+                emit Battle();
+                mainPlayer->stopWalking();
+                Encountered = true;
+                return; // 觸發戰鬥後直接返回，避免在同一步中多次觸發
+            }
+        } else if (!isInGrass && Grass) {
+            Encountered = false;
+            Grass = false;
+        }
+    }
 }

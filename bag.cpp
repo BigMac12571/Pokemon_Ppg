@@ -4,23 +4,48 @@
 Bag::Bag(QWidget *parent) : QWidget(parent)
 {
     this->setFixedSize(296, 378);
-    bag_image = new QLabel(this);
-    QPixmap pixmap(":/new/prefix1/Dataset/Image/bag.png");
-    bag_image->setPixmap(pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
+    bag_image.load(":/new/prefix1/Dataset/Image/bag.png");
     this->move(115, 36);
+
+    MenuContainer = new QWidget(this);
+    MenuContainer->setGeometry(0, 0, width(), height()); // 讓它跟 Bag 一樣大
+
+    // 然後再把 GridLayout 用在 MenuContainer 上
+    Menu = new QGridLayout(MenuContainer);
+    Menu->setSpacing(7*2);
+    Menu->setContentsMargins(9*2, 47*2,70, 14);
+
+    // 使用 MenuContainer 作為 layout
+    MenuContainer->setLayout(Menu);
 
     open = false;
 
-
+    for(int i = 0; i< 4 ; i++){
+        Pokemon_image.append(new QLabel(this));
+        Pokemon_name.append(new QLabel(this));
+        Menu->addWidget(Pokemon_image.at(i), i, 0);
+        Menu->addWidget(Pokemon_name.at(i), i, 1);
+    }
 }
 
 Bag::~Bag() {
     delete pokeballLabel;
     delete potionLabel;
     delete etherLabel;
+    //ClearBag();
 }
 
+void Bag::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    if (!bag_image.isNull()) {
+        QPixmap scaledBg = bag_image.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+         painter.drawPixmap(0, 0, scaledBg);
+    } else {
+        painter.fillRect(rect(), Qt::darkGray);
+    }
+    QWidget::paintEvent(event);
+}
 void Bag::Open_bag(){
     if(!open){
         this->show();
@@ -32,47 +57,44 @@ void Bag::Open_bag(){
     open = !open;
 }
 
-
-
-void Bag::Add_pokemon(const QPixmap& IconPixmap, const QString& name) {
-    if (IconPixmap.isNull()) {
-            qDebug() << "Warning: addPokemonIcon received a null QPixmap!";
-            return;
-        }
-
-        QLabel* IconLabel = new QLabel(this); // 创建新的 QLabel，父对象是 Bag
-        IconLabel->setPixmap(IconPixmap); // 设置接收到的缩放后的图片
-        IconLabel->setFixedSize(IconPixmap.size());
-        int Icon_x = 200 ; // 固定 X 坐标
-        int Icon_y = 94 + Pokemon_List.size() * 70;
-        IconLabel->move(Icon_x, Icon_y);
-
-
-        QLabel* NameLabel = new QLabel(this); // 创建新的 QLabel 用于显示名字，父对象也是 Bag
-        NameLabel->setText(name);
-        int Name_x = 40;
-        int Name_y = 102 + Pokemon_List.size() * 70;
-        NameLabel->move(Name_x, Name_y);
-        NameLabel->setStyleSheet("font-size: 32px; color: black;");
-
-
-        Pokemon_List.append(IconLabel);
-        IconLabel->show(); // 确保图标是可见的
-        IconLabel->raise(); // 确保图标在背景图片之上
-        NameLabel->show();
-        NameLabel->raise();
+void Bag::Add_Pokemon(int id, int form) {
+    PokemonData new_pokemon(id,form);
+    Pokemon_List.append(new_pokemon);
+    QPixmap image = new_pokemon.GetImagePath();
+    Pokemon_image.at(id)->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    Pokemon_name.at(id)->setStyleSheet("color: black; font-size: 30px;");
+    Pokemon_name.at(id)->setText(new_pokemon.GetName());
 
 }
+
+
+
+
+
+
+
+
+
+
 void Bag::Add_pokeball(){
-    pokeball++;
+    if(pokeball < 3){
+        pokeball++;
+        //qDebug() << "pokeball 的值現在是：" << pokeball;
+    }
+    Refresh_bag(0);
+    //qDebug() << "Add_pokeball() 執行後，Refresh_bag(0) 被呼叫";
 }
+
 void Bag::Add_potion(){
     potion++;
+    Refresh_bag(1);
 }
 void Bag::Add_ether(){
     ether++;
+    Refresh_bag(2);
 }
 void Bag::Refresh_bag(int id) {
+    //qDebug() << "Bag::Refresh_bag(" << id << ") 被呼叫，pokeball 的值是：" << pokeball;
     QString res = "x";
     int x, y;
 
@@ -80,30 +102,42 @@ void Bag::Refresh_bag(int id) {
 
     switch (id) {
     case 0:
-        res += QString::number(pokeball);
+        res = res + QString::number(pokeball);
         x = 92;
-        y = 52;
+        y = 40;
         currentLabel = pokeballLabel;
         break;
     case 1:
         res += QString::number(potion);
         x = 176;
-        y = 52;
+        y = 40;
         currentLabel = potionLabel;
         break;
     case 2:
         res += QString::number(ether);
         x = 272;
-        y = 52;
+        y = 40;
         currentLabel = etherLabel;
         break;
-    default:
-        return;
+
     }
 
     if (currentLabel) {
         // 如果標籤已經存在，則更新文字
+        //qDebug() << "更新 pokeballLabel: " << currentLabel << "，設定文字為：" << res;
+        if (id == 0 && pokeball == 3 && maxPokeballLabel == nullptr) {
+                        maxPokeballLabel = new QLabel("(max)", this);
+                        maxPokeballLabel->move(82, 56);
+                        maxPokeballLabel->setStyleSheet("font-size: 16px; color: black; font-weight: bold;");
+                        maxPokeballLabel->show();
+                        maxPokeballLabel->raise();
+                    } else if (id == 0 && pokeball < 3 && maxPokeballLabel != nullptr) {
+                        delete maxPokeballLabel;
+                        maxPokeballLabel = nullptr;
+                    }
         currentLabel->setText(res);
+        currentLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
+
     } else {
         // 如果標籤不存在，則創建新的標籤並儲存指標
         QLabel* NameLabel = new QLabel(this);
@@ -125,5 +159,6 @@ void Bag::Refresh_bag(int id) {
             break;
         }
     }
+
 }
 

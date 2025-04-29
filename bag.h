@@ -4,13 +4,15 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QPixmap>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
-
-
+#include <QPaintEvent>
+#include <QGridLayout>
+#include "pokemondata.h"
 
 
 class Bag:public QWidget
@@ -22,17 +24,31 @@ public:
 
     void Open_bag();
 
-    void Add_pokemon(const QPixmap& IconPixmap, const QString& name);
+    void Refresh_pokemon(QList<QLabel*> &put_in_pokemon); //寶可夢背包管理
+    void Add_Pokemon(int id, int form);
+    void Remove_Pokemon(int id, int form);
+    void ClearBag();
+
+
     void Add_pokeball();
     void Add_potion();
     void Add_ether();
     void Refresh_bag(int id);
 
 
-private:
-    QLabel* bag_image;
+    QList<PokemonData> Pokemon_List;
 
-    QList<QLabel*> Pokemon_List;
+protected:
+    void paintEvent(QPaintEvent *event) override;
+private:
+    QPixmap bag_image;
+    QWidget* MenuContainer;
+
+
+    QList<QLabel*> Pokemon_image;
+    QList<QLabel*> Pokemon_name;
+
+    QGridLayout *Menu ;
 
     const int View_Width = 525; // 視窗寬度
     const int View_Height = 450; // 視窗高度
@@ -42,7 +58,7 @@ private:
     QLabel* pokeballLabel = nullptr;
     QLabel* potionLabel = nullptr;
     QLabel* etherLabel = nullptr;
-
+    QLabel* maxPokeballLabel = nullptr;
 
 
 

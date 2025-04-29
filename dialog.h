@@ -23,13 +23,14 @@ class Dialog:public QLabel
 public:
     explicit Dialog(QWidget *parent = nullptr);
 
-
     void Oak_Dialog();
     void Sign_Dialog();
     void Grassland_Dialog();
 
     void Box_Dialog();
     void Show_Pokeballs_Dialog(int id);
+    void Show_Pokemon(int id);
+
     void Reset_Dialog_State();
     //void Setup_Shared_pokeball_ID(int id);
 
@@ -51,7 +52,7 @@ private:
 
     const int View_Width = 525; // 視窗寬度
     const int View_Height = 450; // 視窗高度
-
+    QLabel *Text;
 
 
 
@@ -68,9 +69,11 @@ private:
     bool Pickup_Pokeballs_dialog_start;
     int Shared_pokeball_ID;
     bool Waiting_For_YesNo;
-
+    QLabel *Pokemon;
 
     int CurrentDialog;
+
+
 
 
 

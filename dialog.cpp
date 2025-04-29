@@ -1,8 +1,13 @@
 #include "dialog.h"
 Dialog::Dialog(QWidget *parent) : QLabel(parent)
 {
-    this->setFixedSize(525, 99);
-    this->move(0, View_Height - 99);
+    this->setFixedSize(View_Width, View_Height);
+    this->move(0,0);
+    Text = new QLabel(this);
+    Text->setAlignment(Qt::AlignCenter);  // 文字居中顯示
+    Text->setStyleSheet("color: black; font-size: 20px;");
+    Text->setGeometry(0, View_Height-99, 525, 99);
+
 
     Oak_dialog << "I am Professor Oak. Welcome to my laboratory!"
                << "You can choose one from three Poké Balls as your initial\nPokémon in Laboratory.";
@@ -47,13 +52,12 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
 
 
     CurrentDialog = 0;
+    Pokemon = nullptr;
 
-
-    setAlignment(Qt::AlignCenter);  // 文字居中顯示
-    setStyleSheet("color: black; font-size: 20px;");
 
 
 }
+
 void Dialog::Reset_Dialog_State() {
     Oak_dialog_start = false;
     Sign_dialog_start = false;
@@ -68,7 +72,9 @@ void Dialog::Oak_Dialog(){
     Oak_dialog_start = true;
     if (CurrentDialog < Oak_dialog.size()) {
 
-        setText(Oak_dialog.at(CurrentDialog));
+        Text->setText(Oak_dialog.at(CurrentDialog));
+        Text->show();
+        Text->raise();
         CurrentDialog++;
     } else {
         emit Close_Dialog();
@@ -80,7 +86,9 @@ void Dialog::Sign_Dialog(){
     Sign_dialog_start = true;
     if (CurrentDialog < Sign_dialog.size()) {
 
-        setText(Sign_dialog.at(CurrentDialog));
+        Text->setText(Sign_dialog.at(CurrentDialog));
+        Text->show();
+        Text->raise();
         CurrentDialog++;
     } else {
         emit Close_Dialog();
@@ -93,7 +101,9 @@ void Dialog::Grassland_Dialog(){
     Grassland_dialog_start = true;
     if (CurrentDialog < Grassland_dialog.size()) {
 
-        setText(Grassland_dialog.at(CurrentDialog));
+        Text->setText(Grassland_dialog.at(CurrentDialog));
+        Text->show();
+        Text->raise();
         CurrentDialog++;
     } else {
         emit Close_Dialog();
@@ -107,7 +117,9 @@ void Dialog::Box_Dialog(){
     int id = QRandomGenerator::global()->generate() % 3;
     if (CurrentDialog < Box_dialog[id].size()) {
 
-        setText(Box_dialog[id].at(CurrentDialog));
+        Text->setText(Box_dialog[id].at(CurrentDialog));
+        Text->show();
+        Text->raise();
         CurrentDialog++;
     } else {
         emit Close_Dialog();
@@ -135,12 +147,18 @@ void Dialog::Show_Pokeballs_Dialog(int id){
     Shared_pokeball_ID = id;
 
     if (CurrentDialog < Pickup_Pokeballs_dialog[id].size() - 1) {
-            setText(Pickup_Pokeballs_dialog[id].at(CurrentDialog));
+            Text->setText(Pickup_Pokeballs_dialog[id].at(CurrentDialog));
+            Text->show();
+            Text->raise();
+
             CurrentDialog++;
 
         } else if (CurrentDialog == Pickup_Pokeballs_dialog[id].size() - 1) {
 
-            setText(Pickup_Pokeballs_dialog[id].at(CurrentDialog));
+            Text->setText(Pickup_Pokeballs_dialog[id].at(CurrentDialog));
+            Text->show();
+            Text->raise();
+
             CurrentDialog++;
             Waiting_For_YesNo = true;
 
@@ -148,7 +166,23 @@ void Dialog::Show_Pokeballs_Dialog(int id){
         }
 }
 
-
+void Dialog::Show_Pokemon(int id){
+    if (Pokemon) {
+         delete Pokemon;
+        Pokemon = nullptr;
+     }
+    Pokemon = new QLabel(this);
+    QPixmap pokemon_image;
+    switch(id){
+    case 0:{pokemon_image.load(":/new/prefix1/Dataset/Image/battle/bulbasaur.png"); break;}
+    case 1:{pokemon_image.load(":/new/prefix1/Dataset/Image/battle/squirtle.png"); break;}
+    case 2:{pokemon_image.load(":/new/prefix1/Dataset/Image/battle/charmander.png"); break;}
+    }
+    Pokemon->setPixmap(pokemon_image);
+    Pokemon->move( width()/2-110/2, height()/2-80);
+    Pokemon->show();
+    Pokemon->raise();
+}
 
 
 
@@ -160,7 +194,7 @@ void Dialog::paintEvent(QPaintEvent *event)
     QPainter PaintDialog(this);
     QPixmap pixmap(":/new/prefix1/Dataset/Image/dialog.png");
     // 繪製背景圖片
-    PaintDialog.drawPixmap(0, 0, width(), height(), pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    PaintDialog.drawPixmap(0, View_Height-99, 525, 99, pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     QLabel::paintEvent(event); // 顯示你設定的文字（像你用 setText() 設定的句子）
 
 }

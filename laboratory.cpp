@@ -237,8 +237,6 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
                 if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){
                     emit Show_Pokeballs(i);
 
-                    //emit Open_Dialog_Showing_Pokemons(i);
-
 
                         }
                     }
