@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPainter>
@@ -31,6 +32,8 @@ public:
     PokemonData* GetPokemon_From_List(int id);
 
     void UpdateHPBar(QLabel* barLabel, int currentHP, int maxHP, QSize size);
+    void UpdateBagUI();
+
     void ResetBattleScene() ;
 
     void ShowNextDialog();
@@ -52,7 +55,8 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
-
+//    void keyPressEvent(QKeyEvent *event) override;
+    bool eventFilter(QObject* obj, QEvent* event) override;
 private:
     QLabel *background;
     QLabel *playerLabel;
@@ -65,6 +69,19 @@ private:
     QPushButton *bagButton;
     QPushButton *pokemonButton;
     QPushButton *runButton;
+
+    int currentSkillIndex = 0;
+    //QVector<QToolButton*> SkillButtons;
+    QToolButton* backButton_skill;
+    QToolButton* Move0_Button;
+    QToolButton* Move1_Button;
+    QToolButton* Move2_Button;
+    QToolButton* Move3_Button;
+
+    QToolButton* Pokeball_Button ;
+    QToolButton* Potion_Button ;
+    QToolButton* Ether_Button ;
+    QToolButton* Bag_BackButton ;
 
     Bulbasaur *playerPokemon;
     Bulbasaur *enemyPokemon;
@@ -93,6 +110,7 @@ private:
 
     QWidget* SkillMenu;
     QWidget* bag_area;
+    QLabel* SkillInfo;
 
     QLabel* Dialog;
     QTimer* Timer;

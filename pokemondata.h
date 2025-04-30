@@ -27,10 +27,15 @@ public:
     int GetCurrentHp() const { return current_hp;}
     int GetMaxHp() const { return max_hp; }
     int GetLevel() const { return level_; }
+    int GetCurrentPP(int pp) const { return  (pp == 0)? current_pp.at(0): (pp == 1)? current_pp.at(1): (pp == 2)? current_pp.at(2): (pp == 3)? current_pp.at(3): 0;}
+    int GetMaxPP(int pp) const { return  (pp == 0)? pp0: (pp == 1)? pp1: (pp == 2)? pp2: (pp == 3)? pp3: 0;}
     QString GetImagePath() const { return ImagePath; }
     QString GetBackImagaePath() const { return BackImagePath;}
     int GetDamage(const PokemonData& opponent, int move) const;
     void TakeDamage(int damage);
+    void RestoreHP();
+    void RestorePP(int MoveID);
+    void UseMove(int MoveID);
 
     void Reset();
 
@@ -40,6 +45,7 @@ private:
     int level_;
     int attack;
     int defense;
+
     int max_hp;
     int current_hp;
     QString name;
@@ -52,6 +58,7 @@ private:
     int power1;
     int power2;
     int power3;
+    QVector<int> current_pp;
     int pp0;
     int pp1;
     int pp2;

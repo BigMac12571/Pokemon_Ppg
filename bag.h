@@ -35,6 +35,13 @@ public:
     void Add_ether();
     void Refresh_bag(int id);
 
+    int GetPokeball() const {return pokeball ;}
+    int GetPotion() const {return potion ;}
+    int GetEther() const {return ether ;}
+
+    void UsePokeball();
+    void UsePotion();
+    void UseEther();
 
     QList<PokemonData> Pokemon_List;
 

@@ -8,6 +8,7 @@ PokemonData::PokemonData(int id, int level):id_(id),level_(level)
 
     UpdateData();
     current_hp = max_hp;
+    current_pp = {pp0,pp1,pp2,pp3};
 
 
 }
@@ -34,10 +35,11 @@ void PokemonData::InitializeBaseData()
 void PokemonData::LevelUp()
 {   int before_hp = GetCurrentHp();
     int before_max_hp = GetMaxHp();
+
     level_++;
     UpdateData();
     current_hp = before_hp +(GetMaxHp()-before_max_hp);
-
+    current_pp = {GetCurrentPP(0),(level_==2)? pp1: GetCurrentPP(1), (level_==3)?pp2:GetCurrentPP(2),(level_==4)?pp3:GetCurrentPP(3)};
 }
 
 void PokemonData::UpdateData()
@@ -93,6 +95,28 @@ void PokemonData::TakeDamage(int damage)
     if (current_hp < 0) {
         current_hp = 0;
     }
+}
+
+void PokemonData::RestoreHP(){
+    current_hp += 10;
+    if (current_hp > GetMaxHp()) {
+        current_hp = GetMaxHp();
+    }
+
+}
+
+void PokemonData::UseMove(int MoveID){
+    if(current_pp[MoveID]>0){
+        current_pp[MoveID] -- ;
+     }
+}
+void PokemonData::RestorePP(int MoveID){
+
+    if(current_pp[MoveID]<GetMaxPP(MoveID)){
+        current_pp[MoveID] = GetMaxPP(MoveID) ;
+     }
+
+
 }
 void PokemonData::Reset()
 {

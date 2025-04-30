@@ -107,7 +107,33 @@ void Bag::Add_Pokemon(int id, int level) {
 //    Pokemon_name.at(id)->setText(new_pokemon.GetName());
 
 }
+void Bag::UsePokeball(){
+    if(pokeball>=0){
 
+        pokeball --;
+    }
+
+    Refresh_bag(0);
+
+}
+void Bag::UsePotion(){
+    if(potion>=0){
+
+        potion --;
+    }
+
+    Refresh_bag(1);
+
+}
+void Bag::UseEther(){
+    if(ether>=0){
+
+        pokeball --;
+    }
+
+    Refresh_bag(2);
+
+}
 void Bag::Add_pokeball(){
     if(pokeball < 3){
         pokeball++;
