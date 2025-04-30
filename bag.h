@@ -49,6 +49,7 @@ private:
     QList<QLabel*> Pokemon_name;
 
     QGridLayout *Menu ;
+    QList<QList<QWidget*>> pokemonPlaceholders;
 
     const int View_Width = 525; // 視窗寬度
     const int View_Height = 450; // 視窗高度

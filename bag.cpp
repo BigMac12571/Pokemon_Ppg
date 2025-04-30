@@ -12,20 +12,33 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
 
     // 然後再把 GridLayout 用在 MenuContainer 上
     Menu = new QGridLayout(MenuContainer);
-    Menu->setSpacing(7*2);
-    Menu->setContentsMargins(9*2, 47*2,70, 14);
-
+    Menu->setHorizontalSpacing(14);
+    Menu->setVerticalSpacing(12);
+    Menu->setContentsMargins(16,94 ,58, 14);
+    //Menu->setContentsMargins(0,0 ,0, 0);
     // 使用 MenuContainer 作為 layout
     MenuContainer->setLayout(Menu);
 
     open = false;
 
-    for(int i = 0; i< 4 ; i++){
-        Pokemon_image.append(new QLabel(this));
-        Pokemon_name.append(new QLabel(this));
-        Menu->addWidget(Pokemon_image.at(i), i, 0);
-        Menu->addWidget(Pokemon_name.at(i), i, 1);
+    // 創建 4x2 的透明QLabel
+    for (int row = 0; row < 4; ++row) {
+        QList<QWidget*> rowPlaceholders;
+        for (int col = 0; col < 2; ++col) {
+            QWidget* placeholder = new QWidget(this);
+            placeholder->setStyleSheet("background: transparent;");
+            Menu->addWidget(placeholder, row, col);
+            rowPlaceholders.append(placeholder);
+        }
+        pokemonPlaceholders.append(rowPlaceholders);
     }
+
+//    for(int i = 0; i< 4 ; i++){
+//        Pokemon_image.append(new QLabel(this));
+//        Pokemon_name.append(new QLabel(this));
+//        Menu->addWidget(Pokemon_image.at(i), i, 0);
+//        Menu->addWidget(Pokemon_name.at(i), i, 1);
+//    }
 }
 
 Bag::~Bag() {
@@ -60,10 +73,38 @@ void Bag::Open_bag(){
 void Bag::Add_Pokemon(int id, int level) {
     PokemonData new_pokemon(id,level);
     Pokemon_List.append(new_pokemon);
-    QPixmap image = new_pokemon.GetImagePath();
-    Pokemon_image.at(id)->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    Pokemon_name.at(id)->setStyleSheet("color: black; font-size: 30px;");
-    Pokemon_name.at(id)->setText(new_pokemon.GetName());
+
+    int row = Pokemon_List.count() - 1;
+
+        if (row < pokemonPlaceholders.size()) {//背包只能放4隻寶可夢
+            // 加寶可夢圖片
+            QLabel* imageLabel = new QLabel(this);
+            QPixmap image = new_pokemon.GetImagePath();
+            imageLabel->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            imageLabel->setAlignment(Qt::AlignCenter);
+
+            // 替換透明QLabel
+            QWidget* imagePlaceholder = pokemonPlaceholders[row][0];
+            Menu->removeWidget(imagePlaceholder);
+            imagePlaceholder->deleteLater();
+            Menu->addWidget(imageLabel, row, 0);
+
+            // 加寶可夢名稱
+            QLabel* nameLabel = new QLabel(this);
+            nameLabel->setStyleSheet("color: black; font-size: 30px;");
+            nameLabel->setText(new_pokemon.GetName());
+            nameLabel->setAlignment(Qt::AlignVCenter);
+
+            // 替換透明QLabel
+            QWidget* namePlaceholder = pokemonPlaceholders[row][1];
+            Menu->removeWidget(namePlaceholder);
+            namePlaceholder->deleteLater();
+            Menu->addWidget(nameLabel, row, 1);
+            }
+//    QPixmap image = new_pokemon.GetImagePath();
+//    Pokemon_image.at(id)->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+//    Pokemon_name.at(id)->setStyleSheet("color: black; font-size: 30px;");
+//    Pokemon_name.at(id)->setText(new_pokemon.GetName());
 
 }
 
