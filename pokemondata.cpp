@@ -13,17 +13,23 @@ PokemonData::PokemonData(int id, int level):id_(id),level_(level)
 }
 void PokemonData::InitializeBaseData()
 {
-    baseDataMap[qMakePair(0, 1)] = {"Bulbasaur", 5, 5, 30, "Tackle", "Growl", 10, 15, 20,20, ":/new/prefix1/Dataset/Image/battle/bulbasaur.png",":/new/prefix1/Dataset/Image/battle/bulbasaur_back.png"};
-    baseDataMap[qMakePair(0, 3)] = {"Ivysaur", 10, 10, 80, "Growth", "Razor Leaf", 20, 25, 15, 5, ":/new/prefix1/Dataset/Image/battle/ivysaur.png",":/new/prefix1/Dataset/Image/battle/ivysaur_back.png"};
-    baseDataMap[qMakePair(0, 5)] = {"Venusaur", 15, 15, 100, "x", "x", 0, 0, 0,0, ":/new/prefix1/Dataset/Image/battle/venusaur.png",":/new/prefix1/Dataset/Image/battle/venusaur_back.png"};
+    baseDataMap[qMakePair(0, 1)] = {"Bulbasaur", 5, 5, 30, "Tackle", "x","x","x", 10, 0,0,0, 20,0,0,0, ":/new/prefix1/Dataset/Image/battle/bulbasaur.png",":/new/prefix1/Dataset/Image/battle/bulbasaur_back.png"};
+    baseDataMap[qMakePair(0, 2)] = {"Bulbasaur", 5, 5, 30, "Tackle", "Growl","x","x", 10, 15,0,0, 20,20,0,0, ":/new/prefix1/Dataset/Image/battle/bulbasaur.png",":/new/prefix1/Dataset/Image/battle/bulbasaur_back.png"};
+    baseDataMap[qMakePair(0, 3)] = {"Ivysaur", 10, 10, 80, "Tackle", "Growl", "Growth", "x",10, 20, 25,0, 20,20,15, 0, ":/new/prefix1/Dataset/Image/battle/ivysaur.png",":/new/prefix1/Dataset/Image/battle/ivysaur_back.png"};
+    baseDataMap[qMakePair(0, 4)] = {"Ivysaur", 10, 10, 80, "Tackle", "Growl", "Growth", "Razor Leaf", 10, 15, 20, 25, 20,20,15, 5, ":/new/prefix1/Dataset/Image/battle/ivysaur.png",":/new/prefix1/Dataset/Image/battle/ivysaur_back.png"};
+    baseDataMap[qMakePair(0, 5)] = {"Venusaur", 15, 15, 100, "Tackle", "Growl", "Growth", "Razor Leaf", 10, 15, 20, 25, 20,20,15, 5, ":/new/prefix1/Dataset/Image/battle/venusaur.png",":/new/prefix1/Dataset/Image/battle/venusaur_back.png"};
 
-    baseDataMap[qMakePair(1, 1)] = {"Squirtle", 5, 5, 30, "Tackle", "Tail Whip", 10, 15, 20,20, ":/new/prefix1/Dataset/Image/battle/squirtle.png",":/new/prefix1/Dataset/Image/battle/squirtle_back.png"};
-    baseDataMap[qMakePair(1, 3)] = {"Wartortle", 10, 10, 80, "Protect", "Wave Crash", 20, 25, 15, 5, ":/new/prefix1/Dataset/Image/battle/wartortle.png",":/new/prefix1/Dataset/Image/battle/wartortle_back.png"};
-    baseDataMap[qMakePair(1, 5)] = {"Blastoise", 15, 15, 100, "x", "x", 0, 0, 0,0, ":/new/prefix1/Dataset/Image/battle/blastoise.png",":/new/prefix1/Dataset/Image/battle/blastoise_back.png"};
+    baseDataMap[qMakePair(1, 1)] = {"Squirtle", 5, 5, 30, "Tackle", "x", "x", "x", 10, 0,0,0, 20,0,0,0, ":/new/prefix1/Dataset/Image/battle/squirtle.png",":/new/prefix1/Dataset/Image/battle/squirtle_back.png"};
+    baseDataMap[qMakePair(1, 2)] = {"Squirtle", 5, 5, 30, "Tackle", "Tail Whip", "x", "x", 10, 15,0,0, 20,20,0,0, ":/new/prefix1/Dataset/Image/battle/squirtle.png",":/new/prefix1/Dataset/Image/battle/squirtle_back.png"};
+    baseDataMap[qMakePair(1, 3)] = {"Wartortle", 10, 10, 80, "Tackle", "Tail Whip", "Protect", "x",10, 20, 25,0, 20,20,15, 0, ":/new/prefix1/Dataset/Image/battle/wartortle.png",":/new/prefix1/Dataset/Image/battle/wartortle_back.png"};
+    baseDataMap[qMakePair(1, 4)] = {"Wartortle", 10, 10, 80, "Tackle", "Tail Whip", "Protect", "Wave Crash", 10, 15, 20, 25, 20,20,15, 5, ":/new/prefix1/Dataset/Image/battle/wartortle.png",":/new/prefix1/Dataset/Image/battle/wartortle_back.png"};
+    baseDataMap[qMakePair(1, 5)] = {"Blastoise", 15, 15, 100, "Tackle", "Tail Whip", "Protect", "Wave Crash", 10, 15, 20, 25, 20,20,15, 5, ":/new/prefix1/Dataset/Image/battle/blastoise.png",":/new/prefix1/Dataset/Image/battle/blastoise_back.png"};
 
-    baseDataMap[qMakePair(2, 1)] = {"Charmander", 5, 5, 30, "Scratch", "Growl", 10, 15, 20,20, ":/new/prefix1/Dataset/Image/battle/charmander.png",":/new/prefix1/Dataset/Image/battle/charmander_back.png"};
-    baseDataMap[qMakePair(2, 3)] = {"Charmeleon", 10, 10, 80, "Scary face", "Flare Blitz", 20, 25, 15, 5, ":/new/prefix1/Dataset/Image/battle/charmeleon.png",":/new/prefix1/Dataset/Image/battle/charmeleon_back.png"};
-    baseDataMap[qMakePair(2, 5)] = {"Charizard", 15, 15, 100, "x", "x", 0, 0, 0,0, ":/new/prefix1/Dataset/Image/battle/charizard.png",":/new/prefix1/Dataset/Image/battle/charizard_back.png"};
+    baseDataMap[qMakePair(2, 1)] = {"Charmander", 5, 5, 30, "Scratch", "x", "x", "x", 10, 0,0,0, 20,0,0,0, ":/new/prefix1/Dataset/Image/battle/charmander.png",":/new/prefix1/Dataset/Image/battle/charmander_back.png"};
+    baseDataMap[qMakePair(2, 2)] = {"Charmander", 5, 5, 30, "Scratch", "Growl", "x", "x", 10, 15,0,0, 20,20,0,0, ":/new/prefix1/Dataset/Image/battle/charmander.png",":/new/prefix1/Dataset/Image/battle/charmander_back.png"};
+    baseDataMap[qMakePair(2, 3)] = {"Charmeleon", 10, 10, 80, "Scratch", "Growl", "Scary face", "x",10, 20, 25,0, 20,20,15, 0, ":/new/prefix1/Dataset/Image/battle/charmeleon.png",":/new/prefix1/Dataset/Image/battle/charmeleon_back.png"};
+    baseDataMap[qMakePair(2, 4)] = {"Charmeleon", 10, 10, 80, "Scratch", "Growl", "Scary face", "Flare Blitz", 10, 15, 20, 25, 20,20,15, 5, ":/new/prefix1/Dataset/Image/battle/charmeleon.png",":/new/prefix1/Dataset/Image/battle/charmeleon_back.png"};
+    baseDataMap[qMakePair(2, 5)] = {"Charizard", 15, 15, 100, "Scratch", "Growl", "Scary face", "Flare Blitz", 10, 15, 20, 25, 20,20,15, 5, ":/new/prefix1/Dataset/Image/battle/charizard.png",":/new/prefix1/Dataset/Image/battle/charizard_back.png"};
 }
 void PokemonData::LevelUp()
 {   int before_hp = GetCurrentHp();
@@ -52,12 +58,18 @@ void PokemonData::UpdateData()
         attack = data.attack;
         defense = data.defense;
         max_hp = data.max_hp;
+        move0 = data.move0;
         move1 = data.move1;
         move2 = data.move2;
+        move3 = data.move3;
+        power0 = data.power0;
         power1 = data.power1;
         power2 = data.power2;
+        power3 = data.power3;
+        pp0 = data.pp0;
         pp1 = data.pp1;
         pp2 = data.pp2;
+        pp3 = data.pp3;
         ImagePath = data.imagePath;
         BackImagePath = data.BackImagePath;
         }
@@ -67,20 +79,10 @@ void PokemonData::UpdateData()
 int PokemonData::GetDamage(const PokemonData& opponent, int move) const
 {
     int selectedPower = 0;
+    selectedPower = (move ==0)? power0: (move ==1)? power1:(move ==2)? power2:(move ==3)? power3: 0;
 
-    // 根據 move index 判斷威力
-    if (move == 1) {
-        selectedPower = power1;
-    } else if (move == 2) {
-        selectedPower = power2;
-    } else {
-        selectedPower = 0;  // 預設為無效攻擊
-    }
-
-    // 簡單的傷害計算
     int damage = (selectedPower + attack - opponent.defense) * level_;
 
-    // 避免傷害為負
     if (damage < 0) damage = 0;
 
     return damage;

@@ -161,7 +161,7 @@ void BattleScene::StartBattle() {
 
 
     QPushButton* backButton_skill = new QPushButton("Back", SkillMenu);
-    backButton_skill->setGeometry(160, 70, 100, 30);
+    backButton_skill->setGeometry(240, 70, 80, 30);
     connect(backButton_skill, &QPushButton::clicked,this, [=]() {
         SkillMenu->hide();
         fightButton->show();
@@ -173,33 +173,36 @@ void BattleScene::StartBattle() {
     });
 
 
-    QPushButton* NormalAttack_Button = new QPushButton("Attack", SkillMenu);
-    NormalAttack_Button->setGeometry(30, 30, 100, 30);
-    connect(NormalAttack_Button, &QPushButton::clicked,this, [=]() {
-        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon,0)); // 普通攻擊傷害 10
+
+
+    QPushButton* Move0_Button = new QPushButton(MyPokemon->GetMove(0), SkillMenu);
+    Move0_Button->setGeometry(20, 30, 80, 30);
+    connect(Move0_Button, &QPushButton::clicked,this, [=]() {
+        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon,0)); // 技能1 傷害 20
         UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
 
 
         SkillMenu->hide();
         emit Attack_Dialog(0,0);
     });
-    if(MyPokemon->GetLevel()<=4){
-    QPushButton* Power1_Button = new QPushButton(MyPokemon->GetMove(1), SkillMenu);
-    Power1_Button->setGeometry(160, 30, 100, 30);
-    connect(Power1_Button, &QPushButton::clicked,this, [=]() {
-        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon,1)); // 技能1 傷害 20
+
+    if(MyPokemon->GetLevel()>=2){
+    QPushButton* Move1_Button = new QPushButton(MyPokemon->GetMove(1), SkillMenu);
+    Move1_Button->setGeometry(20, 70, 80, 30);
+    connect(Move1_Button, &QPushButton::clicked,this, [=]() {
+        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon,1)); // 技能2 傷害 30
         UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
 
 
         SkillMenu->hide();
         emit Attack_Dialog(0,1);
     });
-
-
-    QPushButton* Power2_Button = new QPushButton(MyPokemon->GetMove(2), SkillMenu);
-    Power2_Button->setGeometry(30, 70, 100, 30);
-    connect(Power2_Button, &QPushButton::clicked,this, [=]() {
-        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon,2)); // 技能2 傷害 30
+    }
+    if(MyPokemon->GetLevel()>=3){
+    QPushButton* Move2_Button = new QPushButton(MyPokemon->GetMove(2), SkillMenu);
+    Move2_Button->setGeometry(140, 30, 80, 30);
+    connect(Move2_Button, &QPushButton::clicked,this, [=]() {
+        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon,2)); // 普通攻擊傷害 10
         UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
 
 
@@ -207,7 +210,18 @@ void BattleScene::StartBattle() {
         emit Attack_Dialog(0,2);
     });
     }
+    if(MyPokemon->GetLevel()>=4){
+    QPushButton* Move3_Button = new QPushButton(MyPokemon->GetMove(3), SkillMenu);
+    Move3_Button->setGeometry(140, 70, 80, 30);
+    connect(Move3_Button, &QPushButton::clicked,this, [=]() {
+        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon,3)); // 普通攻擊傷害 10
+        UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
 
+
+        SkillMenu->hide();
+        emit Attack_Dialog(0,3);
+    });
+    }
     //背包區
 
 
@@ -468,7 +482,7 @@ void BattleScene::ShowNextDialog() {
 }
 void BattleScene::Enemy_turn(){
     PokemonData myPokemon = *MyPokemon;
-    int Enemy_move = QRandomGenerator::global()->bounded(0, 3);
+    int Enemy_move = QRandomGenerator::global()->bounded(0, 1);
     MyPokemon->TakeDamage(EnemyPokemon.GetDamage(myPokemon,Enemy_move)); // 技能2 傷害 30
     UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
     UpdateBattleInfo();

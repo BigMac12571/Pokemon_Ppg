@@ -231,7 +231,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
             if(picked[i]) one_of_pokeball_get_picked = true;
         }
 
-        if(true){
+        if(!one_of_pokeball_get_picked){
 
             for(int i=0;i<Pick_Pokeballs_area.size();i++){
                 if(Pick_Pokeballs_area[i].intersects(Real_coodinate)){
