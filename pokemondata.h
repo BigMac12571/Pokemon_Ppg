@@ -21,7 +21,7 @@ public:
 
     // Getter
     QString GetName() const { return name; }
-    QString GetMove(int move) const { return (move == 1)? move1: (move == 2 )? move2 : "Attack"; }
+    QString GetMove(int move) const { return (move == 0)? move0: (move == 1)? move1: (move == 2)? move2: (move == 3)? move3: "WTF"; }
     int GetAttack() const { return attack; }
     int GetDefense() const { return defense; }
     int GetCurrentHp() const { return current_hp;}
@@ -43,12 +43,19 @@ private:
     int max_hp;
     int current_hp;
     QString name;
+    QString move0;
     QString move1;
     QString move2;
+    QString move3;
+
+    int power0;
     int power1;
     int power2;
+    int power3;
+    int pp0;
     int pp1;
     int pp2;
+    int pp3;
     QString ImagePath;
     QString BackImagePath;
 
@@ -57,12 +64,18 @@ private:
         int attack;
         int defense;
         int max_hp;
+        QString move0;
         QString move1;
         QString move2;
+        QString move3;
+        int power0;
         int power1;
         int power2;
+        int power3;
+        int pp0;
         int pp1;
         int pp2;
+        int pp3;
         QString imagePath;
         QString BackImagePath;
         };
