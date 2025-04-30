@@ -17,6 +17,7 @@
 #include "bulbasaur.h"
 #include "charmander.h"
 #include "squirtle.h"
+#include "pokemondata.h"
 #include "bag.h"
 
 QT_BEGIN_NAMESPACE

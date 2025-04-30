@@ -26,7 +26,7 @@ public:
 
     void Refresh_pokemon(QList<QLabel*> &put_in_pokemon); //寶可夢背包管理
     void Add_Pokemon(int id, int form);
-    void Remove_Pokemon(int id, int form);
+    void Remove_Pokemon(int id);
     void ClearBag();
 
 
@@ -68,6 +68,10 @@ private:
     QLabel* potionLabel = nullptr;
     QLabel* etherLabel = nullptr;
     QLabel* maxPokeballLabel = nullptr;
+
+    QLabel* ImageLabel = nullptr;
+    QLabel* NameLabel = nullptr;
+    QLabel* LevelLabel = nullptr;
 
 
 

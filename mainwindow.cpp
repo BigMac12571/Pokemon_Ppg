@@ -343,6 +343,7 @@ void MainWindow::Refresh_bag(){
     mybag->Refresh_bag(0);
     mybag->Refresh_bag(1);
     mybag->Refresh_bag(2);
+    mybag->Refresh_bag_pokemon();
 }
 ///////////////////實驗室拿pokeball
 

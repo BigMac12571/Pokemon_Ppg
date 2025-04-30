@@ -15,7 +15,7 @@
 class PokemonData
 {
 public:
-    PokemonData() : id_(0), level_(1) {}
+    PokemonData() : id_(-1), level_(1) {}
     PokemonData(int id, int level);
     void LevelUp();
 
@@ -36,6 +36,7 @@ public:
     void RestoreHP();
     void RestorePP(int MoveID);
     void UseMove(int MoveID);
+    bool isEmpty() const { return id_ == -1; }
 
     void Reset();
 

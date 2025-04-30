@@ -567,7 +567,7 @@ void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
     if (!AttackDialogs.isEmpty()) {
         Dialog->setText(AttackDialogs[Who][CurrentDialogIndex]);
         Dialog->show();
-        Timer->start(3000);
+        Timer->start(2000);
     }
 
 }
@@ -594,7 +594,7 @@ void BattleScene::ShowNextDialog() {
     if(!AttackDialogs.isEmpty()){
         if (CurrentDialogIndex < AttackDialogs[Who].size()){
             Dialog->setText(AttackDialogs[Who][CurrentDialogIndex]);
-            Timer->start(3000); // 繼續計時下一句
+            Timer->start(2000); // 繼續計時下一句
         }else {
             AttackDialogs.clear();
             Dialog->hide();
@@ -603,7 +603,7 @@ void BattleScene::ShowNextDialog() {
     }else if (!ItemsDialogs.isEmpty()){
         if (CurrentDialogIndex < ItemsDialogs[ItemID].size()) {
             Dialog->setText(ItemsDialogs[ItemID][CurrentDialogIndex]);
-            Timer->start(3000); // 繼續計時下一句
+            Timer->start(2000); // 繼續計時下一句
         } else {
             ItemsDialogs.clear();
             Dialog->hide();

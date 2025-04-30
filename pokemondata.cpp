@@ -40,6 +40,7 @@ void PokemonData::LevelUp()
     UpdateData();
     current_hp = before_hp +(GetMaxHp()-before_max_hp);
     current_pp = {GetCurrentPP(0),(level_==2)? pp1: GetCurrentPP(1), (level_==3)?pp2:GetCurrentPP(2),(level_==4)?pp3:GetCurrentPP(3)};
+
 }
 
 void PokemonData::UpdateData()
