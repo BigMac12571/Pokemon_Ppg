@@ -65,10 +65,10 @@ private:
     QLabel *enemyInfo;
     QLabel *messageBox;
 
-    QPushButton *fightButton;
-    QPushButton *bagButton;
-    QPushButton *pokemonButton;
-    QPushButton *runButton;
+    QToolButton *fightButton;
+    QToolButton *bagButton;
+    QToolButton *pokemonButton;
+    QToolButton *runButton;
 
     int currentSkillIndex = 0;
     //QVector<QToolButton*> SkillButtons;
@@ -83,6 +83,12 @@ private:
     QToolButton* Ether_Button ;
     QToolButton* Bag_BackButton ;
 
+    QToolButton* backButton_PP;
+    QToolButton* Move0_Button_PP;
+    QToolButton* Move1_Button_PP;
+    QToolButton* Move2_Button_PP;
+    QToolButton* Move3_Button_PP;
+
     Bulbasaur *playerPokemon;
     Bulbasaur *enemyPokemon;
     Bag *bag;
@@ -96,6 +102,7 @@ private:
 
     PokemonData *MyPokemon;
     QLabel* MyHpBarLabel;
+    QLabel* MyHp;
     QLabel* MyPokemonImage;
     QLabel* MyPokemonName;
     QLabel* MyLevel;
@@ -107,10 +114,12 @@ private:
     QLabel* EnemyName;
     QLabel* EnemyLevel;
 
-
+    QWidget* MainMenu;
     QWidget* SkillMenu;
     QWidget* bag_area;
-    QLabel* SkillInfo;
+    QWidget* Restore_PP_Menu;
+    QLabel* SkillInfo_SkillMenu;
+    QLabel* SkillInfo_PPMenu;
 
     QLabel* Dialog;
     QTimer* Timer;
@@ -119,6 +128,7 @@ private:
     int Who;
     QList<QStringList> ItemsDialogs;
     int ItemID;
+    int RestoreMoveID;
 };
 
 #endif // BATTLESCENE_H
