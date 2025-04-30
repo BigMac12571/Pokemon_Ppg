@@ -402,7 +402,7 @@ void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
             {
              myPokemon.GetName() + " used " + myPokemon.GetMove(MoveID) + " ! " ,
              EnemyPokemon.GetName() + " took " + QString::number(myPokemon.GetDamage(EnemyPokemon,MoveID)) + " damage!",
-             "Player won"
+             "You won"
             },
             {
             EnemyPokemon.GetName() + " used " + EnemyPokemon.GetMove(MoveID) + "!" ,
@@ -411,7 +411,7 @@ void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
             }
     };
     if (EnemyPokemon.GetCurrentHp() <= 0)
-        AttackDialogs[0].push_back("Player won!");
+        AttackDialogs[0].push_back("You won!");
     else if (MyPokemon->GetCurrentHp() <= 0)
         AttackDialogs[1].push_back("Enemy won!");
 

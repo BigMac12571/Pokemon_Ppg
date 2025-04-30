@@ -42,12 +42,12 @@ Grassland::Grassland(Bag *mybag,QWidget *parent)
     Ledges.append(QRect(416,1310,500,20));//壁崖(6,2)
 
     //加入高草區
-    TallGrasses.append(QRect(416, 250,500,206));//上長高草
-    TallGrasses.append(QRect(666, 542,248,206));//上短高草
-    TallGrasses.append(QRect(500, 1000,248,206));//中短高草
-    TallGrasses.append(QRect(84, 1334,372,164));//左階梯形高草
-    TallGrasses.append(QRect(624, 1334,292,164));//右階梯型高草
-    TallGrasses.append(QRect(500, 1458,82,206));//下長高草
+    TallGrasses.append(QRect(436, 270,460,166));//上長高草
+    TallGrasses.append(QRect(686, 562,208,166));//上短高草
+    TallGrasses.append(QRect(520, 1020,208,166));//中短高草
+    TallGrasses.append(QRect(104, 1354,332,124));//左階梯形高草
+    TallGrasses.append(QRect(644, 1354,252,124));//右階梯型高草
+    TallGrasses.append(QRect(520, 1478,42,166));//下長高草
 
     Exit_Zone = QRect(500, 1642, 84, 24); // 自己依照背景圖微調
     Talk_With_Sign.append(QRect(374,1294,42,50)); //高草旁Sign
