@@ -14,7 +14,7 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
     Menu = new QGridLayout(MenuContainer);
     Menu->setHorizontalSpacing(14);
     Menu->setVerticalSpacing(12);
-    Menu->setContentsMargins(16,94 ,58, 14);
+    Menu->setContentsMargins(16,94 ,16, 14);
     //Menu->setContentsMargins(0,0 ,0, 0);
     // 使用 MenuContainer 作為 layout
     MenuContainer->setLayout(Menu);
@@ -24,7 +24,7 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
     // 創建 4x2 的透明QLabel
     for (int row = 0; row < 4; ++row) {
         QList<QWidget*> rowPlaceholders;
-        for (int col = 0; col < 2; ++col) {
+        for (int col = 0; col < 3; ++col) {
             QWidget* placeholder = new QWidget(this);
             placeholder->setStyleSheet("background: transparent;");
             Menu->addWidget(placeholder, row, col);
@@ -91,7 +91,7 @@ void Bag::Add_Pokemon(int id, int level) {
 
             // 加寶可夢名稱
             QLabel* nameLabel = new QLabel(this);
-            nameLabel->setStyleSheet("color: black; font-size: 30px;");
+            nameLabel->setStyleSheet("color: black; font-size: 25px;");
             nameLabel->setText(new_pokemon.GetName());
             nameLabel->setAlignment(Qt::AlignVCenter);
 
@@ -100,6 +100,18 @@ void Bag::Add_Pokemon(int id, int level) {
             Menu->removeWidget(namePlaceholder);
             namePlaceholder->deleteLater();
             Menu->addWidget(nameLabel, row, 1);
+
+            //加等級
+            QLabel* levelLabel = new QLabel(this);
+            levelLabel->setStyleSheet("color: black; font-size: 25px;");
+            levelLabel->setText("LV:" + QString::number(new_pokemon.GetLevel()));
+            nameLabel->setAlignment(Qt::AlignVCenter);
+
+            // 替換透明QLabel
+            QWidget* levelPlaceholder = pokemonPlaceholders[row][2];
+            Menu->removeWidget(levelPlaceholder);
+            levelPlaceholder->deleteLater();
+            Menu->addWidget(levelLabel, row, 2);
             }
 //    QPixmap image = new_pokemon.GetImagePath();
 //    Pokemon_image.at(id)->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));

@@ -447,7 +447,6 @@ void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
             {
              myPokemon.GetName() + " used " + myPokemon.GetMove(MoveID) + " ! " ,
              EnemyPokemon.GetName() + " took " + QString::number(myPokemon.GetDamage(EnemyPokemon,MoveID)) + " damage!",
-             "You won"
             },
             {
             EnemyPokemon.GetName() + " used " + EnemyPokemon.GetMove(MoveID) + "!" ,
