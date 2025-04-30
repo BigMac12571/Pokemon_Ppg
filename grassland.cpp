@@ -10,9 +10,9 @@ Grassland::Grassland(Bag *mybag,QWidget *parent)
     background = new QLabel(this);
     QPixmap backgroundPixmap(":/new/prefix1/Dataset/Image/scene/GrassLand.png");
     background->setPixmap(backgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    background->setGeometry(-(View_Width/2),-(Map_Height-View_Height), width(), height()); // 填滿整個視窗
+    background->setGeometry(-(View_Width/2+15),-(Map_Height-View_Height), width(), height()); // 填滿整個視窗
     background->lower(); //背景在最下
-    Map_Offset = QPoint(View_Width/2, Map_Height-View_Height); //Map_Offset位置
+    Map_Offset = QPoint(View_Width/2+15, Map_Height-View_Height); //Map_Offset位置
 
     OpenBag = false;
 
@@ -73,6 +73,9 @@ void Grassland::SetMainPlayer(Player *p) {
     mainPlayer = p; //p 指向 mainPlayer 這個物件
 
     mainPlayer->move(Player_Center_X, Player_Center_Y+175);
+
+
+
     mainPlayer->raise();
     mainPlayer->setFocus();
     this->setFocus();
@@ -329,6 +332,8 @@ void Grassland::EncounterBattle(){
             if (random == 0) {
                 //qDebug() << "fight!!!";
                 emit Battle();
+                Last_Map_Offset = Map_Offset;
+                Last_Player_Pos = mainPlayer->pos();
                 mainPlayer->stopWalking();
                 Encountered = true;
                 return; // 觸發戰鬥後直接返回，避免在同一步中多次觸發
@@ -337,5 +342,15 @@ void Grassland::EncounterBattle(){
             Encountered = false;
             Grass = false;
         }
+    }
+}
+void Grassland::SetLastPosition() {
+    if (Last_Map_Offset != QPoint()) {
+        Map_Offset = Last_Map_Offset;
+        background->move(-Map_Offset.x(), -Map_Offset.y());
+    }
+
+    if (mainPlayer && Last_Player_Pos != QPoint()) {
+        mainPlayer->move(Last_Player_Pos);
     }
 }

@@ -104,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(grassland, &Grassland::Exit_Grassland, this, &MainWindow::Switch_GrasslandToTown);
 
     connect(grassland, &Grassland::Battle, this, &MainWindow::Switch_GrasslandToBattle);//觸發戰鬥
+    connect(battlescene,&BattleScene::BattleEnd, this , &MainWindow::Switch_BattelToGrassland);//返回草地
 
     connect(laboratory, &Laboratory::Open_Dialog_Oak, this, &MainWindow::Oak_Dialog); //對話框
     connect(town, &Town::Open_Dialog_Sign, this, &MainWindow::Sign_Dialog);
@@ -128,7 +129,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(laboratory, &Laboratory::Open_Bag_Signal, this , &MainWindow::Open_Bag_slot); //按B打開背包
 
 
-
+//    connect(battlescene, &BattleScene::Attack_Dialog, this , &MainWindow::Attack_Dialog_slot);
+//    connect(battlescene, &BattleScene::Items_Dialog, this , &MainWindow::Items_Dialog_slot);
 
 
 
@@ -209,7 +211,31 @@ void MainWindow::Switch_GrasslandToBattle(){
     if(!mybag->Pokemon_List.isEmpty()){
     Scene_stack->setCurrentIndex(4); // 進入battle
     switch_windowtitle(4);
-    battlescene->StartBattle();}
+    battlescene->StartBattle();
+
+
+
+
+
+    }
+}
+
+void MainWindow::Switch_BattelToGrassland(bool win){
+    if(win){
+    }else{
+
+    }
+
+    Scene_stack->setCurrentIndex(3);
+    switch_windowtitle(3);
+
+    grassland->Add_Player_To_Scene(player); // 將玩家加進新場景
+    grassland->SetMainPlayer(player);// 更新主角控制權
+    grassland->SetLastPosition();
+
+
+
+
 }
 
 void MainWindow::Oak_Dialog(){
@@ -246,8 +272,18 @@ void MainWindow::Box_Dialog(){
     dialog->Box_Dialog();
 }
 
+//void MainWindow::Attack_Dialog_slot(PokemonData *pokemon,PokemonData enemy_pokemon, int MoveID){
 
+//    dialog->show();
+//    dialog->setFocus();
+//    dialog->Battle_Dialog(pokemon,enemy_pokemon,0,0,MoveID); // 0,0,MoveiD = attack對話，我，哪個move
+//}
+//void MainWindow::Items_Dialog_slot(PokemonData *pokemon,PokemonData enemy_pokemon, int ItemID){
 
+//    dialog->show();
+//    dialog->setFocus();
+//    dialog->Battle_Dialog(pokemon,enemy_pokemon,1,ItemID,0); // 0,ItemID,本來是存moveid但這邊隨便放 = item對話，哪個item，哪個move(不需要)
+//}
 
 
 void MainWindow::Close_Dialog(){

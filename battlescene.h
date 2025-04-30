@@ -28,15 +28,26 @@ public:
     void RunAway();
 
     PokemonData GenerateRandomEnemy();
-    PokemonData GetPokemon_From_List(int id);
+    PokemonData* GetPokemon_From_List(int id);
 
     void UpdateHPBar(QLabel* barLabel, int currentHP, int maxHP, QSize size);
+    void ResetBattleScene() ;
+
+    void ShowNextDialog();
+signals:
     void BattleEnd(bool playerWon);
 
+    void Attack_Dialog(int Who,int MoveID); // attack id =0 , move1 id =1, move2 id =2
 
+    void Items_Dialog(int ItemID); // pokball = 0 , potion =1 , ether = 2
 
+    void DialogFinished();
+public slots:
+    void Attack_Dialog_slot(int Who,int MoveID);
+    void Items_Dialog_slot(int ItemID);
 
-
+    void Enemy_turn();
+    void Player_turn();
 
 
 protected:
@@ -59,18 +70,37 @@ private:
     Bulbasaur *enemyPokemon;
     Bag *bag;
 
-    bool isPlayerTurn;
+    bool PlayerTurn;
+    bool End;
 
     void SetupUI();
     void ShowBattleMessage(const QString &msg);
 
 
-    PokemonData myPokemon;
+    PokemonData *MyPokemon;
+    QLabel* MyHpBarLabel;
+    QLabel* MyPokemonImage;
+    QLabel* MyPokemonName;
+    QLabel* MyLevel;
+
+
     PokemonData EnemyPokemon;
-    QLabel* myHpBarLabel;
-    QLabel* enemyHpBarLabel;
+    QLabel* EnemyHpBarLabel;
+    QLabel* EnemyImage;
+    QLabel* EnemyName;
+    QLabel* EnemyLevel;
+
 
     QWidget* SkillMenu;
+    QWidget* bag_area;
+
+    QLabel* Dialog;
+    QTimer* Timer;
+    int CurrentDialogIndex = 0;
+    QList<QStringList> AttackDialogs;
+    int Who;
+    QList<QStringList> ItemsDialogs;
+    int ItemID;
 };
 
 #endif // BATTLESCENE_H

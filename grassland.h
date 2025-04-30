@@ -28,6 +28,8 @@ public:
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
     void EncounterBattle();
 
+    QPoint GetMapOffset() const { return Map_Offset; }
+    void SetLastPosition();
 public slots:
     void clearPressedKeys();
 
@@ -56,6 +58,7 @@ private:
 
 
 
+
     QPoint Map_Offset; // 地圖的偏移量
     QSet<int> keysPressed; // 長按
     const int Map_Width = 1000; // 背景圖片寬度
@@ -77,6 +80,9 @@ private:
 
 
     QRect Exit_Zone;
+
+    QPoint Last_Map_Offset;
+    QPoint Last_Player_Pos;
 };
 
 #endif // TITLESCREEN_H

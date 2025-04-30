@@ -42,6 +42,7 @@ public slots:
     void Switch_GrasslandToTown();
 
     void Switch_GrasslandToBattle();
+    void Switch_BattelToGrassland(bool win);
 
     void Oak_Dialog();
     void Sign_Dialog();
@@ -61,6 +62,8 @@ public slots:
     void Pickup_Pokeballs_slot(int id);
 
     void Open_Bag_slot();
+
+
 private:
     Ui::MainWindow *ui;
     QStackedWidget *Scene_stack;
@@ -85,6 +88,10 @@ private:
 
     Bag *mybag;
     QList<QLabel*> Pokemon_List;
+
+    QPoint LastMapOffset;
+    QPoint PlayPosition;
+
 
 };
 #endif // MAINWINDOW_H

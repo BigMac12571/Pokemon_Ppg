@@ -51,6 +51,11 @@ Dialog::Dialog(QWidget *parent) : QLabel(parent)
         };
 
 
+
+
+
+
+
     Reset_Dialog_State();
 
 
@@ -181,8 +186,44 @@ void Dialog::Show_Pokemon(int id){
     Pokemon->raise();
 }
 
+//void Dialog::Battle_Dialog(PokemonData pokemon,PokemonData enemy_pokemon,int Attack_or_Item,int Me_Enemy_or_Item_Index ,int Attack_or_Item_ID){
 
 
+
+//    MyPokemon = pokemon;
+//    EnemyPokemon= enemy_pokemon;
+//    MoveIndex = Attack_or_Item_ID;
+
+//    Battle_dialog = {
+//        {//[attack][我/敵]
+//          {MyPokemon->GetName() + "used" + MyPokemon->GetMove(MoveIndex) + "!" , EnemyPokemon.GetName() + " took " + QString::number(MyPokemon->GetDamage(EnemyPokemon,MyPokemon->GetMove(MoveIndex))) + " damage!"},
+//          {EnemyPokemon.GetName() + "used" + EnemyPokemon.GetMove(MoveIndex) + "!" , MyPokemon->GetName() + " took " + QString::number(EnemyPokemon.GetDamage(MyPokemon,0)) + " damage!"}
+
+//        },
+//        {//[Item][哪個item]
+
+//            {"Used Pokeball!" ,EnemyPokemon.GetName()+"was caught"},//[Item][哪個item][下個對話]
+//            {"Used Potion!" + MyPokemon->GetName() +"restores 10 HP"  },
+//            {"Used Ether!" + MyPokemon->GetMove(MoveIndex) +"PP fully restored" }
+
+//        }
+//    };
+//    Text->setText(Battle_dialog[Attack_or_Item][Me_Enemy_or_Item_Index].at(CurrentDialog));
+//    Text->show();
+//    Text->raise();
+
+//    QTimer::singleShot(3000, this, [=]() {
+//            CurrentDialog++;
+//            if (CurrentDialog < Battle_dialog[Attack_or_Item][Me_Enemy_or_Item_Index].size()) {
+//                Text->setText(Battle_dialog[Attack_or_Item][Me_Enemy_or_Item_Index].at(CurrentDialog));
+//            }
+//            QTimer::singleShot(3000, this, [=]() {
+//                emit Close_Dialog();
+//                Reset_Dialog_State();
+//            });
+//    });
+
+//}
 
 
 void Dialog::paintEvent(QPaintEvent *event)

@@ -21,8 +21,7 @@ public:
 
     // Getter
     QString GetName() const { return name; }
-    QString GetType1() const { return type1; }
-    QString GetType2() const { return type2; }
+    QString GetMove(int move) const { return (move == 1)? move1: (move == 2 )? move2 : "Attack"; }
     int GetAttack() const { return attack; }
     int GetDefense() const { return defense; }
     int GetCurrentHp() const { return current_hp;}
@@ -30,10 +29,10 @@ public:
     int GetLevel() const { return level_; }
     QString GetImagePath() const { return ImagePath; }
     QString GetBackImagaePath() const { return BackImagePath;}
-    int GetDamage(const PokemonData& opponent, int MoveIndex) const;
+    int GetDamage(const PokemonData& opponent, int move) const;
     void TakeDamage(int damage);
 
-
+    void Reset();
 
 private:
 
@@ -44,8 +43,8 @@ private:
     int max_hp;
     int current_hp;
     QString name;
-    QString type1;
-    QString type2;
+    QString move1;
+    QString move2;
     int power1;
     int power2;
     int pp1;
@@ -58,8 +57,8 @@ private:
         int attack;
         int defense;
         int max_hp;
-        QString type1;
-        QString type2;
+        QString move1;
+        QString move2;
         int power1;
         int power2;
         int pp1;

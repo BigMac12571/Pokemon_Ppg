@@ -12,7 +12,8 @@
 #include <QPainter>
 #include <QStringList>
 #include <QRandomGenerator>
-
+#include <QTimer>
+#include "pokemondata.h"
 
 
 
@@ -30,6 +31,8 @@ public:
     void Box_Dialog();
     void Show_Pokeballs_Dialog(int id);
     void Show_Pokemon(int id);
+
+//    void Battle_Dialog(PokemonData *pokemon,PokemonData enemy_pokemon,int Attack_or_Item, int Me_Enemy_or_Item_Index , int Attack_or_Item_ID);
 
     void Reset_Dialog_State();
     //void Setup_Shared_pokeball_ID(int id);
@@ -62,6 +65,11 @@ private:
     bool Sign_dialog_start;
     QStringList Grassland_dialog;
     bool Grassland_dialog_start;
+//    QList<QList<QStringList>> Battle_dialog;
+//    bool Battle_dialog_start;
+//    int MoveIndex;
+//    PokemonData *MyPokemon = nullptr;
+//    PokemonData EnemyPokemon;
 
     QList<QStringList> Box_dialog;
     bool Box_dialog_start;

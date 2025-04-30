@@ -26,28 +26,16 @@ void PokemonData::InitializeBaseData()
     baseDataMap[qMakePair(2, 5)] = {"Charizard", 15, 15, 100, "x", "x", 0, 0, 0,0, ":/new/prefix1/Dataset/Image/battle/charizard.png",":/new/prefix1/Dataset/Image/battle/charizard_back.png"};
 }
 void PokemonData::LevelUp()
-{
+{   int before_hp = GetCurrentHp();
+    int before_max_hp = GetMaxHp();
     level_++;
-    auto key = qMakePair(id_, level_);
-       if (baseDataMap.contains(key)) {
-           const PokemonBaseData& data = baseDataMap[key];
-           name = data.name;
-           attack = data.attack;
-           defense = data.defense;
-           max_hp = data.max_hp;
-           type1 = data.type1;
-           type2 = data.type2;
-           power1 = data.power1;
-           power2 = data.power2;
-           pp1 = data.pp1;
-           pp2 = data.pp2;
-           ImagePath = data.imagePath;
-           BackImagePath = data.BackImagePath;
-       }
+    UpdateData();
+    current_hp = before_hp +(GetMaxHp()-before_max_hp);
+
 }
 
 void PokemonData::UpdateData()
-{
+{/*
     int dataLevel;
 
     if (level_ <= 2) {
@@ -56,7 +44,7 @@ void PokemonData::UpdateData()
         dataLevel = 3;
     } else {
         dataLevel = 5;
-    }
+    }*/
     auto key = qMakePair(id_, level_);
     if (baseDataMap.contains(key)) {
         const PokemonBaseData& data = baseDataMap[key];
@@ -64,8 +52,8 @@ void PokemonData::UpdateData()
         attack = data.attack;
         defense = data.defense;
         max_hp = data.max_hp;
-        type1 = data.type1;
-        type2 = data.type2;
+        move1 = data.move1;
+        move2 = data.move2;
         power1 = data.power1;
         power2 = data.power2;
         pp1 = data.pp1;
@@ -76,24 +64,44 @@ void PokemonData::UpdateData()
 }
 
 
-int PokemonData::GetDamage(const PokemonData& opponent, int MoveIndex) const
+int PokemonData::GetDamage(const PokemonData& opponent, int move) const
 {
     int selectedPower = 0;
-    if (MoveIndex == 1) {
+
+    // 根據 move index 判斷威力
+    if (move == 1) {
         selectedPower = power1;
-    } else if (MoveIndex == 2) {
+    } else if (move == 2) {
         selectedPower = power2;
     } else {
-        selectedPower = 0;  // 預設是普通攻擊
+        selectedPower = 0;  // 預設為無效攻擊
     }
 
+    // 簡單的傷害計算
     int damage = (selectedPower + attack - opponent.defense) * level_;
-    return damage < 0 ? 0 : damage;
+
+    // 避免傷害為負
+    if (damage < 0) damage = 0;
+
+    return damage;
 }
 void PokemonData::TakeDamage(int damage)
 {
     current_hp -= damage;
     if (current_hp < 0) {
         current_hp = 0;
+    }
+}
+void PokemonData::Reset()
+{
+    current_hp = max_hp;
+
+    const auto key = qMakePair(0, 1);
+    if (baseDataMap.contains(key)) {
+        const auto& base = baseDataMap[key];
+        pp1 = base.pp1;
+        pp2 = base.pp2;
+    } else {
+        qDebug() << "Reset failed: No base data for ID" << id_ << "Level" << level_;
     }
 }
