@@ -34,6 +34,7 @@ public:
     void Add_potion();
     void Add_ether();
     void Refresh_bag(int id);
+    void Refresh_bag_pokemon();
 
     int GetPokeball() const {return pokeball ;}
     int GetPotion() const {return potion ;}

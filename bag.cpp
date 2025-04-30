@@ -140,7 +140,7 @@ void Bag::UsePotion(){
 void Bag::UseEther(){
     if(ether>=0){
 
-        pokeball --;
+        ether --;
     }
 
     Refresh_bag(2);
