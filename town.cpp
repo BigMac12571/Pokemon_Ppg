@@ -48,9 +48,9 @@ Town::Town(QWidget *parent)
 
     Enter_Laboratory_Trigger = QRect(658, 696, 58, 8);  //實驗室大門
     Enter_Grassland_Trigger = QRect(480,0, 120, 1); //草地入口
-    Talk_With_Sign.append(QRect(210,700,33,50)); //木Sign
-    Talk_With_Sign.append(QRect(372,548,42,50)); //花旁柵欄Sign
-    Talk_With_Sign.append(QRect(666,798,42,50)); //右下Sign
+    Talk_With_Sign.append(QRect(224,744,8,6)); //木Sign
+    Talk_With_Sign.append(QRect(391,588,8,16)); //花旁柵欄Sign
+    Talk_With_Sign.append(QRect(682,840,8,16)); //右下Sign
 
     //Enter_Laboratory_Trigger = QRect(684, 696, 4, 8);  //實驗室大門
     //Enter_Grassland_Trigger = QRect(480,0, 120, 1);
