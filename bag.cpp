@@ -24,14 +24,24 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
     // 創建 4x3 的透明QLabel
     for (int row = 0; row < 4; ++row) {
         QList<QWidget*> rowPlaceholders;
+        QList<QLabel*> rowImageLabels;
+        QList<QLabel*> rowNameLabels;
+        QList<QLabel*> rowLevelLabels;
         for (int col = 0; col < 3; ++col) {
             QWidget* placeholder = new QWidget(this);
             placeholder->setStyleSheet("background: transparent;");
             Menu->addWidget(placeholder, row, col);
             rowPlaceholders.append(placeholder);
+            rowImageLabels.append(nullptr);
+            rowNameLabels.append(nullptr);
+            rowLevelLabels.append(nullptr);
         }
         pokemonPlaceholders.append(rowPlaceholders);
+        ImageLabel.append(rowImageLabels);
+        NameLabel.append(rowNameLabels);
+        LevelLabel.append(rowLevelLabels);
     }
+
 
     //    for(int i = 0; i< 4 ; i++){
     //        Pokemon_image.append(new QLabel(this));
@@ -45,9 +55,6 @@ Bag::~Bag() {
     delete pokeballLabel;
     delete potionLabel;
     delete etherLabel;
-    delete ImageLabel;
-    delete NameLabel;
-    delete LevelLabel;
     //ClearBag();
 }
 
@@ -218,157 +225,232 @@ void Bag::Refresh_bag(int id) {
 }
 
 void Bag::Refresh_bag_pokemon() {
-    for (int row = 0; row < pokemonPlaceholders.size(); ++row) {
-        for (int col = 0; col < pokemonPlaceholders[row].size(); ++col) {
-            QLabel* currentImageLabel = nullptr;
-            QLabel* currentNameLabel = nullptr;
-            QLabel* currentLevelLabel = nullptr;
-
-            currentImageLabel = ImageLabel;
-            currentNameLabel = NameLabel;
-            currentLevelLabel = LevelLabel;
-
-
-            if(currentImageLabel){
-                //            Menu->addWidget(nameLabel, row, 1);
+    for (int row = 0; row < 4; ++row) {
+            for (int col = 0; col < 3; ++col) {
                 if (row < Pokemon_List.size()) {
                     const PokemonData& pokemon = Pokemon_List[row];
                     if (!pokemon.isEmpty()) {
-                        // 獲取當前等級對應的圖像和名字
-                        QPixmap image = pokemon.GetImagePath();
+                        if (col == 0) { // 圖片
+                            if (!ImageLabel[row][col]) {
+                                ImageLabel[row][col] = new QLabel(this);
+                                ImageLabel[row][col]->setAlignment(Qt::AlignCenter);
+                                Menu->addWidget(ImageLabel[row][col], row, col);
+                            }
+                            QPixmap image = pokemon.GetImagePath();
+                            ImageLabel[row][col]->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                        } else if (col == 1) { // 名稱
+                            if (!NameLabel[row][col]) {
+                                NameLabel[row][col] = new QLabel(this);
+                                NameLabel[row][col]->setStyleSheet("color: black; font-size: 25px;");
+                                NameLabel[row][col]->setAlignment(Qt::AlignVCenter);
+                                Menu->addWidget(NameLabel[row][col], row, col);
+                            }
+                            NameLabel[row][col]->setText(pokemon.GetName());
+                        } else if (col == 2) { // 等級
+                            if (!LevelLabel[row][col]) {
+                                LevelLabel[row][col] = new QLabel(this);
+                                LevelLabel[row][col]->setStyleSheet("color: black; font-size: 25px;");
+                                LevelLabel[row][col]->setAlignment(Qt::AlignVCenter);
+                                Menu->addWidget(LevelLabel[row][col], row, col);
+                            }
+                            LevelLabel[row][col]->setText("LV:" + QString::number(pokemon.GetLevel()));
+                        }
 
-                        // 更新圖片 QLabel
-                        currentImageLabel->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-                        currentImageLabel->setAlignment(Qt::AlignCenter);
-                        Menu->addWidget(currentImageLabel, row, 0);
-
-                    }else {
-                        // 顯示透明佔位符
-                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+                        // 移除佔位符 (如果存在)
+                        QLayoutItem* item = Menu->itemAtPosition(row, col);
+                        if (item && item->widget() == pokemonPlaceholders[row][col]) {
+                            Menu->removeItem(item);
+                            pokemonPlaceholders[row][col]->hide();
+                        }
+                    } else {
+                        // 顯示透明佔位符並隱藏 QLabel
+                        QLayoutItem* item = Menu->itemAtPosition(row, col);
+                        if (!item || item->widget() != pokemonPlaceholders[row][col]) {
+                            QWidget* existingWidget = item ? item->widget() : nullptr;
+                            if (existingWidget && existingWidget != pokemonPlaceholders[row][col]) {
+                                Menu->removeWidget(existingWidget);
+                                existingWidget->deleteLater();
+                            }
+                            Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+                            if (ImageLabel.size() > row && ImageLabel[row].size() > col && ImageLabel[row][col]) ImageLabel[row][col]->hide();
+                            if (NameLabel.size() > row && NameLabel[row].size() > col && NameLabel[row][col]) NameLabel[row][col]->hide();
+                            if (LevelLabel.size() > row && LevelLabel[row].size() > col && LevelLabel[row][col]) LevelLabel[row][col]->hide();
+                        }
                     }
-                }else {
-                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
-                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                }
-            }else{
-                if (row < Pokemon_List.size()) {
-                    const PokemonData& pokemon = Pokemon_List[row];
-                    if (!pokemon.isEmpty()) {
-                        // 獲取當前等級對應的圖像和名字
-                        QPixmap image = pokemon.GetImagePath();
-
-                        // 更新圖片 QLabel
-                        QLabel* imageLabel = new QLabel(this);
-                        imageLabel->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-                        imageLabel->setAlignment(Qt::AlignCenter);
-                        Menu->addWidget(imageLabel, row, 0);
-
-                        ImageLabel = imageLabel;
-
-                    }else {
-                        // 顯示透明佔位符
+                } else {
+                    // 超出 Pokemon_List 大小的位置顯示透明佔位符並隱藏 QLabel
+                    QLayoutItem* item = Menu->itemAtPosition(row, col);
+                    if (!item || item->widget() != pokemonPlaceholders[row][col]) {
+                        QWidget* existingWidget = item ? item->widget() : nullptr;
+                        if (existingWidget && existingWidget != pokemonPlaceholders[row][col]) {
+                            Menu->removeWidget(existingWidget);
+                            existingWidget->deleteLater();
+                        }
                         Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+                        if (ImageLabel.size() > row && ImageLabel[row].size() > col && ImageLabel[row][col]) ImageLabel[row][col]->hide();
+                        if (NameLabel.size() > row && NameLabel[row].size() > col && NameLabel[row][col]) NameLabel[row][col]->hide();
+                        if (LevelLabel.size() > row && LevelLabel[row].size() > col && LevelLabel[row][col]) LevelLabel[row][col]->hide();
                     }
-                }else {
-                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
-                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                }
-            }
-            if(currentNameLabel){
-                //            Menu->addWidget(nameLabel, row, 1);
-                if (row < Pokemon_List.size()) {
-                    const PokemonData& pokemon = Pokemon_List[row];
-                    if (!pokemon.isEmpty()) {
-                        // 獲取當前等級對應的圖像和名字
-                        QString name = pokemon.GetName();
-
-                        // 更新圖片 QLabel
-                        currentNameLabel->setStyleSheet("color: black; font-size: 30px;");
-                        currentNameLabel->setText(name);
-                        currentNameLabel->setAlignment(Qt::AlignVCenter);
-                        Menu->addWidget(currentNameLabel, row, 1);
-
-                    }else {
-                        // 顯示透明佔位符
-                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                    }
-                }else {
-                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
-                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                }
-            }else{
-                if (row < Pokemon_List.size()) {
-                    const PokemonData& pokemon = Pokemon_List[row];
-                    if (!pokemon.isEmpty()) {
-                        // 獲取當前等級對應的圖像和名字
-                        QString name = pokemon.GetName();
-
-                        // 更新圖片 QLabel
-                        QLabel* nameLabel = new QLabel(this);
-                        nameLabel->setStyleSheet("color: black; font-size: 30px;");
-                        nameLabel->setText(name);
-                        nameLabel->setAlignment(Qt::AlignVCenter);
-                        Menu->addWidget(nameLabel, row, 1);
-
-                        NameLabel = nameLabel;
-
-                    }else {
-                        // 顯示透明佔位符
-                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                    }
-                }else {
-                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
-                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                }
-            }
-            if(currentLevelLabel){
-                //            Menu->addWidget(nameLabel, row, 1);
-                if (row < Pokemon_List.size()) {
-                    const PokemonData& pokemon = Pokemon_List[row];
-                    if (!pokemon.isEmpty()) {
-                        // 獲取當前等級對應的圖像和名字
-                        int level = pokemon.GetLevel();
-
-                        // 更新圖片 QLabel
-                        currentLevelLabel->setStyleSheet("color: black; font-size: 25px;");
-                        currentLevelLabel->setText("LV:" + QString::number(level));
-                        currentLevelLabel->setAlignment(Qt::AlignVCenter);
-                        Menu->addWidget(currentLevelLabel, row, 2);
-
-                    }else {
-                        // 顯示透明佔位符
-                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                    }
-                }else {
-                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
-                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                }
-            }else{
-                if (row < Pokemon_List.size()) {
-                    const PokemonData& pokemon = Pokemon_List[row];
-                    if (!pokemon.isEmpty()) {
-                        // 獲取當前等級對應的圖像和名字
-                        int level = pokemon.GetLevel();
-
-                        // 更新圖片 QLabel
-                        QLabel* levelLabel = new QLabel(this);
-                        levelLabel->setStyleSheet("color: black; font-size: 25px;");
-                        levelLabel->setText("LV:" + QString::number(level));
-                        levelLabel->setAlignment(Qt::AlignVCenter);
-                        Menu->addWidget(levelLabel, row, 2);
-
-                        LevelLabel = levelLabel;
-
-                    }else {
-                        // 顯示透明佔位符
-                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
-                    }
-                }else {
-                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
-                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
                 }
             }
         }
-    }
+
+//    QList<QList<QLabel*>> currentImageLabel;
+//    QList<QList<QLabel*>> currentNameLabel;
+//    QList<QList<QLabel*>> currentLevelLabel;
+
+//    for (int row = 0; row < 4; ++row) {
+//        for (int col = 0; col < 3; ++col) {
+
+//            currentImageLabel[row][col] = nullptr;
+//            currentNameLabel[row][col] = nullptr;
+//            currentLevelLabel[row][col] = nullptr;
+
+//            currentImageLabel[row][col] = ImageLabel[row][col];
+//            currentNameLabel[row][col] = NameLabel[row][col];
+//            currentLevelLabel[row][col] = LevelLabel[row][col];
+
+
+//            if(currentImageLabel[row][col] && col == 0){
+//                //            Menu->addWidget(nameLabel, row, 1);
+//                if (row < Pokemon_List.size()) {
+//                    const PokemonData& pokemon = Pokemon_List[row];
+//                    if (!pokemon.isEmpty()) {
+//                        // 獲取當前等級對應的圖像和名字
+//                        QPixmap image = pokemon.GetImagePath();
+
+//                        // 更新圖片 QLabel
+//                        currentImageLabel[row][col]->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+//                        currentImageLabel[row][col]->setAlignment(Qt::AlignCenter);
+//                        Menu->addWidget(currentImageLabel[row][col], row, 0);
+
+//                    }else {
+//                        // 顯示透明佔位符
+//                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                    }
+//                }else {
+//                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
+//                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                }
+//            }else if(!currentImageLabel[row][col] && col == 0){
+//                if (row < Pokemon_List.size()) {
+//                    const PokemonData& pokemon = Pokemon_List[row];
+//                    if (!pokemon.isEmpty()) {
+//                        // 獲取當前等級對應的圖像和名字
+//                        QPixmap image = pokemon.GetImagePath();
+
+//                        // 更新圖片 QLabel
+//                        QLabel* imageLabel = new QLabel(this);
+//                        imageLabel->setPixmap(image.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+//                        imageLabel->setAlignment(Qt::AlignCenter);
+//                        Menu->addWidget(imageLabel, row, 0);
+
+//                        ImageLabel[row][col] = imageLabel;
+
+//                    }else {
+//                        // 顯示透明佔位符
+//                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                    }
+//                }else {
+//                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
+//                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                }
+//            }
+//            if(currentNameLabel[row][col] && col == 1){
+//                //            Menu->addWidget(nameLabel, row, 1);
+//                if (row < Pokemon_List.size()) {
+//                    const PokemonData& pokemon = Pokemon_List[row];
+//                    if (!pokemon.isEmpty()) {
+//                        // 獲取當前等級對應的圖像和名字
+//                        QString name = pokemon.GetName();
+
+//                        // 更新圖片 QLabel
+//                        currentNameLabel[row][col]->setStyleSheet("color: black; font-size: 30px;");
+//                        currentNameLabel[row][col]->setText(name);
+//                        currentNameLabel[row][col]->setAlignment(Qt::AlignVCenter);
+//                        Menu->addWidget(currentNameLabel[row][col], row, 1);
+
+//                    }else {
+//                        // 顯示透明佔位符
+//                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                    }
+//                }else {
+//                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
+//                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                }
+//            }else if(!currentImageLabel[row][col] && col == 1){
+//                if (row < Pokemon_List.size()) {
+//                    const PokemonData& pokemon = Pokemon_List[row];
+//                    if (!pokemon.isEmpty()) {
+//                        // 獲取當前等級對應的圖像和名字
+//                        QString name = pokemon.GetName();
+
+//                        // 更新圖片 QLabel
+//                        QLabel* nameLabel = new QLabel(this);
+//                        nameLabel->setStyleSheet("color: black; font-size: 30px;");
+//                        nameLabel->setText(name);
+//                        nameLabel->setAlignment(Qt::AlignVCenter);
+//                        Menu->addWidget(nameLabel, row, 1);
+
+//                        NameLabel[row][col] = nameLabel;
+
+//                    }else {
+//                        // 顯示透明佔位符
+//                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                    }
+//                }else {
+//                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
+//                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                }
+//            }
+//            if(currentLevelLabel[row][col] && col == 2){
+//                //            Menu->addWidget(nameLabel, row, 1);
+//                if (row < Pokemon_List.size()) {
+//                    const PokemonData& pokemon = Pokemon_List[row];
+//                    if (!pokemon.isEmpty()) {
+//                        // 獲取當前等級對應的圖像和名字
+//                        int level = pokemon.GetLevel();
+
+//                        // 更新圖片 QLabel
+//                        currentLevelLabel[row][col]->setStyleSheet("color: black; font-size: 25px;");
+//                        currentLevelLabel[row][col]->setText("LV:" + QString::number(level));
+//                        currentLevelLabel[row][col]->setAlignment(Qt::AlignVCenter);
+//                        Menu->addWidget(currentLevelLabel[row][col], row, 2);
+
+//                    }else {
+//                        // 顯示透明佔位符
+//                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                    }
+//                }else {
+//                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
+//                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                }
+//            }else if(!currentImageLabel[row][col] && col == 2){
+//                if (row < Pokemon_List.size()) {
+//                    const PokemonData& pokemon = Pokemon_List[row];
+//                    if (!pokemon.isEmpty()) {
+//                        // 獲取當前等級對應的圖像和名字
+//                        int level = pokemon.GetLevel();
+
+//                        // 更新圖片 QLabel
+//                        QLabel* levelLabel = new QLabel(this);
+//                        levelLabel->setStyleSheet("color: black; font-size: 25px;");
+//                        levelLabel->setText("LV:" + QString::number(level));
+//                        levelLabel->setAlignment(Qt::AlignVCenter);
+//                        Menu->addWidget(levelLabel, row, 2);
+
+//                        LevelLabel[row][col] = levelLabel;
+
+//                    }else {
+//                        // 顯示透明佔位符
+//                        Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                    }
+//                }else {
+//                    // 超出 Pokemon_List 大小的位置顯示透明佔位符
+//                    Menu->addWidget(pokemonPlaceholders[row][col], row, col);
+//                }
+//            }
+//        }
+//    }
 }
 
