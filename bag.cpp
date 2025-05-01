@@ -174,13 +174,13 @@ void Bag::Refresh_bag(int id) {
         break;
     case 1:
         res += QString::number(potion);
-        x = 176;
+        x = 172;
         y = 40;
         currentLabel = potionLabel;
         break;
     case 2:
         res += QString::number(ether);
-        x = 272;
+        x = 264;
         y = 40;
         currentLabel = etherLabel;
         break;
@@ -202,6 +202,7 @@ void Bag::Refresh_bag(int id) {
         }
         currentLabel->setText(res);
         currentLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
+        currentLabel->adjustSize();
 
     } else {
         // 如果標籤不存在，則創建新的標籤並儲存指標
@@ -209,6 +210,7 @@ void Bag::Refresh_bag(int id) {
         NameLabel->setText(res);
         NameLabel->move(x, y);
         NameLabel->setStyleSheet("font-size: 20px; color: black; font-weight: bold;");
+        NameLabel->adjustSize();
         NameLabel->show();
         NameLabel->raise();
 
