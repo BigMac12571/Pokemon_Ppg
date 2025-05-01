@@ -108,7 +108,7 @@ void BattleScene::SetupUI() {
 
     Dialog = new QLabel(this);
     Dialog->setGeometry(19, 337, 245, 92); // (264-19 = 245, 429-337 = 92)
-    Dialog->setStyleSheet("background-color: white; border: 2px solid black; font: 28px;");
+    Dialog->setStyleSheet( "background-color: rgba(0,0,0,0);" "color: white;""font-size: 28px;" );
     Dialog->setWordWrap(true);
     Dialog->hide();
     connect(this, &BattleScene::Attack_Dialog, this , &BattleScene::Attack_Dialog_slot);
@@ -175,19 +175,22 @@ void BattleScene::StartBattle() {
     MyPokemonName = new QLabel(this);
     MyPokemonName->setText(MyPokemon->GetName());
     MyPokemonName->move(311, 225);
-    MyPokemonName->setStyleSheet("font-weight: bold; font-size: 25px;");
+    MyPokemonName->setFixedWidth(150);
+    MyPokemonName->setStyleSheet("font-weight: bold; font-size: 20px;");
     MyPokemonName->show();
 
     MyLevel = new QLabel(this);
     MyLevel->setText("Lv:"+QString::number(MyPokemon->GetLevel()));
     MyLevel->move(443, 225);
-    MyLevel->setStyleSheet("font-weight: bold; font-size: 25px;");
+    MyLevel->setFixedWidth(100);
+    MyLevel->setStyleSheet("font-weight: bold; font-size: 20px;");
     MyLevel->show();
 
     MyHp = new QLabel(this);
-    MyHp->move(390, 274);
+    MyHp->move(390, 277);
     MyHp->setText(QString::number(MyPokemon->GetCurrentHp()) + " / " + QString::number(MyPokemon->GetMaxHp()));
-    MyHp->setStyleSheet("font-weight: bold; font-size: 24px;");
+    MyHp->setFixedWidth(100);
+    MyHp->setStyleSheet("font-weight: bold; font-size: 20px;");
     MyHp->show();
 
 
@@ -199,13 +202,13 @@ void BattleScene::StartBattle() {
     EnemyImage->show();
 
     EnemyName = new QLabel(EnemyPokemon.GetName(), this);
-    EnemyName->move(47, 54);
-    EnemyName->setStyleSheet("font-weight: bold; font-size: 25px;");
+    EnemyName->move(47, 60);
+    EnemyName->setStyleSheet("font-weight: bold; font-size: 20px;");
     EnemyName->show();
 
     EnemyLevel = new QLabel("Lv:"+QString::number(EnemyPokemon.GetLevel()), this);
     EnemyLevel->move(170, 58);
-    EnemyLevel->setStyleSheet("font-weight: bold; font-size: 25px;");
+    EnemyLevel->setStyleSheet("font-weight: bold; font-size: 20px;");
     EnemyLevel->show();
 
     EnemyHpBarLabel = new QLabel(this);
@@ -469,10 +472,10 @@ void BattleScene::RebuildAllButtons() {
                 }
 
                 switch (ButtonType) {
-                case 0: button->setGeometry(25, 30, 100, 100); break;
-                case 1: button->setGeometry(130, 30, 100, 100); break;
-                case 2: button->setGeometry(235, 30, 100, 100); break;
-                case 3: button->setGeometry(340, 30, 100, 100); break;
+                case 0: button->setGeometry(25, 20, 100, 100); break;
+                case 1: button->setGeometry(130, 20, 100, 100); break;
+                case 2: button->setGeometry(235, 20, 100, 100); break;
+                case 3: button->setGeometry(340, 20, 100, 100); break;
                 case 4: {
                     button->setText("Back");
                     button->setGeometry(445, 70, 40, 40);

@@ -40,6 +40,7 @@ public:
 
     void Pokeball_Animation_Start();
     void CapturePokemon();
+    void Dead_And_SwitchToAnotherPokemon();
 signals:
     void BattleEnd(bool playerWon);
 
