@@ -314,15 +314,18 @@ void MainWindow::Pickup_Pokeballs_slot(int id){
 
     if(id==0) {
         laboratory->Pokeball_get_picked(pokeball0);
-        mybag->Add_Pokemon(id,1);
+        PokemonData Bulbasaur(0,1);
+        mybag->Add_Pokemon(Bulbasaur);
     }
     else if(id==1){
         laboratory->Pokeball_get_picked(pokeball1);
-        mybag->Add_Pokemon(id,1);
+        PokemonData Squirtle(1,1);
+        mybag->Add_Pokemon(Squirtle);
     }
     else if(id==2) {
         laboratory->Pokeball_get_picked(pokeball2);
-        mybag->Add_Pokemon(id,1);
+        PokemonData Charmander(2,1);
+        mybag->Add_Pokemon(Charmander);
     }
     qDebug() << "Bag 裡有" << mybag->Pokemon_List.size() << "隻";
 }

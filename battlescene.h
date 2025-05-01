@@ -37,6 +37,9 @@ public:
     void ResetBattleScene() ;
 
     void ShowNextDialog();
+
+    void Pokeball_Animation_Start();
+    void CapturePokemon();
 signals:
     void BattleEnd(bool playerWon);
 
@@ -120,6 +123,8 @@ private:
     QWidget* Restore_PP_Menu;
     QLabel* SkillInfo_SkillMenu;
     QLabel* SkillInfo_PPMenu;
+
+    QWidget* Pokeball_Animation;
 
     QLabel* Dialog;
     QTimer* Timer;

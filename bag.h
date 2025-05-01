@@ -25,7 +25,8 @@ public:
     void Open_bag();
 
     void Refresh_pokemon(QList<QLabel*> &put_in_pokemon); //寶可夢背包管理
-    void Add_Pokemon(int id, int form);
+    void Add_Pokemon(PokemonData NewPokemon);
+    //void Capture_Pokemon(PokemonData* NewPokemon);
     void Remove_Pokemon(int id);
     void ClearBag();
 

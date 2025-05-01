@@ -72,9 +72,11 @@ void Bag::Open_bag(){
     }
     open = !open;
 }
+//void Bag::Capture_Pokemon(PokemonData *NewPokemon) {
+//    Add_Pokemon(NewPokemon->GetID(), NewPokemon->GetLevel());
+//}
 
-void Bag::Add_Pokemon(int id, int level) {
-    PokemonData new_pokemon(id, level);
+void Bag::Add_Pokemon(PokemonData NewPokemon) {
 
     int emptyIndex = -1;
     for (int i = 0; i < Pokemon_List.size(); ++i) {
@@ -85,9 +87,9 @@ void Bag::Add_Pokemon(int id, int level) {
     }
 
     if (emptyIndex != -1) {
-        Pokemon_List[emptyIndex] = new_pokemon;
+        Pokemon_List[emptyIndex] = NewPokemon; //中間有空
     } else {
-        Pokemon_List.append(new_pokemon);
+        Pokemon_List.append(NewPokemon); //前方沒有空
     }
 
     Refresh_bag_pokemon();
@@ -106,7 +108,7 @@ void Bag::Remove_Pokemon(int id) {
 }
 
 void Bag::UsePokeball(){
-    if(pokeball>=0){
+    if(pokeball>0){
 
         pokeball --;
     }
@@ -115,7 +117,7 @@ void Bag::UsePokeball(){
 
 }
 void Bag::UsePotion(){
-    if(potion>=0){
+    if(potion>0){
 
         potion --;
     }
@@ -124,7 +126,7 @@ void Bag::UsePotion(){
 
 }
 void Bag::UseEther(){
-    if(ether>=0){
+    if(ether>0){
 
         ether --;
     }
