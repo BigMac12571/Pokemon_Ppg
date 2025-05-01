@@ -314,8 +314,10 @@ void MainWindow::Pickup_Pokeballs_slot(int id){
 
     if(id==0) {
         laboratory->Pokeball_get_picked(pokeball0);
+
         PokemonData Bulbasaur(0,1);
         mybag->Add_Pokemon(Bulbasaur);
+
     }
     else if(id==1){
         laboratory->Pokeball_get_picked(pokeball1);
