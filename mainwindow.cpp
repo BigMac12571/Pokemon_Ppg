@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     laboratory = new Laboratory(this);
     grassland = new Grassland(mybag,this);
     battlescene = new BattleScene(mybag,this);
+    gameover = new GameOver(this);
     /////// 初始化每個畫面
 
     /////// 初始化每個角色
@@ -70,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent)
     Scene_stack->addWidget(laboratory);   // index 2
     Scene_stack->addWidget(grassland);     // index 3
     Scene_stack->addWidget(battlescene);      // index 4
+    Scene_stack->addWidget(gameover);
     /////// 畫面加進 stack
 
 
@@ -131,8 +133,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 //    connect(battlescene, &BattleScene::Attack_Dialog, this , &MainWindow::Attack_Dialog_slot);
 //    connect(battlescene, &BattleScene::Items_Dialog, this , &MainWindow::Items_Dialog_slot);
-
-
+    connect(battlescene, &BattleScene::GameOver, this,  [=]() {
+        Scene_stack->setCurrentIndex(5);
+        switch_windowtitle(5);
+    });
 
 }
 
@@ -150,6 +154,7 @@ void MainWindow::switch_windowtitle(int index) {
     case 2: this->setWindowTitle("Laboratory"); break;
     case 3: this->setWindowTitle("Grassland"); break;
     case 4: this->setWindowTitle("Battle"); break;
+    case 5: this->setWindowTitle("Game Over Loser"); break ;
     default: this->setWindowTitle("Scene"); break;
     }
 }

@@ -10,6 +10,7 @@
 #include "town.h"
 #include "battlescene.h"
 #include "grassland.h"
+#include "gameover.h"
 #include "player.h"
 #include "npc.h"
 #include "dialog.h"
@@ -64,6 +65,7 @@ public slots:
 
     void Open_Bag_slot();
 
+    //void GameOver_slot();
 
 private:
     Ui::MainWindow *ui;
@@ -74,6 +76,7 @@ private:
     Laboratory *laboratory;
     Grassland *grassland;
     BattleScene *battlescene;
+    GameOver *gameover;
 
     Player *player;
     NPC *npc;

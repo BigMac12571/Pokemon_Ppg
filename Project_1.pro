@@ -15,6 +15,7 @@ SOURCES += \
     bulbasaur.cpp \
     charmander.cpp \
     dialog.cpp \
+    gameover.cpp \
     grassland.cpp \
     laboratory.cpp \
     main.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     bulbasaur.h \
     charmander.h \
     dialog.h \
+    gameover.h \
     grassland.h \
     laboratory.h \
     mainwindow.h \

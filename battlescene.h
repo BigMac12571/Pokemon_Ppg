@@ -46,13 +46,16 @@ signals:
 
     void Attack_Dialog(int Who,int MoveID); // attack id =0 , move1 id =1, move2 id =2
     void Items_Dialog(int ItemID); // pokball = 0 , potion =1 , ether = 2
-    void Pokemon_Switch_Dialog(int PokemonID); // pokball = 0 , potion =1 , ether = 2
+    //void Pokemon_Switch_Dialog(int PokemonID); // pokball = 0 , potion =1 , ether = 2
 
     void DialogFinished();
+
+    void GameOver();
 public slots:
     void Attack_Dialog_slot(int Who,int MoveID);
     void Items_Dialog_slot(int ItemID);
-    void Pokemon_Switch_Dialog_slot(int PokemonID);
+    void Pokemon_Switch_Dialog_slot(int Seletion);
+    void Pokemon_Dead_Dialog_slot();
 
     void Enemy_turn();
     void Player_turn();
@@ -146,6 +149,7 @@ private:
     int RestoreMoveID;
     bool Capture;
     QList<QStringList> Pokemon_Switch_Dialogs;
+    QList<QStringList> Pokemon_Dead_Dialogs;
 };
 
 #endif // BATTLESCENE_H

@@ -12,6 +12,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QGridLayout>
+#include <QToolButton>
 #include "pokemondata.h"
 
 
@@ -30,6 +31,7 @@ public:
     //void Capture_Pokemon(PokemonData* NewPokemon);
 
     void Remove_Pokemon(int id);
+    int  GetNextAlivePokemonID(int dead_location = -1);
     void ClearBag();
 
 
@@ -75,6 +77,9 @@ private:
     QList<QList<QLabel*>> ImageLabel;
     QList<QList<QLabel*>> NameLabel;
     QList<QList<QLabel*>> LevelLabel;
+
+    QList<QToolButton*> bag;
+
 
 };
 

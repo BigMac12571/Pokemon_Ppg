@@ -14,6 +14,9 @@ PokemonData::PokemonData(int id, int level):id_(id),level_(level)
 }
 void PokemonData::InitializeBaseData()
 {
+    baseDataMap[qMakePair(-1, 1)] = {"", 0, 0, 0, "", "","","", 0, 0,0,0, 0,0,0,0, "",""};
+
+
     baseDataMap[qMakePair(0, 1)] = {"Bulbasaur", 5, 5, 30, "Tackle", "x","x","x", 10, 0,0,0, 20,0,0,0, ":/new/prefix1/Dataset/Image/battle/bulbasaur.png",":/new/prefix1/Dataset/Image/battle/bulbasaur_back.png"};
     baseDataMap[qMakePair(0, 2)] = {"Bulbasaur", 5, 5, 30, "Tackle", "Growl","x","x", 10, 15,0,0, 20,20,0,0, ":/new/prefix1/Dataset/Image/battle/bulbasaur.png",":/new/prefix1/Dataset/Image/battle/bulbasaur_back.png"};
     baseDataMap[qMakePair(0, 3)] = {"Ivysaur", 10, 10, 80, "Tackle", "Growl", "Growth", "x",10, 20, 25,0, 20,20,15, 0, ":/new/prefix1/Dataset/Image/battle/ivysaur.png",":/new/prefix1/Dataset/Image/battle/ivysaur_back.png"};

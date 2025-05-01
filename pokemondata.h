@@ -39,6 +39,10 @@ public:
     void UseMove(int MoveID);
     bool isEmpty() const { return id_ == -1; }
 
+    void SetBagLocation(int loc) { Bag_Location = loc; }
+    int GetBagLocation() const { return Bag_Location; }
+
+
     void Reset();
 
 private:
@@ -92,6 +96,8 @@ private:
     static void InitializeBaseData(); // 初始設定
 
     void UpdateData(); // 自動改變form
+
+    int Bag_Location = -1;
 };
 
 #endif // POKEMONDATA_H

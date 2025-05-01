@@ -464,7 +464,7 @@ void BattleScene::RebuildAllButtons() {
                 button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
                 button->setStyleSheet("border: none; font-size: 18px;");
 
-                if (ButtonType <= 3 && bag->Pokemon_List.size() >= ButtonType + 1 && !bag->Pokemon_List.at(ButtonType).isEmpty()) {
+                if (ButtonType <= 3 && bag->Pokemon_List.size() >= ButtonType + 1 && bag->Pokemon_List.at(ButtonType).GetID() != -1) {
                     button->setIcon(QIcon(bag->Pokemon_List.at(ButtonType).GetImagePath()));
                     button->setText(QString::number(bag->Pokemon_List.at(ButtonType).GetCurrentHp()) + " / " + QString::number(bag->Pokemon_List.at(ButtonType).GetMaxHp()) + " Lv:" + QString::number(bag->Pokemon_List.at(ButtonType).GetLevel()));
                 } else if (ButtonType <= 3) {
@@ -571,14 +571,13 @@ void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
             {
             EnemyPokemon.GetName() + " used " + EnemyPokemon.GetMove(MoveID) + "!" ,
             myPokemon.GetName() + " took " + QString::number(EnemyPokemon.GetDamage(myPokemon,MoveID)) + " damage!",
-            "Player Turn"
+
             }
     };
     if (EnemyPokemon.GetCurrentHp() <= 0)
         AttackDialogs[0].push_back("You won!");
-    else if (MyPokemon->GetCurrentHp() <= 0)
-        AttackDialogs[1].push_back("You Lose!");
-
+    if (MyPokemon->GetCurrentHp() > 0)
+        AttackDialogs[1].push_back("Player Turn");
     if (!AttackDialogs.isEmpty()) {
         Dialog->setText(AttackDialogs[Who][CurrentDialogIndex]);
         Dialog->show();
@@ -604,7 +603,7 @@ void BattleScene::Items_Dialog_slot(int ItemID) {
     if (!ItemsDialogs.isEmpty()) {
         Dialog->setText(ItemsDialogs[ItemID][CurrentDialogIndex]);
         Dialog->show();
-        Timer->start(3000);
+        Timer->start(2000);
     }
 
 
@@ -614,7 +613,7 @@ void BattleScene::Pokemon_Switch_Dialog_slot(int Seletion) {
 
     Pokemon_Switch_Dialogs ={//[Item][哪個item]
                      {"Switch to " + bag->Pokemon_List.at(Seletion).GetName(),
-                             "Enemy Turn"},//[Item][哪個item][下個對話]
+                             "Enemy Turn"},
 //                     {"Used Potion!" + MyPokemon->GetName() +" restores 10 HP "  },
 //                     {"Used Ether!" + MyPokemon->GetMove(RestoreMoveID) +" PP fully restored" }
                     };
@@ -624,18 +623,40 @@ void BattleScene::Pokemon_Switch_Dialog_slot(int Seletion) {
         Timer->start(3000);
     }
 }
+
+void BattleScene::Pokemon_Dead_Dialog_slot() {
+    CurrentDialogIndex = 0;
+
+    Pokemon_Dead_Dialogs ={
+                     {MyPokemon->GetName()+" is dead.",
+                             "Cherish UR Pokemon ,idiot."},
+//                     {"Used Potion!" + MyPokemon->GetName() +" restores 10 HP "  },
+//                     {"Used Ether!" + MyPokemon->GetMove(RestoreMoveID) +" PP fully restored" }
+                    };
+    if (bag->GetNextAlivePokemonID() == -1)
+        Pokemon_Dead_Dialogs[0].push_back("Loser , Fuck you.");
+    if (!Pokemon_Dead_Dialogs.isEmpty()) {
+        Dialog->setText(Pokemon_Dead_Dialogs[0][CurrentDialogIndex]);
+        Dialog->show();
+        Timer->start(3000);
+    }
+}
+
+
 void BattleScene::ShowNextDialog() {
     CurrentDialogIndex++;
 
     if(!AttackDialogs.isEmpty()){
         if (CurrentDialogIndex < AttackDialogs[Who].size() ){
-            if((AttackDialogs[Who][CurrentDialogIndex] == "Enemy Turn" || AttackDialogs[Who][CurrentDialogIndex] == "Player Turn")&& EnemyPokemon.GetCurrentHp() <= 0) CurrentDialogIndex++;
+            if((AttackDialogs[Who][CurrentDialogIndex] == "Enemy Turn") && (EnemyPokemon.GetCurrentHp() <= 0)) CurrentDialogIndex++;
             Dialog->setText(AttackDialogs[Who][CurrentDialogIndex]);
             Timer->start(2000); // 繼續計時下一句
         }else {
             AttackDialogs.clear();
             Dialog->hide();
-            emit DialogFinished();
+            if(MyPokemon->GetCurrentHp()<=0) Pokemon_Dead_Dialog_slot();
+            else emit DialogFinished();
+
         }
     }else if (!ItemsDialogs.isEmpty()){
         if (CurrentDialogIndex < ItemsDialogs[ItemID].size()) {
@@ -653,6 +674,17 @@ void BattleScene::ShowNextDialog() {
         } else {
             Pokemon_Switch_Dialogs.clear();
             Dialog->hide();
+            emit DialogFinished(); // 若有需要可加上
+        }
+    }else if (!Pokemon_Dead_Dialogs.isEmpty()){
+        if (CurrentDialogIndex < Pokemon_Dead_Dialogs[0].size()) {
+            if((Pokemon_Dead_Dialogs[0][CurrentDialogIndex] == "Cherish UR Pokemon ,idiot.")&& bag->GetNextAlivePokemonID() == -1) CurrentDialogIndex++;
+            Dialog->setText(Pokemon_Dead_Dialogs[0][CurrentDialogIndex]);
+            Timer->start(2000); // 繼續計時下一句
+        } else {
+            Pokemon_Dead_Dialogs.clear();
+            Dialog->hide();
+            Dead_And_SwitchToAnotherPokemon();
             emit DialogFinished(); // 若有需要可加上
         }
     }else{
@@ -747,4 +779,25 @@ void BattleScene::CapturePokemon(){
     bag->Add_Pokemon(EnemyPokemon);
     Capture = true;
     emit Items_Dialog(0);
+}
+void BattleScene::Dead_And_SwitchToAnotherPokemon() {
+    int BagLocation = MyPokemon->GetBagLocation();
+
+    bag->Remove_Pokemon(BagLocation);
+
+    int nextId = bag->GetNextAlivePokemonID(BagLocation);
+    if (nextId != -1) {
+        MyPokemon = GetPokemon_From_List(nextId);
+        UpdateBattleInfo();
+        UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+
+    } else {
+        emit GameOver();
+    }
+
+
+
+
+
+
 }
