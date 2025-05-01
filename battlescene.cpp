@@ -99,7 +99,8 @@ void BattleScene::SetupUI() {
     PokemonMenu->setGeometry(0, 314, 525, 136); // 與原本按鈕區域重疊
     PokemonMenu->hide(); // 一開始先隱藏
     QLabel* PokemonMenu_Background = new QLabel(PokemonMenu);
-    PokemonMenu_Background->setPixmap(QPixmap(":/new/prefix1/Dataset/Image/battle/fight_skill.png"));
+    PokemonMenu_Background->setPixmap(QPixmap(":/new/prefix1/Dataset/Image/item_bag_background.png"));
+    PokemonMenu_Background->setScaledContents(true);
     PokemonMenu_Background->setGeometry(0, 0, 525, 136);
     PokemonMenu_Background->show();
     PokemonMenu_Background->raise();
@@ -114,14 +115,12 @@ void BattleScene::SetupUI() {
     connect(this, &BattleScene::Items_Dialog, this , &BattleScene::Items_Dialog_slot);
 
 
-
     Timer = new QTimer(this);
     Timer->setSingleShot(true);
     connect(Timer, &QTimer::timeout, this, &BattleScene::ShowNextDialog);
 
     connect(this, &BattleScene::DialogFinished ,this ,[=](){ //每回合兩次
         UpdateBattleInfo();
-        UpdateBagUI();
         if(!End){
             PlayerTurn = !PlayerTurn;
             if(!PlayerTurn){
@@ -140,14 +139,14 @@ void BattleScene::SetupUI() {
     SkillInfo_SkillMenu = new QLabel(SkillMenu);
     SkillInfo_SkillMenu->setGeometry(397, 33, 513-397, 36);
     SkillInfo_SkillMenu->setStyleSheet("background-color: transparent; border: none ; font-size: 24px;");
-    SkillInfo_SkillMenu->setVisible(false);
+    SkillInfo_SkillMenu->hide();
     SkillInfo_SkillMenu->setWordWrap(true);
 
     // Restore_PP_Menu 上的 SkillInfo
     SkillInfo_PPMenu = new QLabel(Restore_PP_Menu);
     SkillInfo_PPMenu->setGeometry(397, 33, 513-397, 36);
     SkillInfo_PPMenu->setStyleSheet("background-color: transparent; border: none ; font-size: 24px;");
-    SkillInfo_PPMenu->setVisible(false);
+    SkillInfo_PPMenu->hide();
     SkillInfo_PPMenu->setWordWrap(true);
 
     Pokeball_Animation = new QWidget(this);
@@ -168,17 +167,19 @@ void BattleScene::StartBattle() {
     }
 
     MyPokemonImage = new QLabel(this);
-    QPixmap myImage(MyPokemon->GetBackImagaePath());
-    MyPokemonImage->setPixmap(myImage.scaled(150, 150, Qt::KeepAspectRatio));
-    MyPokemonImage->move(62, 180);
+    MyImage = QPixmap(MyPokemon->GetBackImagaePath());
+    MyPokemonImage->setPixmap(MyImage.scaled(150, 150, Qt::KeepAspectRatio));
+    MyPokemonImage->move(62, 200);
     MyPokemonImage->show();
 
-    MyPokemonName = new QLabel(MyPokemon->GetName(), this);
+    MyPokemonName = new QLabel(this);
+    MyPokemonName->setText(MyPokemon->GetName());
     MyPokemonName->move(311, 225);
     MyPokemonName->setStyleSheet("font-weight: bold; font-size: 25px;");
     MyPokemonName->show();
 
-    MyLevel = new QLabel("Lv:"+QString::number(MyPokemon->GetLevel()), this);
+    MyLevel = new QLabel(this);
+    MyLevel->setText("Lv:"+QString::number(MyPokemon->GetLevel()));
     MyLevel->move(443, 225);
     MyLevel->setStyleSheet("font-weight: bold; font-size: 25px;");
     MyLevel->show();
@@ -220,304 +221,327 @@ void BattleScene::StartBattle() {
     MyHpBarLabel->move(381, 258);
     MyHpBarLabel->show();
 
-
-    // 技能選單區
-
+    RebuildAllButtons();
 
 
 
-    Move0_Button = new QToolButton(SkillMenu);
-    Move0_Button->setFocusPolicy(Qt::NoFocus);
-    Move0_Button->installEventFilter(this);
-    Move0_Button->setText(MyPokemon->GetMove(0));
-    Move0_Button->setGeometry(20, 30, 80, 30);
-//    SkillButtons.append(Move0_Button);
-    connect(Move0_Button, &QToolButton::clicked, this, [=]() {
-        if(MyPokemon->GetCurrentPP(0)>0){
-        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 0));
-        UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
-        MyPokemon->UseMove(0);
-        SkillMenu->hide();
-        emit Attack_Dialog(0, 0);
-        }
-    });
+//    Move0_Button = new QToolButton(SkillMenu);
+//    Move0_Button->setFocusPolicy(Qt::NoFocus);
+//    Move0_Button->installEventFilter(this);
+//    Move0_Button->setText(MyPokemon->GetMove(0));
+//    Move0_Button->setGeometry(20, 30, 80, 30);
+////    SkillButtons.append(Move0_Button);
+//    connect(Move0_Button, &QToolButton::clicked, this, [=]() {
+//        if(MyPokemon->GetCurrentPP(0)>0){
+//        EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 0));
+//        UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+//        MyPokemon->UseMove(0);
+//        SkillMenu->hide();
+//        emit Attack_Dialog(0, 0);
+//        }
+//    });
 
-    if (MyPokemon->GetLevel() >= 2) {
-        Move1_Button = new QToolButton(SkillMenu);
-        Move1_Button->setFocusPolicy(Qt::NoFocus);
-        Move1_Button->installEventFilter(this);
-        Move1_Button->setText(MyPokemon->GetMove(1));
-        Move1_Button->setGeometry(20, 70, 80, 30);
-//        SkillButtons.append(Move1_Button);
-        connect(Move1_Button, &QToolButton::clicked, this, [=]() {
-            if(MyPokemon->GetCurrentPP(1)>0){
-            EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 1));
-            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
-            MyPokemon->UseMove(1);
-            SkillMenu->hide();
-            emit Attack_Dialog(0, 1);
-            }
-        });
-    }
-    if (MyPokemon->GetLevel() >= 3) {
-        Move2_Button = new QToolButton(SkillMenu);
-        Move2_Button->setFocusPolicy(Qt::NoFocus);
-        Move2_Button->installEventFilter(this);
-        Move2_Button->setText(MyPokemon->GetMove(2));
-        Move2_Button->setGeometry(140, 30, 80, 30);
-//        SkillButtons.append(Move2_Button);
-        connect(Move2_Button, &QToolButton::clicked, this, [=]() {
-            if(MyPokemon->GetCurrentPP(2)>0){
-            EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 2));
-            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
-            MyPokemon->UseMove(2);
-            SkillMenu->hide();
-            emit Attack_Dialog(0, 2);
-            }
-        });
-    }
-    if (MyPokemon->GetLevel() >= 4) {
-        Move3_Button = new QToolButton(SkillMenu);
-        Move3_Button->setFocusPolicy(Qt::NoFocus);
-        Move3_Button->installEventFilter(this);
-        Move3_Button->setText(MyPokemon->GetMove(3));
-        Move3_Button->setGeometry(140, 70, 80, 30);
-//        SkillButtons.append(Move3_Button);
-        connect(Move3_Button, &QToolButton::clicked, this, [=]() {
-            if(MyPokemon->GetCurrentPP(3)>0){
-            EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 3));
-            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
-            MyPokemon->UseMove(3);
-            SkillMenu->hide();
-            emit Attack_Dialog(0, 3);
-            }
-        });
-    }
-    backButton_skill = new QToolButton(SkillMenu);
-    backButton_skill->setFocusPolicy(Qt::NoFocus);
-    backButton_skill->installEventFilter(this);
-    backButton_skill->setText("Back");
-    backButton_skill->setGeometry(240, 70, 80, 30);
-//    SkillButtons.append(backButton_skill);
-    connect(backButton_skill, &QToolButton::clicked, this, [=]() {
-        SkillMenu->hide();
-        MainMenu->show();
-    });
+//    if (MyPokemon->GetLevel() >= 2) {
+//        Move1_Button = new QToolButton(SkillMenu);
+//        Move1_Button->setFocusPolicy(Qt::NoFocus);
+//        Move1_Button->installEventFilter(this);
+//        Move1_Button->setText(MyPokemon->GetMove(1));
+//        Move1_Button->setGeometry(20, 70, 80, 30);
+////        SkillButtons.append(Move1_Button);
+//        connect(Move1_Button, &QToolButton::clicked, this, [=]() {
+//            if(MyPokemon->GetCurrentPP(1)>0){
+//            EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 1));
+//            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+//            MyPokemon->UseMove(1);
+//            SkillMenu->hide();
+//            emit Attack_Dialog(0, 1);
+//            }
+//        });
+//    }
+//    if (MyPokemon->GetLevel() >= 3) {
+//        Move2_Button = new QToolButton(SkillMenu);
+//        Move2_Button->setFocusPolicy(Qt::NoFocus);
+//        Move2_Button->installEventFilter(this);
+//        Move2_Button->setText(MyPokemon->GetMove(2));
+//        Move2_Button->setGeometry(140, 30, 80, 30);
+////        SkillButtons.append(Move2_Button);
+//        connect(Move2_Button, &QToolButton::clicked, this, [=]() {
+//            if(MyPokemon->GetCurrentPP(2)>0){
+//            EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 2));
+//            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+//            MyPokemon->UseMove(2);
+//            SkillMenu->hide();
+//            emit Attack_Dialog(0, 2);
+//            }
+//        });
+//    }
+//    if (MyPokemon->GetLevel() >= 4) {
+//        Move3_Button = new QToolButton(SkillMenu);
+//        Move3_Button->setFocusPolicy(Qt::NoFocus);
+//        Move3_Button->installEventFilter(this);
+//        Move3_Button->setText(MyPokemon->GetMove(3));
+//        Move3_Button->setGeometry(140, 70, 80, 30);
+////        SkillButtons.append(Move3_Button);
+//        connect(Move3_Button, &QToolButton::clicked, this, [=]() {
+//            if(MyPokemon->GetCurrentPP(3)>0){
+//            EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, 3));
+//            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+//            MyPokemon->UseMove(3);
+//            SkillMenu->hide();
+//            emit Attack_Dialog(0, 3);
+//            }
+//        });
+//    }
+//    backButton_skill = new QToolButton(SkillMenu);
+//    backButton_skill->setFocusPolicy(Qt::NoFocus);
+//    backButton_skill->installEventFilter(this);
+//    backButton_skill->setText("Back");
+//    backButton_skill->setGeometry(240, 70, 80, 30);
+////    SkillButtons.append(backButton_skill);
+//    connect(backButton_skill, &QToolButton::clicked, this, [=]() {
+//        SkillMenu->hide();
+//        MainMenu->show();
+//    });
 
-    //背包區
-
-
-    Pokeball_Button = new QToolButton(ItemBagMenu);
-    Pokeball_Button->setFocusPolicy(Qt::NoFocus);
-    Pokeball_Button->setText("x" + QString::number(bag->GetPokeball()));
-    Pokeball_Button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Pokeball_bag.png"));
-    Pokeball_Button->setIconSize(QSize(40, 40));
-    Pokeball_Button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    Pokeball_Button->setGeometry(40, 30, 120, 80);
-    Pokeball_Button->setStyleSheet("border: none; font-size: 18px;");
-
-    Potion_Button = new QToolButton(ItemBagMenu);
-    Potion_Button->setFocusPolicy(Qt::NoFocus);
-    Potion_Button->setText("x" + QString::number(bag->GetPotion()));
-    Potion_Button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Potion_bag.png"));
-    Potion_Button->setIconSize(QSize(40, 40));
-    Potion_Button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    Potion_Button->setGeometry(170, 30, 120, 80);
-    Potion_Button->setStyleSheet("border: none; font-size: 18px;");
-
-    Ether_Button = new QToolButton(ItemBagMenu);
-    Ether_Button->setFocusPolicy(Qt::NoFocus);
-    Ether_Button->setText("x" + QString::number(bag->GetEther()));
-    Ether_Button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Ether_bag.png"));
-    Ether_Button->setIconSize(QSize(40, 40));
-    Ether_Button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    Ether_Button->setGeometry(300, 30, 120, 80);
-    Ether_Button->setStyleSheet("border: none; font-size: 18px;");
-
-    Bag_BackButton = new QToolButton(ItemBagMenu);
-    Bag_BackButton->setFocusPolicy(Qt::NoFocus);
-    Bag_BackButton->setText("Back");
-    Bag_BackButton->setGeometry(430, 30, 100, 80);
-    Bag_BackButton->setStyleSheet("border: none; font-size: 24px;");
-
-    connect(Bag_BackButton, &QPushButton::clicked,this, [=]() {
-        ItemBagMenu->hide();
-        MainMenu->show();
-
-    });
-
-    connect(Pokeball_Button, &QPushButton::clicked,this, [=]() {
-    if(bag->GetPokeball()>0){
-        ItemBagMenu->hide();
-        bag->UsePokeball();
-        Pokeball_Animation_Start();
-        //emit Items_Dialog(0);
-    }
-    });
-
-    connect(Potion_Button, &QPushButton::clicked,this, [=]() {
-    if(bag->GetPotion()>0){
-        ItemBagMenu->hide();
-        bag->UsePotion();
-        MyPokemon->RestoreHP();
-        UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
-        emit Items_Dialog(1);
-        }
-    });
-
-    connect(Ether_Button, &QPushButton::clicked,this, [=]() {
-    if(bag->GetEther()>0){
-        ItemBagMenu->hide();
-
-        Restore_PP_Menu->show();
-
-        }
-    });
-
-    //恢復pp區
-    Move0_Button_PP = new QToolButton(Restore_PP_Menu);
-    Move0_Button_PP->setFocusPolicy(Qt::NoFocus);
-    Move0_Button_PP->installEventFilter(this);
-    Move0_Button_PP->setText(MyPokemon->GetMove(0));
-    Move0_Button_PP->setGeometry(20, 30, 80, 30);
-//    SkillButtons.append(Move0_Button);
-    connect(Move0_Button_PP, &QToolButton::clicked, this, [=]() {
-        RestoreMoveID = 0;
-        MyPokemon->RestorePP(RestoreMoveID);
-        bag->UseEther();
-        Restore_PP_Menu->hide();
-        emit Items_Dialog(2);
-    });
-
-    if (MyPokemon->GetLevel() >= 2) {
-        Move1_Button_PP = new QToolButton(Restore_PP_Menu);
-        Move1_Button_PP->setFocusPolicy(Qt::NoFocus);
-        Move1_Button_PP->installEventFilter(this);
-        Move1_Button_PP->setText(MyPokemon->GetMove(1));
-        Move1_Button_PP->setGeometry(20, 70, 80, 30);
-//        SkillButtons.append(Move1_Button);
-        connect(Move1_Button_PP, &QToolButton::clicked, this, [=]() {
-            RestoreMoveID = 1;
-            MyPokemon->RestorePP(RestoreMoveID);
-            bag->UseEther();
-            Restore_PP_Menu->hide();
-            emit Items_Dialog(2);
-        });
-    }
-    if (MyPokemon->GetLevel() >= 3) {
-        Move2_Button_PP = new QToolButton(Restore_PP_Menu);
-        Move2_Button_PP->setFocusPolicy(Qt::NoFocus);
-        Move2_Button_PP->installEventFilter(this);
-        Move2_Button_PP->setText(MyPokemon->GetMove(2));
-        Move2_Button_PP->setGeometry(140, 30, 80, 30);
-//        SkillButtons.append(Move2_Button);
-        connect(Move2_Button_PP, &QToolButton::clicked, this, [=]() {
-            RestoreMoveID = 2;
-            MyPokemon->RestorePP(RestoreMoveID);
-            bag->UseEther();
-            Restore_PP_Menu->hide();
-            emit Items_Dialog(2);
-        });
-    }
-    if (MyPokemon->GetLevel() >= 4) {
-        Move3_Button_PP = new QToolButton(Restore_PP_Menu);
-        Move3_Button_PP->setFocusPolicy(Qt::NoFocus);
-        Move3_Button_PP->installEventFilter(this);
-        Move3_Button_PP->setText(MyPokemon->GetMove(3));
-        Move3_Button_PP->setGeometry(140, 70, 80, 30);
-//        SkillButtons.append(Move3_Button);
-        connect(Move3_Button_PP, &QToolButton::clicked, this, [=]() {
-            RestoreMoveID = 3;
-            MyPokemon->RestorePP(RestoreMoveID);
-            bag->UseEther();
-            Restore_PP_Menu->hide();
-            emit Items_Dialog(2);
-        });
-    }
-
-    backButton_PP = new QToolButton(Restore_PP_Menu);
-    backButton_PP->setFocusPolicy(Qt::NoFocus);
-    backButton_PP->installEventFilter(this);
-    backButton_PP->setText("Back");
-    backButton_PP->setGeometry(240, 70, 80, 30);
-//    SkillButtons.append(backButton_skill);
-    connect(backButton_PP, &QToolButton::clicked, this, [=]() {
-        Restore_PP_Menu->hide();
-        ItemBagMenu->show();
-    });
+//    //背包區
 
 
-    //Pokemon區
-    if(bag->Pokemon_List.size()>=1){
-        Pokemon0 = new QToolButton(PokemonMenu);
-        Pokemon0->setFocusPolicy(Qt::NoFocus);
-        Pokemon0->setIcon(QIcon(bag->Pokemon_List.at(0).GetImagePath()));
-        Pokemon0->setIconSize(QSize(40, 40));
-        Pokemon0->setText(QString::number(bag->Pokemon_List.at(0).GetCurrentHp())+" / "+QString::number(bag->Pokemon_List.at(0).GetMaxHp())+" Lv:"+QString::number(bag->Pokemon_List.at(0).GetLevel()));
-        Pokemon0->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-        Pokemon0->setGeometry(25, 30, 80, 80);
-        Pokemon0->setStyleSheet("border: none; font-size: 10px;");
-        connect(Pokemon0, &QToolButton::clicked, this, [=]() {
-            PokemonMenu->hide();
-            MyPokemon = GetPokemon_From_List(0);
-    });
-    }
+//    Pokeball_Button = new QToolButton(ItemBagMenu);
+//    Pokeball_Button->setFocusPolicy(Qt::NoFocus);
+//    Pokeball_Button->setText("x" + QString::number(bag->GetPokeball()));
+//    Pokeball_Button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Pokeball_bag.png"));
+//    Pokeball_Button->setIconSize(QSize(40, 40));
+//    Pokeball_Button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+//    Pokeball_Button->setGeometry(40, 30, 120, 80);
+//    Pokeball_Button->setStyleSheet("border: none; font-size: 18px;");
 
-    if(bag->Pokemon_List.size()>=2){
-        Pokemon1 = new QToolButton(PokemonMenu);
-        Pokemon1->setFocusPolicy(Qt::NoFocus);
-        Pokemon1->setIcon(QIcon(bag->Pokemon_List.at(1).GetImagePath()));
-        Pokemon1->setIconSize(QSize(40, 40));
-        Pokemon1->setText(QString::number(bag->Pokemon_List.at(1).GetCurrentHp())+" / "+QString::number(bag->Pokemon_List.at(1).GetMaxHp())+" Lv:"+QString::number(bag->Pokemon_List.at(1).GetLevel()));
-        Pokemon1->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-        Pokemon1->setGeometry(130, 30, 80, 80);
-        Pokemon1->setStyleSheet("border: none; font-size: 18px;");
-        connect(Pokemon1, &QToolButton::clicked, this, [=]() {
-            PokemonMenu->hide();
-        MyPokemon = GetPokemon_From_List(1);
-        });
-    }
+//    Potion_Button = new QToolButton(ItemBagMenu);
+//    Potion_Button->setFocusPolicy(Qt::NoFocus);
+//    Potion_Button->setText("x" + QString::number(bag->GetPotion()));
+//    Potion_Button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Potion_bag.png"));
+//    Potion_Button->setIconSize(QSize(40, 40));
+//    Potion_Button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+//    Potion_Button->setGeometry(170, 30, 120, 80);
+//    Potion_Button->setStyleSheet("border: none; font-size: 18px;");
 
-    if(bag->Pokemon_List.size()>=3){
-        Pokemon1 = new QToolButton(PokemonMenu);
-        Pokemon1->setFocusPolicy(Qt::NoFocus);
-        Pokemon1->setIcon(QIcon(bag->Pokemon_List.at(2).GetImagePath()));
-        Pokemon1->setIconSize(QSize(40, 40));
-        Pokemon1->setText(QString::number(bag->Pokemon_List.at(2).GetCurrentHp())+" / "+ QString::number(bag->Pokemon_List.at(2).GetMaxHp()) +" Lv:" + QString::number(bag->Pokemon_List.at(2).GetLevel()));
-        Pokemon1->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-        Pokemon1->setGeometry(235, 30, 80, 80);
-        Pokemon1->setStyleSheet("border: none; font-size: 18px;");
-        connect(Pokemon1, &QToolButton::clicked, this, [=]() {
-            PokemonMenu->hide();
-            MyPokemon = GetPokemon_From_List(2);
-        });
-    }
+//    Ether_Button = new QToolButton(ItemBagMenu);
+//    Ether_Button->setFocusPolicy(Qt::NoFocus);
+//    Ether_Button->setText("x" + QString::number(bag->GetEther()));
+//    Ether_Button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Ether_bag.png"));
+//    Ether_Button->setIconSize(QSize(40, 40));
+//    Ether_Button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+//    Ether_Button->setGeometry(300, 30, 120, 80);
+//    Ether_Button->setStyleSheet("border: none; font-size: 18px;");
 
-    if(bag->Pokemon_List.size()>=4){
-        Pokemon1 = new QToolButton(PokemonMenu);
-        Pokemon1->setFocusPolicy(Qt::NoFocus);
-        Pokemon1->setIcon(QIcon(bag->Pokemon_List.at(3).GetImagePath()));
-        Pokemon1->setIconSize(QSize(40, 40));
-        Pokemon1->setText(QString::number(bag->Pokemon_List.at(3).GetCurrentHp())+" / "+QString::number(bag->Pokemon_List.at(3).GetMaxHp())+" Lv:"+QString::number(bag->Pokemon_List.at(3).GetLevel()));
-        Pokemon1->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-        Pokemon1->setGeometry(340, 30, 80, 80);
-        Pokemon1->setStyleSheet("border: none; font-size: 18px;");
-        connect(Pokemon1, &QToolButton::clicked, this, [=]() {
-            PokemonMenu->hide();
-            MyPokemon = GetPokemon_From_List(3);
-        });
-    }
+//    Bag_BackButton = new QToolButton(ItemBagMenu);
+//    Bag_BackButton->setFocusPolicy(Qt::NoFocus);
+//    Bag_BackButton->setText("Back");
+//    Bag_BackButton->setGeometry(430, 30, 100, 80);
+//    Bag_BackButton->setStyleSheet("border: none; font-size: 24px;");
 
-    backButton_Pokemon = new QToolButton(PokemonMenu);
-    backButton_Pokemon->setFocusPolicy(Qt::NoFocus);
-    backButton_Pokemon->installEventFilter(this);
-    backButton_Pokemon->setText("Back");
-    backButton_Pokemon->setGeometry(445, 70, 40, 40);
-//    SkillButtons.append(backButton_skill);
-    connect(backButton_Pokemon, &QToolButton::clicked, this, [=]() {
-        PokemonMenu->hide();
-        MainMenu->show();
-    });
+//    connect(Bag_BackButton, &QPushButton::clicked,this, [=]() {
+//        ItemBagMenu->hide();
+//        MainMenu->show();
+
+//    });
+
+//    connect(Pokeball_Button, &QPushButton::clicked,this, [=]() {
+//    int pokemonCount = std::count_if(bag->Pokemon_List.begin(), bag->Pokemon_List.end(), [](const PokemonData& p) {
+//        return !p.isEmpty();
+//    });
+//    if(bag->GetPokeball()>0 && pokemonCount<4){
+//        ItemBagMenu->hide();
+//        bag->UsePokeball();
+//        Pokeball_Animation_Start();
+//        //emit Items_Dialog(0);
+//    }
+//    });
+
+//    connect(Potion_Button, &QPushButton::clicked,this, [=]() {
+//    if(bag->GetPotion()>0){
+//        ItemBagMenu->hide();
+//        bag->UsePotion();
+//        MyPokemon->RestoreHP();
+//        UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+//        emit Items_Dialog(1);
+//        }
+//    });
+
+//    connect(Ether_Button, &QPushButton::clicked,this, [=]() {
+//    if(bag->GetEther()>0){
+//        ItemBagMenu->hide();
+
+//        Restore_PP_Menu->show();
+
+//        }
+//    });
+
+//    //恢復pp區
+//    Move0_Button_PP = new QToolButton(Restore_PP_Menu);
+//    Move0_Button_PP->setFocusPolicy(Qt::NoFocus);
+//    Move0_Button_PP->installEventFilter(this);
+//    Move0_Button_PP->setText(MyPokemon->GetMove(0));
+//    Move0_Button_PP->setGeometry(20, 30, 80, 30);
+////    SkillButtons.append(Move0_Button);
+//    connect(Move0_Button_PP, &QToolButton::clicked, this, [=]() {
+//        RestoreMoveID = 0;
+//        MyPokemon->RestorePP(RestoreMoveID);
+//        bag->UseEther();
+//        Restore_PP_Menu->hide();
+//        emit Items_Dialog(2);
+//    });
+
+//    if (MyPokemon->GetLevel() >= 2) {
+//        Move1_Button_PP = new QToolButton(Restore_PP_Menu);
+//        Move1_Button_PP->setFocusPolicy(Qt::NoFocus);
+//        Move1_Button_PP->installEventFilter(this);
+//        Move1_Button_PP->setText(MyPokemon->GetMove(1));
+//        Move1_Button_PP->setGeometry(20, 70, 80, 30);
+////        SkillButtons.append(Move1_Button);
+//        connect(Move1_Button_PP, &QToolButton::clicked, this, [=]() {
+//            RestoreMoveID = 1;
+//            MyPokemon->RestorePP(RestoreMoveID);
+//            bag->UseEther();
+//            Restore_PP_Menu->hide();
+//            emit Items_Dialog(2);
+//        });
+//    }
+//    if (MyPokemon->GetLevel() >= 3) {
+//        Move2_Button_PP = new QToolButton(Restore_PP_Menu);
+//        Move2_Button_PP->setFocusPolicy(Qt::NoFocus);
+//        Move2_Button_PP->installEventFilter(this);
+//        Move2_Button_PP->setText(MyPokemon->GetMove(2));
+//        Move2_Button_PP->setGeometry(140, 30, 80, 30);
+////        SkillButtons.append(Move2_Button);
+//        connect(Move2_Button_PP, &QToolButton::clicked, this, [=]() {
+//            RestoreMoveID = 2;
+//            MyPokemon->RestorePP(RestoreMoveID);
+//            bag->UseEther();
+//            Restore_PP_Menu->hide();
+//            emit Items_Dialog(2);
+//        });
+//    }
+//    if (MyPokemon->GetLevel() >= 4) {
+//        Move3_Button_PP = new QToolButton(Restore_PP_Menu);
+//        Move3_Button_PP->setFocusPolicy(Qt::NoFocus);
+//        Move3_Button_PP->installEventFilter(this);
+//        Move3_Button_PP->setText(MyPokemon->GetMove(3));
+//        Move3_Button_PP->setGeometry(140, 70, 80, 30);
+////        SkillButtons.append(Move3_Button);
+//        connect(Move3_Button_PP, &QToolButton::clicked, this, [=]() {
+//            RestoreMoveID = 3;
+//            MyPokemon->RestorePP(RestoreMoveID);
+//            bag->UseEther();
+//            Restore_PP_Menu->hide();
+//            emit Items_Dialog(2);
+//        });
+//    }
+
+//    backButton_PP = new QToolButton(Restore_PP_Menu);
+//    backButton_PP->setFocusPolicy(Qt::NoFocus);
+//    backButton_PP->installEventFilter(this);
+//    backButton_PP->setText("Back");
+//    backButton_PP->setGeometry(240, 70, 80, 30);
+////    SkillButtons.append(backButton_skill);
+//    connect(backButton_PP, &QToolButton::clicked, this, [=]() {
+//        Restore_PP_Menu->hide();
+//        ItemBagMenu->show();
+//    });
+
+
+//    //Pokemon區
+//    if(bag->Pokemon_List.size()>=1){
+//        if(!bag->Pokemon_List.at(0).isEmpty()){
+//        Pokemon0 = new QToolButton(PokemonMenu);
+//        Pokemon0->setFocusPolicy(Qt::NoFocus);
+//        Pokemon0->setIcon(QIcon(bag->Pokemon_List.at(0).GetImagePath()));
+//        Pokemon0->setIconSize(QSize(40, 40));
+//        Pokemon0->setText(QString::number(bag->Pokemon_List.at(0).GetCurrentHp())+" / "+QString::number(bag->Pokemon_List.at(0).GetMaxHp())+" Lv:"+QString::number(bag->Pokemon_List.at(0).GetLevel()));
+//        Pokemon0->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+//        Pokemon0->setGeometry(25, 30, 100, 100);
+//        Pokemon0->setStyleSheet("border: none; font-size: 18px;");
+//        connect(Pokemon0, &QToolButton::clicked, this, [=]() {
+//            PokemonMenu->hide();
+//            Pokemon_Switch_Dialog_slot(0);
+//            MyPokemon = GetPokemon_From_List(0);
+//            UpdateBattleInfo();
+//            UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+
+
+//        });
+//        }
+//    }
+
+//    if(bag->Pokemon_List.size()>=2){
+//        if(!bag->Pokemon_List.at(1).isEmpty()){
+//        Pokemon1 = new QToolButton(PokemonMenu);
+//        Pokemon1->setFocusPolicy(Qt::NoFocus);
+//        Pokemon1->setIcon(QIcon(bag->Pokemon_List.at(1).GetImagePath()));
+//        Pokemon1->setIconSize(QSize(40, 40));
+//        Pokemon1->setText(QString::number(bag->Pokemon_List.at(1).GetCurrentHp())+" / "+QString::number(bag->Pokemon_List.at(1).GetMaxHp())+" Lv:"+QString::number(bag->Pokemon_List.at(1).GetLevel()));
+//        Pokemon1->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+//        Pokemon1->setGeometry(130, 30, 100, 100);
+//        Pokemon1->setStyleSheet("border: none; font-size: 18px;");
+//        connect(Pokemon1, &QToolButton::clicked, this, [=]() {
+//            PokemonMenu->hide();
+//            Pokemon_Switch_Dialog_slot(1);
+//            MyPokemon = GetPokemon_From_List(1);
+//            UpdateBattleInfo();
+//            UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+//        });
+//        }
+//    }
+
+//    if(bag->Pokemon_List.size()>=3){
+//        if(!bag->Pokemon_List.at(2).isEmpty()){
+//        Pokemon2 = new QToolButton(PokemonMenu);
+//        Pokemon2->setFocusPolicy(Qt::NoFocus);
+//        Pokemon2->setIcon(QIcon(bag->Pokemon_List.at(2).GetImagePath()));
+//        Pokemon2->setIconSize(QSize(40, 40));
+//        Pokemon2->setText(QString::number(bag->Pokemon_List.at(2).GetCurrentHp())+" / "+ QString::number(bag->Pokemon_List.at(2).GetMaxHp()) +" Lv:" + QString::number(bag->Pokemon_List.at(2).GetLevel()));
+//        Pokemon2->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+//        Pokemon2->setGeometry(235, 30, 100, 100);
+//        Pokemon2->setStyleSheet("border: none; font-size: 18px;");
+//        connect(Pokemon2, &QToolButton::clicked, this, [=]() {
+//            PokemonMenu->hide();
+//            Pokemon_Switch_Dialog_slot(2);
+//            MyPokemon = GetPokemon_From_List(2);
+//            UpdateBattleInfo();
+//            UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+//        });
+//    }
+//    }
+
+//    if(bag->Pokemon_List.size()>=4){
+//        if(!bag->Pokemon_List.at(3).isEmpty()){
+//        Pokemon3 = new QToolButton(PokemonMenu);
+//        Pokemon3->setFocusPolicy(Qt::NoFocus);
+//        Pokemon3->setIcon(QIcon(bag->Pokemon_List.at(3).GetImagePath()));
+//        Pokemon3->setIconSize(QSize(40, 40));
+//        Pokemon3->setText(QString::number(bag->Pokemon_List.at(3).GetCurrentHp())+" / "+QString::number(bag->Pokemon_List.at(3).GetMaxHp())+" Lv:"+QString::number(bag->Pokemon_List.at(3).GetLevel()));
+//        Pokemon3->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+//        Pokemon3->setGeometry(340, 30, 100, 100);
+//        Pokemon3->setStyleSheet("border: none; font-size: 18px;");
+//        connect(Pokemon3, &QToolButton::clicked, this, [=]() {
+//            PokemonMenu->hide();
+//            Pokemon_Switch_Dialog_slot(3);
+//            MyPokemon = GetPokemon_From_List(3);
+//            UpdateBattleInfo();
+//            UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+
+//        });
+//    }
+//    }
+
+//    backButton_Pokemon = new QToolButton(PokemonMenu);
+//    backButton_Pokemon->setFocusPolicy(Qt::NoFocus);
+//    backButton_Pokemon->installEventFilter(this);
+//    backButton_Pokemon->setText("Back");
+//    backButton_Pokemon->setGeometry(445, 70, 40, 40);
+//    connect(backButton_Pokemon, &QToolButton::clicked, this, [=]() {
+//        PokemonMenu->hide();
+//        MainMenu->show();
+//    });
 
 
 
@@ -525,7 +549,7 @@ void BattleScene::StartBattle() {
 
 
 
-
+    //UpdateBattleInfo();
 
 
 
@@ -553,9 +577,16 @@ void BattleScene::UpdateHPBar(QLabel* barLabel, int currentHP, int maxHP, QSize 
 }
 
 void BattleScene::UpdateBattleInfo() {
-    Pokeball_Button->setText("x" + QString::number(bag->GetPokeball()));
-    Potion_Button->setText("x" + QString::number(bag->GetPotion()));
-    Ether_Button->setText("x" + QString::number(bag->GetEther()));
+    RebuildAllButtons();
+
+    MyImage = QPixmap(MyPokemon->GetBackImagaePath());
+    MyPokemonImage->setPixmap(MyImage.scaled(150, 150, Qt::KeepAspectRatio));
+
+    MyPokemonName->setText(MyPokemon->GetName());
+    MyLevel->setText("Lv:"+QString::number(MyPokemon->GetLevel()));
+    MyHp->setText(QString::number(MyPokemon->GetCurrentHp()) + " / " + QString::number(MyPokemon->GetMaxHp()));
+
+
     // 檢查敵人或玩家血量
     if (MyPokemon->GetCurrentHp() <= 0) {
         ResetBattleScene();
@@ -581,18 +612,7 @@ void BattleScene::ResetBattleScene() {
     if (MyLevel) { delete MyLevel; MyLevel = nullptr; }
     if (MyHpBarLabel) { delete MyHpBarLabel; MyHpBarLabel = nullptr; }
     if (MyHp) {delete MyHp ; MyHp = nullptr; }
-    QList<QToolButton*> old_skill_Buttons = SkillMenu->findChildren<QToolButton*>();
-    for (QToolButton* btn : old_skill_Buttons) {
-        btn->deleteLater();
-    }
-    QList<QToolButton*> old_bag_Buttons = ItemBagMenu->findChildren<QToolButton*>();
-    for (QToolButton* btn : old_bag_Buttons) {
-        btn->deleteLater();
-    }
-    QList<QToolButton*> old_pp_Buttons = Restore_PP_Menu->findChildren<QToolButton*>();
-    for (QToolButton* btn : old_pp_Buttons) {
-        btn->deleteLater();
-    }
+    RebuildAllButtons();
     PlayerTurn = true;
     Capture = false;
     EnemyPokemon.Reset();
@@ -600,15 +620,223 @@ void BattleScene::ResetBattleScene() {
     // 隱藏 Dialog 與選單區塊
     SkillMenu->hide();
     ItemBagMenu->hide();
+    //SkillInfo_PPMenu->hide();
+    //SkillInfo_SkillMenu->hide();
+
+    PokemonMenu->hide();
     Dialog->hide();
     AttackDialogs.clear();
     ItemsDialogs.clear();
+    Pokemon_Switch_Dialogs.clear();
     Timer->stop();
 
 
 
 }
+void BattleScene::RebuildAllButtons() {
+    for (auto& row : Buttons) {
+        for (auto* btn : row) {
+            if (btn) {
+                btn->removeEventFilter(this);
+                delete btn;
+            }
+        }
+    }
+    Buttons.clear();
+    for (int MenuIndex = 0; MenuIndex < 4; MenuIndex++) {
+        QList<QToolButton*> buttons;
+        for (int ButtonType = 0; ButtonType < 5; ButtonType++) {
+            QToolButton* button = nullptr;
 
+            switch (MenuIndex) {
+            case 0: { // Move
+                button = new QToolButton(SkillMenu);
+                button->setFocusPolicy(Qt::NoFocus);
+                button->installEventFilter(this);
+
+                if (ButtonType <= 3)
+                    button->setText(MyPokemon->GetMove(ButtonType));
+
+                switch (ButtonType) {
+                case 0: button->setGeometry(20, 30, 80, 30); break;
+                case 1: button->setGeometry(20, 70, 80, 30); break;
+                case 2: button->setGeometry(140, 30, 80, 30); break;
+                case 3: button->setGeometry(140, 70, 80, 30); break;
+                case 4: button->setGeometry(240, 70, 80, 30); button->setText("Back"); break;
+                }
+
+                if (ButtonType <= 3) {
+                    if (MyPokemon->GetLevel() >= ButtonType + 1) button->show(); else button->hide();
+
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        if (MyPokemon->GetCurrentPP(ButtonType) > 0) {
+                            EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, ButtonType));
+                            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+                            MyPokemon->UseMove(ButtonType);
+                            SkillMenu->hide();
+                            emit Attack_Dialog(0, ButtonType);
+                        }
+                    });
+                } else {
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        SkillMenu->hide();
+                        MainMenu->show();
+                    });
+                }
+
+                break;
+            }
+            case 1: { // Move PP
+                button = new QToolButton(Restore_PP_Menu);
+                button->setFocusPolicy(Qt::NoFocus);
+                button->installEventFilter(this);
+
+                if (ButtonType <= 3)
+                    button->setText(MyPokemon->GetMove(ButtonType));
+
+                switch (ButtonType) {
+                case 0: button->setGeometry(20, 30, 80, 30); break;
+                case 1: button->setGeometry(20, 70, 80, 30); break;
+                case 2: button->setGeometry(140, 30, 80, 30); break;
+                case 3: button->setGeometry(140, 70, 80, 30); break;
+                case 4: button->setGeometry(240, 70, 80, 30); button->setText("Back"); break;
+                }
+
+                if (ButtonType <= 3) {
+                    if (MyPokemon->GetLevel() >= ButtonType + 1) button->show(); else button->hide();
+
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        RestoreMoveID = ButtonType;
+                        MyPokemon->RestorePP(RestoreMoveID);
+                        bag->UseEther();
+                        Restore_PP_Menu->hide();
+                        emit Items_Dialog(2);
+                    });
+                } else {
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        Restore_PP_Menu->hide();
+                        ItemBagMenu->show();
+                    });
+                }
+
+                break;
+            }
+            case 2: { // Item
+                button = new QToolButton(ItemBagMenu);
+                button->setFocusPolicy(Qt::NoFocus);
+                button->setIconSize(QSize(40, 40));
+                button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+                button->setStyleSheet("border: none; font-size: 24px;");
+
+                switch (ButtonType) {
+                case 0:
+                    button->setGeometry(40, 30, 120, 80);
+                    button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Pokeball_bag.png"));
+                    button->setText("x" + QString::number(bag->GetPokeball()));
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        int pokemonCount = std::count_if(bag->Pokemon_List.begin(), bag->Pokemon_List.end(), [](const PokemonData& p) {
+                            return !p.isEmpty();
+                        });
+                        if (bag->GetPokeball() > 0 && pokemonCount < 4) {
+                            ItemBagMenu->hide();
+                            bag->UsePokeball();
+                            Pokeball_Animation_Start();
+                        }
+                    });
+                    break;
+                case 1:
+                    button->setGeometry(170, 30, 120, 80);
+                    button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Potion_bag.png"));
+                    button->setText("x" + QString::number(bag->GetPotion()));
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        if (bag->GetPotion() > 0) {
+                            ItemBagMenu->hide();
+                            bag->UsePotion();
+                            MyPokemon->RestoreHP();
+                            UpdateHPBar(MyHpBarLabel, MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+                            emit Items_Dialog(ButtonType);
+                        }
+                    });
+                    break;
+                case 2:
+                    button->setGeometry(300, 30, 120, 80);
+                    button->setIcon(QIcon(":/new/prefix1/Dataset/Image/icon/Ether_bag.png"));
+                    button->setText("x" + QString::number(bag->GetEther()));
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        if (bag->GetEther() > 0) {
+                            ItemBagMenu->hide();
+                            Restore_PP_Menu->show();
+                        }
+                    });
+                    break;
+                case 3:
+                    button->setGeometry(430, 30, 100, 80);
+                    button->setText("Back");
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        ItemBagMenu->hide();
+                        MainMenu->show();
+                    });
+                    break;
+                case 4:
+                    button->hide(); break;
+                }
+
+                break;
+            }
+            case 3: { // Pokémon
+                button = new QToolButton(PokemonMenu);
+                button->setFocusPolicy(Qt::NoFocus);
+                button->setIconSize(QSize(40, 40));
+                button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+                button->setStyleSheet("border: none; font-size: 18px;");
+
+                if (ButtonType <= 3 && bag->Pokemon_List.size() >= ButtonType + 1 && !bag->Pokemon_List.at(ButtonType).isEmpty()) {
+                    button->setIcon(QIcon(bag->Pokemon_List.at(ButtonType).GetImagePath()));
+                    button->setText(QString::number(bag->Pokemon_List.at(ButtonType).GetCurrentHp()) + " / " + QString::number(bag->Pokemon_List.at(ButtonType).GetMaxHp()) + " Lv:" + QString::number(bag->Pokemon_List.at(ButtonType).GetLevel()));
+                } else if (ButtonType <= 3) {
+                    button->hide();
+                }
+
+                switch (ButtonType) {
+                case 0: button->setGeometry(25, 30, 100, 100); break;
+                case 1: button->setGeometry(130, 30, 100, 100); break;
+                case 2: button->setGeometry(235, 30, 100, 100); break;
+                case 3: button->setGeometry(340, 30, 100, 100); break;
+                case 4: {
+                    button->setText("Back");
+                    button->setGeometry(445, 70, 40, 40);
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        PokemonMenu->hide();
+                        MainMenu->show();
+                    });
+                    break;
+                }
+                }
+
+                if (ButtonType <= 3) {
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        PokemonMenu->hide();
+                        Pokemon_Switch_Dialog_slot(ButtonType);
+                        MyPokemon = GetPokemon_From_List(ButtonType);
+                        UpdateBattleInfo();
+                        UpdateHPBar(MyHpBarLabel, MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+                    });
+                }
+
+                break;
+            }
+            }
+
+            if (button) {
+                buttons.append(button);
+            }
+        }
+
+        Buttons.append(buttons);
+    }
+
+
+}
 void BattleScene::UseMove(int moveIndex) {
     Q_UNUSED(moveIndex);
 }
@@ -625,16 +853,6 @@ void BattleScene::RunAway() {
         emit BattleEnd(false); // false = 沒有贏，是逃跑
     });
 }
-//void BattleScene::BattleEnd(bool win) {
-
-//    if (win) {
-//        qDebug() << "You win!";
-//        myPokemon.LevelUp();
-//    } else {
-//        qDebug() << "You lose!";
-//    }
-//    // 你可以在這裡結束戰鬥畫面、切換場景、恢復狀態等
-//}
 
 
 void BattleScene::paintEvent(QPaintEvent *event) {
@@ -674,10 +892,12 @@ void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
             {
              myPokemon.GetName() + " used " + myPokemon.GetMove(MoveID) + " ! " ,
              EnemyPokemon.GetName() + " took " + QString::number(myPokemon.GetDamage(EnemyPokemon,MoveID)) + " damage!",
+            "Enemy Turn"
             },
             {
             EnemyPokemon.GetName() + " used " + EnemyPokemon.GetMove(MoveID) + "!" ,
             myPokemon.GetName() + " took " + QString::number(EnemyPokemon.GetDamage(myPokemon,MoveID)) + " damage!",
+            "Player Turn"
             }
     };
     if (EnemyPokemon.GetCurrentHp() <= 0)
@@ -697,9 +917,12 @@ void BattleScene::Items_Dialog_slot(int ItemID) {
     BattleScene::ItemID= ItemID;
     ItemsDialogs ={//[Item][哪個item]
                      {"Used Pokeball!" ,
-                      EnemyPokemon.GetName()+" was caught. "},//[Item][哪個item][下個對話]
-                     {"Used Potion!" + MyPokemon->GetName() +" restores 10 HP "  },
-                     {"Used Ether!" + MyPokemon->GetMove(RestoreMoveID) +" PP fully restored" }
+                      EnemyPokemon.GetName()+" was caught. ",
+                      },//[Item][哪個item][下個對話]
+                     {"Used Potion!" + MyPokemon->GetName() +" restores 10 HP " ,
+                      "Enemy Turn" },
+                     {"Used Ether!" + MyPokemon->GetMove(RestoreMoveID) +" PP fully restored",
+                      "Enemy Turn" }
                     };
 
     if (Capture)
@@ -712,17 +935,33 @@ void BattleScene::Items_Dialog_slot(int ItemID) {
 
 
 }
+void BattleScene::Pokemon_Switch_Dialog_slot(int Seletion) {
+    CurrentDialogIndex = 0;
+
+    Pokemon_Switch_Dialogs ={//[Item][哪個item]
+                     {"Switch to " + bag->Pokemon_List.at(Seletion).GetName(),
+                             "Enemy Turn"},//[Item][哪個item][下個對話]
+//                     {"Used Potion!" + MyPokemon->GetName() +" restores 10 HP "  },
+//                     {"Used Ether!" + MyPokemon->GetMove(RestoreMoveID) +" PP fully restored" }
+                    };
+    if (!Pokemon_Switch_Dialogs.isEmpty()) {
+        Dialog->setText(Pokemon_Switch_Dialogs[0][CurrentDialogIndex]);
+        Dialog->show();
+        Timer->start(3000);
+    }
+}
 void BattleScene::ShowNextDialog() {
     CurrentDialogIndex++;
 
     if(!AttackDialogs.isEmpty()){
-        if (CurrentDialogIndex < AttackDialogs[Who].size()){
+        if (CurrentDialogIndex < AttackDialogs[Who].size() ){
+            if((AttackDialogs[Who][CurrentDialogIndex] == "Enemy Turn" || AttackDialogs[Who][CurrentDialogIndex] == "Player Turn")&& EnemyPokemon.GetCurrentHp() <= 0) CurrentDialogIndex++;
             Dialog->setText(AttackDialogs[Who][CurrentDialogIndex]);
             Timer->start(2000); // 繼續計時下一句
         }else {
             AttackDialogs.clear();
             Dialog->hide();
-            emit DialogFinished(); // 若有需要可加上
+            emit DialogFinished();
         }
     }else if (!ItemsDialogs.isEmpty()){
         if (CurrentDialogIndex < ItemsDialogs[ItemID].size()) {
@@ -733,9 +972,19 @@ void BattleScene::ShowNextDialog() {
             Dialog->hide();
             emit DialogFinished(); // 若有需要可加上
         }
+    }else if (!Pokemon_Switch_Dialogs.isEmpty()){
+        if (CurrentDialogIndex < Pokemon_Switch_Dialogs[0].size()) {
+            Dialog->setText(Pokemon_Switch_Dialogs[0][CurrentDialogIndex]);
+            Timer->start(2000); // 繼續計時下一句
+        } else {
+            Pokemon_Switch_Dialogs.clear();
+            Dialog->hide();
+            emit DialogFinished(); // 若有需要可加上
+        }
     }else{
         AttackDialogs.clear();
         ItemsDialogs.clear();
+        Pokemon_Switch_Dialogs.clear();
         Dialog->hide();
     }
 }
@@ -752,78 +1001,28 @@ void BattleScene::Player_turn(){
     MainMenu->show();
 }
 
-void BattleScene::UpdateBagUI() {
 
-}
-//void BattleScene::keyPressEvent(QKeyEvent *event) {
-//    if (!SkillMenu->isVisible()) return;
-
-//    int TotalButtons = SkillButtons.size();
-//    int row = currentSkillIndex / 3;  // 我們有3列（Move0、Move1、Move2、Move3、Back）
-//    int col = currentSkillIndex % 3;  // 列是3
-
-//    switch (event->key()) {
-//        case Qt::Key_Up:
-//            if (row > 0) row--;
-//            break;
-//        case Qt::Key_Down:
-//            if ((row + 1) * 3 + col < TotalButtons)
-//                row++;
-//            break;
-//        case Qt::Key_Left:
-//            if (col > 0) col--;
-//            break;
-//        case Qt::Key_Right:
-//            if (col < 2 && row * 3 + (col + 1) < TotalButtons) // 限制右邊不能超過2
-//                col++;
-//            break;
-//        case Qt::Key_Return:
-//        case Qt::Key_Enter:
-//            if (currentSkillIndex < TotalButtons)
-//                SkillButtons[currentSkillIndex]->click();
-//            return;
-//        default:
-//            return;
-//    }
-
-//    int newIndex = row * 3 + col;  // 根據行列計算新索引
-//    if (newIndex < TotalButtons) {
-//        SkillButtons[currentSkillIndex]->setStyleSheet("border: none;");
-//        currentSkillIndex = newIndex;
-//        SkillButtons[currentSkillIndex]->setStyleSheet("border: 2px solid yellow;");
-//    }
-//     event->accept();
-//}
 bool BattleScene::eventFilter(QObject* obj, QEvent* event) {
     if (event->type() == QEvent::Enter) {
-        if (obj == Move0_Button ) {
-            SkillInfo_SkillMenu->setText(QString::number(MyPokemon->GetCurrentPP(0))+" / "+ QString::number(MyPokemon->GetMaxPP(0)));
-            SkillInfo_SkillMenu->setVisible(true);
-        } else if (obj == Move1_Button ) {
-            SkillInfo_SkillMenu->setText(QString::number(MyPokemon->GetCurrentPP(1))+" / "+ QString::number(MyPokemon->GetMaxPP(1)));
-            SkillInfo_SkillMenu->setVisible(true);
-        } else if (obj == Move2_Button) {
-            SkillInfo_SkillMenu->setText(QString::number(MyPokemon->GetCurrentPP(2))+" / "+ QString::number(MyPokemon->GetMaxPP(2)));
-            SkillInfo_SkillMenu->setVisible(true);
-        } else if (obj == Move3_Button) {
-            SkillInfo_SkillMenu->setText(QString::number(MyPokemon->GetCurrentPP(3))+" / "+ QString::number(MyPokemon->GetMaxPP(3)));
-            SkillInfo_SkillMenu->setVisible(true);
-        }else if (obj == Move0_Button_PP) {
-            SkillInfo_PPMenu->setText(QString::number(MyPokemon->GetCurrentPP(0))+" / "+ QString::number(MyPokemon->GetMaxPP(0)));
-            SkillInfo_PPMenu->setVisible(true);
-        } else if (obj == Move1_Button_PP) {
-            SkillInfo_PPMenu->setText(QString::number(MyPokemon->GetCurrentPP(1))+" / "+ QString::number(MyPokemon->GetMaxPP(1)));
-            SkillInfo_PPMenu->setVisible(true);
-        } else if (obj == Move2_Button_PP) {
-            SkillInfo_PPMenu->setText(QString::number(MyPokemon->GetCurrentPP(2))+" / "+ QString::number(MyPokemon->GetMaxPP(2)));
-            SkillInfo_PPMenu->setVisible(true);
-        } else if (obj == Move3_Button_PP) {
-            SkillInfo_PPMenu->setText(QString::number(MyPokemon->GetCurrentPP(3))+" / "+ QString::number(MyPokemon->GetMaxPP(3)));
-            SkillInfo_PPMenu->setVisible(true);
-        }
+         qDebug() << "Enter event triggered";
+        for (int i = 0; i < Buttons[0].size(); ++i) { // Skill menu
+                    if (obj == Buttons[0][i] && i <= 3) {
+                        SkillInfo_SkillMenu->setText(QString::number(MyPokemon->GetCurrentPP(i)) + " / " + QString::number(MyPokemon->GetMaxPP(i)));
+                        SkillInfo_SkillMenu->show();
+                        SkillInfo_SkillMenu->raise();
+                    }
+                }
+        for (int i = 0; i < Buttons[1].size(); ++i) { // Restore PP menu
+                    if (obj == Buttons[1][i] && i <= 3) {
+                        SkillInfo_PPMenu->setText(QString::number(MyPokemon->GetCurrentPP(i)) + " / " + QString::number(MyPokemon->GetMaxPP(i)));
+                        SkillInfo_PPMenu->show();
+                        SkillInfo_PPMenu->raise();
+                    }
+                }
     } else if (event->type() == QEvent::Leave) {
-        SkillInfo_SkillMenu->setVisible(false);
-        SkillInfo_PPMenu->setVisible(false);
+        qDebug() << "Leave event triggered";
+        SkillInfo_SkillMenu->hide();
+        SkillInfo_PPMenu->hide();
     }
     return QWidget::eventFilter(obj, event);
 }

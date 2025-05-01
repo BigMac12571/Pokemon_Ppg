@@ -24,6 +24,7 @@ public:
 
     void StartBattle();
     void UpdateBattleInfo();
+    void RebuildAllButtons();
     void UseMove(int moveIndex);
     void UseItem(int itemIndex);
     void RunAway();
@@ -32,7 +33,6 @@ public:
     PokemonData* GetPokemon_From_List(int id);
 
     void UpdateHPBar(QLabel* barLabel, int currentHP, int maxHP, QSize size);
-    void UpdateBagUI();
 
     void ResetBattleScene() ;
 
@@ -44,13 +44,14 @@ signals:
     void BattleEnd(bool playerWon);
 
     void Attack_Dialog(int Who,int MoveID); // attack id =0 , move1 id =1, move2 id =2
-
     void Items_Dialog(int ItemID); // pokball = 0 , potion =1 , ether = 2
+    void Pokemon_Switch_Dialog(int PokemonID); // pokball = 0 , potion =1 , ether = 2
 
     void DialogFinished();
 public slots:
     void Attack_Dialog_slot(int Who,int MoveID);
     void Items_Dialog_slot(int ItemID);
+    void Pokemon_Switch_Dialog_slot(int PokemonID);
 
     void Enemy_turn();
     void Player_turn();
@@ -74,7 +75,7 @@ private:
     QToolButton *runButton;
 
     int currentSkillIndex = 0;
-    //QVector<QToolButton*> SkillButtons;
+    QList<QList<QToolButton*>> Buttons;//0 => Move ,1=> MovePP, 2=>Item, 3=> Pokemon
     QToolButton* backButton_skill;
     QToolButton* Move0_Button;
     QToolButton* Move1_Button;
@@ -113,6 +114,7 @@ private:
     QLabel* MyHpBarLabel;
     QLabel* MyHp;
     QLabel* MyPokemonImage;
+    QPixmap MyImage;
     QLabel* MyPokemonName;
     QLabel* MyLevel;
 
@@ -142,6 +144,7 @@ private:
     int ItemID;
     int RestoreMoveID;
     bool Capture;
+    QList<QStringList> Pokemon_Switch_Dialogs;
 };
 
 #endif // BATTLESCENE_H
