@@ -371,7 +371,7 @@ void Grassland::startBattleFlash()
     // 創建閃爍效果的背景 (這裡簡單地讓背景稍微變暗)
     flashBackgroundPixmap = originalBackgroundPixmap;
     QPainter painter(&flashBackgroundPixmap);
-    painter.fillRect(flashBackgroundPixmap.rect(), QColor(255, 255, 0, 70)); // 疊加半透明黃色
+    painter.fillRect(flashBackgroundPixmap.rect(), QColor(0, 0, 0, 90)); // 疊加半透明黑色
     painter.end();
 
     battleFlashTimer->start(battleFlashInterval);
