@@ -10,3 +10,6 @@ Pokeball::Pokeball(int id, QWidget *parent)
 }
 
 
+
+
+

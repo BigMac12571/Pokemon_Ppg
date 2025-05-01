@@ -86,6 +86,12 @@ private:
     QToolButton* Ether_Button ;
     QToolButton* Bag_BackButton ;
 
+    QToolButton* backButton_Pokemon;
+    QToolButton* Pokemon0 ;
+    QToolButton* Pokemon1 ;
+    QToolButton* Pokemon2 ;
+    QToolButton* Pokemon3 ;
+
     QToolButton* backButton_PP;
     QToolButton* Move0_Button_PP;
     QToolButton* Move1_Button_PP;
@@ -119,8 +125,9 @@ private:
 
     QWidget* MainMenu;
     QWidget* SkillMenu;
-    QWidget* bag_area;
+    QWidget* ItemBagMenu;
     QWidget* Restore_PP_Menu;
+    QWidget* PokemonMenu;
     QLabel* SkillInfo_SkillMenu;
     QLabel* SkillInfo_PPMenu;
 
@@ -134,6 +141,7 @@ private:
     QList<QStringList> ItemsDialogs;
     int ItemID;
     int RestoreMoveID;
+    bool Capture;
 };
 
 #endif // BATTLESCENE_H
