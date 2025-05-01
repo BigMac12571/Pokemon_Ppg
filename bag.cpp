@@ -269,7 +269,7 @@ void Bag::Refresh_bag_pokemon() {
         bag_a_space->setIconSize(QSize(60, 60));
         bag_a_space->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
         bag_a_space->setAttribute(Qt::WA_TransparentForMouseEvents);
-        bag_a_space->setStyleSheet("border: none; font-size: 18px;");
+        bag_a_space->setStyleSheet("border: none; font-size: 20px;");
         if (Pokemon_List.size() > BagLocation && Pokemon_List.at(BagLocation).GetID() != -1) {
             bag_a_space->setIcon(QIcon(Pokemon_List.at(BagLocation).GetImagePath()));
             bag_a_space->setText(Pokemon_List.at(BagLocation).GetName()+" " +QString::number(Pokemon_List.at(BagLocation).GetCurrentHp()) + " / " +

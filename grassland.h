@@ -10,6 +10,7 @@
 #include <QRandomGenerator>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QTimer>
 
 #include "player.h"
 #include "bag.h"
@@ -27,6 +28,7 @@ public:
     void UpdateScene() ;//背景移動
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
     void EncounterBattle();
+    void startBattleFlash();
 
     QPoint GetMapOffset() const { return Map_Offset; }
     void SetLastPosition();
@@ -67,6 +69,12 @@ private:
     const int View_Height = 450; // 視窗高度
     const int Player_Center_X = View_Width / 2 - 35 / 2;
     const int Player_Center_Y = View_Height / 2 - 48 / 2;
+    QTimer *battleFlashTimer;
+    int battleFlashCount;
+    int battleFlashInterval;
+    QPixmap originalBackgroundPixmap;
+    QPixmap flashBackgroundPixmap;
+    bool isBattleFlashing = false;
 
 
 
@@ -83,6 +91,9 @@ private:
 
     QPoint Last_Map_Offset;
     QPoint Last_Player_Pos;
+
+private slots:
+    void handleBattleFlashTimeout();
 };
 
 #endif // TITLESCREEN_H
