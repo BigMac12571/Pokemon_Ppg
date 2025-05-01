@@ -20,6 +20,7 @@ public:
     void LevelUp();
 
     // Getter
+    int GetID() const { return id_ ; }
     QString GetName() const { return name; }
     QString GetMove(int move) const { return (move == 0)? move0: (move == 1)? move1: (move == 2)? move2: (move == 3)? move3: "WTF"; }
     int GetAttack() const { return attack; }
