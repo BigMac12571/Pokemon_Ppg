@@ -12,8 +12,6 @@ SOURCES += \
     bag.cpp \
     battlescene.cpp \
     box.cpp \
-    bulbasaur.cpp \
-    charmander.cpp \
     dialog.cpp \
     gameover.cpp \
     grassland.cpp \
@@ -24,7 +22,6 @@ SOURCES += \
     player.cpp \
     pokeball.cpp \
     pokemondata.cpp \
-    squirtle.cpp \
     titlescreen.cpp \
     town.cpp
 
@@ -32,8 +29,6 @@ HEADERS += \
     bag.h \
     battlescene.h \
     box.h \
-    bulbasaur.h \
-    charmander.h \
     dialog.h \
     gameover.h \
     grassland.h \
@@ -43,7 +38,6 @@ HEADERS += \
     player.h \
     pokeball.h \
     pokemondata.h \
-    squirtle.h \
     titlescreen.h \
     town.h
 

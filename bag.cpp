@@ -92,31 +92,20 @@ void Bag::Add_Pokemon(PokemonData NewPokemon) {
     for (int i = 0; i < Pokemon_List.size(); ++i) {
         if (Pokemon_List[i].GetID() == -1) {
             emptyIndex = i;
-            qDebug() << "Adding Pokémon to empty slot:" << emptyIndex;
             break;
         }
     }
 
     if (emptyIndex != -1) {
-        qDebug() << "Before assignment";
         Pokemon_List[emptyIndex] = NewPokemon;
-        qDebug() << "After assignment";
-
-        qDebug() << "Before SetBagLocation";
         Pokemon_List[emptyIndex].SetBagLocation(emptyIndex);
-        qDebug() << "After SetBagLocation";
 
     } else {
-        qDebug() << "Appending Pokémon at end. Old size:" << Pokemon_List.size();
         Pokemon_List.append(NewPokemon);
 
-        qDebug() << "Appended. New size:" << Pokemon_List.size();
-
         if (!Pokemon_List.isEmpty()) {
-            qDebug() << "Last Pokémon ID:" << Pokemon_List.last().GetID();
             Pokemon_List.last().SetBagLocation(Pokemon_List.size() - 1);
         } else {
-            qDebug() << "ERROR: List is still empty after append!";
         }
     }
     Refresh_bag_pokemon();

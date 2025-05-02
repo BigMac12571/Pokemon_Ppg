@@ -9,9 +9,6 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QPixmap>
-#include "bulbasaur.h"
-#include "squirtle.h"
-#include "charmander.h"
 #include "pokemondata.h"
 #include "bag.h"
 
@@ -80,31 +77,9 @@ private:
 
     int currentSkillIndex = 0;
     QList<QList<QToolButton*>> Buttons;//0 => Move ,1=> MovePP, 2=>Item, 3=> Pokemon
-    QToolButton* backButton_skill;
-    QToolButton* Move0_Button;
-    QToolButton* Move1_Button;
-    QToolButton* Move2_Button;
-    QToolButton* Move3_Button;
 
-    QToolButton* Pokeball_Button ;
-    QToolButton* Potion_Button ;
-    QToolButton* Ether_Button ;
-    QToolButton* Bag_BackButton ;
 
-    QToolButton* backButton_Pokemon;
-    QToolButton* Pokemon0 ;
-    QToolButton* Pokemon1 ;
-    QToolButton* Pokemon2 ;
-    QToolButton* Pokemon3 ;
 
-    QToolButton* backButton_PP;
-    QToolButton* Move0_Button_PP;
-    QToolButton* Move1_Button_PP;
-    QToolButton* Move2_Button_PP;
-    QToolButton* Move3_Button_PP;
-
-    Bulbasaur *playerPokemon;
-    Bulbasaur *enemyPokemon;
     Bag *bag;
 
     bool PlayerTurn;

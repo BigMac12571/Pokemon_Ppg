@@ -50,9 +50,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     /////// 初始化寶可夢
-    bulbasaur = new Bulbasaur(this);
-    squirtle = new Squirtle(this);
-    charmander = new Charmander(this);
 
 
 

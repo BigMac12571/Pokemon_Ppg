@@ -15,9 +15,6 @@
 #include "npc.h"
 #include "dialog.h"
 #include "pokeball.h"
-#include "bulbasaur.h"
-#include "charmander.h"
-#include "squirtle.h"
 #include "pokemondata.h"
 #include "bag.h"
 
@@ -86,9 +83,7 @@ private:
     Pokeball *pokeball2;
 
 
-    Bulbasaur *bulbasaur;
-    Squirtle *squirtle;
-    Charmander *charmander;
+
 
     Bag *mybag;
     QList<QLabel*> Pokemon_List;

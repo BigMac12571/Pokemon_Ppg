@@ -3,7 +3,7 @@
 #include <QTimer>
 
 BattleScene::BattleScene(Bag *myBag, QWidget *parent)
-    : QWidget(parent), playerPokemon(nullptr), enemyPokemon(nullptr), bag(myBag) , PlayerTurn(true),MyPokemon(nullptr),EnemyPokemon(0,1)
+    : QWidget(parent), bag(myBag) , PlayerTurn(true),MyPokemon(nullptr),EnemyPokemon(0,1)
 {
     if (!bag) {
             qDebug() << "❌ Bag 是空指標！";
@@ -629,7 +629,7 @@ void BattleScene::Pokemon_Dead_Dialog_slot() {
 
     Pokemon_Dead_Dialogs ={
                      {MyPokemon->GetName()+" is dead.",
-                             "Cherish UR Pokemon ,idiot."},
+                             "Cherish UR Pokemon , idiot."},
 //                     {"Used Potion!" + MyPokemon->GetName() +" restores 10 HP "  },
 //                     {"Used Ether!" + MyPokemon->GetMove(RestoreMoveID) +" PP fully restored" }
                     };
