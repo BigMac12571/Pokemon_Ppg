@@ -1,4 +1,4 @@
-#include "battlescene.h"
+﻿#include "battlescene.h"
 #include <QDebug>
 #include <QTimer>
 
@@ -105,10 +105,18 @@ void BattleScene::SetupUI() {
     PokemonMenu_Background->show();
     PokemonMenu_Background->raise();
 
+    SpecialMenu = new QWidget(this);
+    SpecialMenu->setGeometry(0, 314, 525, 136); // 與原本按鈕區域重疊
+    SpecialMenu->hide(); // 一開始先隱藏
+    QLabel* SpecialMenuBackground = new QLabel(SpecialMenu);
+    SpecialMenuBackground->setPixmap(QPixmap(":/new/prefix1/Dataset/Image/battle/fight_skill.png"));
+    SpecialMenuBackground->setGeometry(0, 0, 525, 136);
+    SpecialMenuBackground->show();
+    SpecialMenuBackground->raise();
 
     Dialog = new QLabel(this);
     Dialog->setGeometry(19, 337, 245, 92); // (264-19 = 245, 429-337 = 92)
-    Dialog->setStyleSheet( "background-color: rgba(0,0,0,0);" "color: white;""font-size: 28px;" );
+    Dialog->setStyleSheet( "background-color: rgba(0,0,0,0);" "color: white;""font-size: 24px;" );
     Dialog->setWordWrap(true);
     Dialog->hide();
     connect(this, &BattleScene::Attack_Dialog, this , &BattleScene::Attack_Dialog_slot);
@@ -121,6 +129,7 @@ void BattleScene::SetupUI() {
 
     connect(this, &BattleScene::DialogFinished ,this ,[=](){ //每回合兩次
         UpdateBattleInfo();
+
         if(!End){
             PlayerTurn = !PlayerTurn;
             if(!PlayerTurn){
@@ -188,14 +197,24 @@ void BattleScene::SetupUI() {
 }
 
 void BattleScene::StartBattle() {
+
     End = false;
+
+
     Capture = false;
-    Player_turn();
-    EnemyPokemon = GenerateRandomEnemy();
+    MainMenu->hide();
+
+
 
     if (MyPokemon == nullptr) {
         MyPokemon = GetPokemon_From_List(0);  // 只初始化一次
     }
+
+    for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
+    MyPokemon->SetSpec();
+    for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
+
+    EnemyPokemon = GenerateRandomEnemy();
 
     MyPokemonImage = new QLabel(this);
     MyImage = QPixmap(MyPokemon->GetBackImagaePath());
@@ -257,16 +276,43 @@ void BattleScene::StartBattle() {
     EnemyHpBarLabel->move(112, 92); // 調整位置
     EnemyHpBarLabel->show();
 
-
-
-
     MyHpBarLabel = new QLabel(this);
     UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
     MyHpBarLabel->move(381, 258);
     MyHpBarLabel->show();
 
-    RebuildAllButtons();
+    if(MyPokemon->GetSpeed() >= EnemyPokemon.GetSpeed()){
+        Dialog->show();
+        Dialog->setText(MyPokemon->GetName() + "'s Speed("+QString::number(MyPokemon->GetSpeed())+ ") is greater than (or equal to) " +EnemyPokemon.GetName()+"'s Speed("+ QString::number(EnemyPokemon.GetSpeed())+")");
+        QTimer::singleShot(4000, this, [this]() {
+            Dialog->setText("Player turn");
+            QTimer::singleShot(2000, this, [this]() {
+                Dialog->hide();
+                Player_turn();
+                RebuildAllButtons();
+            });
+        });
 
+    }
+    else {
+
+        Dialog->show();
+        Dialog->setText(EnemyPokemon.GetName() + "'s Speed("+QString::number(EnemyPokemon.GetSpeed())+ ") is greater than" +MyPokemon->GetName()+"'s Speed("+QString::number(MyPokemon->GetSpeed())+")");
+        QTimer::singleShot(4000, this, [this]() {
+            Dialog->setText("Enemy turn");
+            QTimer::singleShot(2000, this, [this]() {
+                Dialog->hide();
+                Enemy_turn();
+                RebuildAllButtons();
+            });
+        });
+
+
+    }
+
+    qDebug() <<"123";
+
+    qDebug() <<"123";
 
 }
 void BattleScene::UpdateHPBar(QLabel* barLabel, int currentHP, int maxHP, QSize size)
@@ -314,16 +360,12 @@ void BattleScene::UpdateBattleInfo() {
 
 
     // 檢查敵人或玩家血量
-    if (MyPokemon->GetCurrentHp() <= 0) {
-        ResetBattleScene();
-        End = true;
-        emit BattleEnd(false);  // 玩家輸了
-    } else if (EnemyPokemon.GetCurrentHp() <= 0 || Capture) {
+
+    if (EnemyPokemon.GetCurrentHp() <= 0 || Capture) {
         if(!Capture) MyPokemon->LevelUp();
         ResetBattleScene();
         End = true; //不要讓敵人下次一進場就攻擊
         emit BattleEnd(true);   // 玩家贏了
-
     }
 
 }
@@ -338,18 +380,19 @@ void BattleScene::ResetBattleScene() {
     if (MyLevel) { delete MyLevel; MyLevel = nullptr; }
     if (MyHpBarLabel) { delete MyHpBarLabel; MyHpBarLabel = nullptr; }
     if (MyHp) {delete MyHp ; MyHp = nullptr; }
-    RebuildAllButtons();
+    //RebuildAllButtons();
     PlayerTurn = true;
     Capture = false;
-    EnemyPokemon.Reset();
+    //EnemyPokemon.Reset();
 
     // 隱藏 Dialog 與選單區塊
     SkillMenu->hide();
     ItemBagMenu->hide();
+    PokemonMenu->hide();
+    SpecialMenu->hide();
     //SkillInfo_PPMenu->hide();
     //SkillInfo_SkillMenu->hide();
 
-    PokemonMenu->hide();
     Dialog->hide();
     AttackDialogs.clear();
     ItemsDialogs.clear();
@@ -369,9 +412,11 @@ void BattleScene::RebuildAllButtons() {
         }
     }
     Buttons.clear();
-    for (int MenuIndex = 0; MenuIndex < 4; MenuIndex++) {
+    for (int MenuIndex = 0; MenuIndex < 5; MenuIndex++) {
         QList<QToolButton*> buttons;
+        qDebug() <<MenuIndex;
         for (int ButtonType = 0; ButtonType < 5; ButtonType++) {
+            qDebug() <<ButtonType;
             QToolButton* button = nullptr;
 
             switch (MenuIndex) {
@@ -397,7 +442,7 @@ void BattleScene::RebuildAllButtons() {
                     connect(button, &QToolButton::clicked, this, [=]() {
                         if (MyPokemon->GetCurrentPP(ButtonType) > 0) {
                             EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, ButtonType));
-                            UpdateHPBar(EnemyHpBarLabel, EnemyPokemon.GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+                            UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), EnemyPokemon.GetMaxHp(), QSize(108, 10));
                             MyPokemon->UseMove(ButtonType);
                             SkillMenu->hide();
                             emit Attack_Dialog(0, ButtonType);
@@ -408,6 +453,19 @@ void BattleScene::RebuildAllButtons() {
                         SkillMenu->hide();
                         MainMenu->show();
                     });
+                }
+                if( ButtonType == 4){
+                    QToolButton* Special = new QToolButton(SkillMenu);
+                    Special->setFocusPolicy(Qt::NoFocus);
+                    Special->installEventFilter(this);
+                    Special->setGeometry(240, 30, 80, 30);
+                    Special->setText("Special");
+                    buttons.append(Special);
+                    connect(Special, &QToolButton::clicked, this, [=]() {
+                        SkillMenu->hide();
+                        SpecialMenu->show();
+                    });
+
                 }
 
                 break;
@@ -447,7 +505,69 @@ void BattleScene::RebuildAllButtons() {
 
                 break;
             }
-            case 2: { // Item
+            case 2: {
+                button = new QToolButton(SpecialMenu);
+                button->setFocusPolicy(Qt::NoFocus);
+                button->installEventFilter(this);
+                //button->setFixedSize(80, 80);
+                //button->setStyleSheet( "color: white;");
+
+                if (ButtonType <= 2)
+                {button->setText(MyPokemon->GetSpecialATK(ButtonType)+ "\nRemaining: " + QString::number(MyPokemon->GetCurrentSpecialatk_remaing_times(ButtonType)));}
+
+                switch (ButtonType) {
+                case 0: button->setGeometry(20, 30, 80, 35);   break;
+                case 1: button->setGeometry(20, 70, 80, 35);break;
+                case 2: button->setGeometry(140, 30, 80, 35); break;
+                case 3: button->setGeometry(240, 70, 80, 35); button->setText("Back"); break;
+                case 4: button->setGeometry(362, 30, 152, 76); break;
+                default :button->hide(); break;
+                }
+
+                if (ButtonType <= 2) {
+
+                    if (MyPokemon->GetLevel() >= ButtonType *2 +1 && MyPokemon->GetCurrentSpecialatk_remaing_times(ButtonType) >= 1) button->show(); else button->hide();
+
+                    connect(button, &QToolButton::clicked, SpecialMenu, [=]() {
+                            MyPokemon->UseSpec(ButtonType);
+                            SpecialMenu->hide();
+                            int t = 0;
+                            QTimer* timer = new QTimer(SpecialMenu);
+                            connect(timer, &QTimer::timeout, SpecialMenu, [=]() mutable {
+
+                                EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, -1 ,ButtonType));
+                                UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), EnemyPokemon.GetMaxHp(), QSize(108, 10));
+                                qDebug()<< EnemyPokemon.GetCurrentHp() ;
+
+                                t++;
+                                if(t >= MyPokemon->GetSpecialatk(ButtonType).at(1)){
+                                    timer->stop();
+                                    timer->deleteLater();
+                                    emit Attack_Dialog(0, ButtonType, true);
+                                }
+
+                            });
+                            timer->start(1000);
+
+                    });
+
+                } else if (ButtonType == 3){
+                    connect(button, &QToolButton::clicked, this, [=]() {
+                        SpecialMenu->hide();
+                        SkillMenu->show();
+                    });
+                } else{
+
+                    button->setText("SA/DA :\n"+ QString::number(MyPokemon->GetSA()) + " / " + QString::number(MyPokemon->GetDA()));
+                    button->setAttribute(Qt::WA_TransparentForMouseEvents);
+                    button->setStyleSheet("QToolButton { background-color: white; color: black; font-size: 16pt; }");
+
+                }
+
+                break;
+            }
+
+            case 3:{ // Item
                 button = new QToolButton(ItemBagMenu);
                 button->setFocusPolicy(Qt::NoFocus);
                 button->setIconSize(QSize(40, 40));
@@ -509,7 +629,7 @@ void BattleScene::RebuildAllButtons() {
 
                 break;
             }
-            case 3: { // Pokémon
+            case 4: { // Pokémon
                 button = new QToolButton(PokemonMenu);
                 button->setFocusPolicy(Qt::NoFocus);
                 button->setIconSize(QSize(60, 60));
@@ -592,8 +712,16 @@ void BattleScene::ShowBattleMessage(const QString &msg) {
 
 PokemonData BattleScene::GenerateRandomEnemy() {
     int EnemyId = QRandomGenerator::global()->bounded(0, 3); // 假設 0~2 是合法寶可夢ID
-    int EnemyLevel = 1; //初始皆為1級
+    //int EnemyLevel = 1; //初始皆為1級
+
+
+    int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-3>=1)? MyPokemon->GetLevel()-3:1, (MyPokemon->GetLevel()+2 <= 5)? MyPokemon->GetLevel()+2: 5);
     PokemonData enemy(EnemyId, EnemyLevel);
+    if(MyPokemon->GetLevel()>=5){
+    for(int level = 5 ; level < QRandomGenerator::global()->bounded(MyPokemon->GetLevel()-3, MyPokemon->GetLevel()+2); level++){
+        enemy.LevelUp();
+    }
+    }
     qDebug() << "🎯 生成敵人 ID:" << EnemyId << " Level:" << EnemyLevel;
     return enemy;
 }
@@ -609,20 +737,20 @@ PokemonData* BattleScene::GetPokemon_From_List(int id)
     }
 }
 
-void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
+void BattleScene::Attack_Dialog_slot(int Who,int MoveID, bool special) {
 
     CurrentDialogIndex = 0;
     PokemonData myPokemon = *MyPokemon;
     BattleScene::Who = Who;
     AttackDialogs ={
             {
-             myPokemon.GetName() + " used " + myPokemon.GetMove(MoveID) + " ! " ,
-             EnemyPokemon.GetName() + " took " + QString::number(myPokemon.GetDamage(EnemyPokemon,MoveID)) + " damage!",
+             myPokemon.GetName() + " used " + ((special)? myPokemon.GetSpecialATK(MoveID):myPokemon.GetMove(MoveID) )+ " ! " ,
+             EnemyPokemon.GetName() + " took " + ((special)? QString::number(myPokemon.GetDamage(EnemyPokemon,-1,MoveID)) + " x " +QString::number(myPokemon.GetSpecialatk(MoveID).at(1)) : QString::number(myPokemon.GetDamage(EnemyPokemon,MoveID))) + " damage!",
             "Enemy Turn"
             },
             {
-            EnemyPokemon.GetName() + " used " + EnemyPokemon.GetMove(MoveID) + "!" ,
-            myPokemon.GetName() + " took " + QString::number(EnemyPokemon.GetDamage(myPokemon,MoveID)) + " damage!",
+            EnemyPokemon.GetName() + " used " +((special)? EnemyPokemon.GetSpecialATK(MoveID): EnemyPokemon.GetMove(MoveID)) + "!" ,
+            myPokemon.GetName() + " took " + ((special)? QString::number(EnemyPokemon.GetDamage(myPokemon,-1,MoveID)) + " x " +QString::number(myPokemon.GetSpecialatk(MoveID).at(1)) : QString::number(EnemyPokemon.GetDamage(myPokemon,MoveID))) + " damage!",
 
             }
     };
@@ -630,6 +758,7 @@ void BattleScene::Attack_Dialog_slot(int Who,int MoveID) {
         AttackDialogs[0].push_back("You won!");
     if (MyPokemon->GetCurrentHp() > 0)
         AttackDialogs[1].push_back("Player Turn");
+
     if (!AttackDialogs.isEmpty()) {
         Dialog->setText(AttackDialogs[Who][CurrentDialogIndex]);
         Dialog->show();
@@ -747,11 +876,44 @@ void BattleScene::ShowNextDialog() {
 }
 void BattleScene::Enemy_turn(){
     PokemonData myPokemon = *MyPokemon;
-    int Enemy_move = QRandomGenerator::global()->bounded(0, 1);
-    MyPokemon->TakeDamage(EnemyPokemon.GetDamage(myPokemon,Enemy_move)); // 技能2 傷害 30
-    UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+    int Random = QRandomGenerator::global()->bounded(0, 2);
+    switch(Random){
+    case 0:{
+        int Enemy_move = QRandomGenerator::global()->bounded(0, 1);
+         MyPokemon->TakeDamage(EnemyPokemon.GetDamage(myPokemon,Enemy_move));
+         UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
 
-    emit Attack_Dialog(1,Enemy_move);
+         emit Attack_Dialog(1,Enemy_move);
+
+        break;
+    }
+    case 1:{
+        int Special = QRandomGenerator::global()->bounded(0, (EnemyPokemon.GetLevel() <=2)? 1: (EnemyPokemon.GetLevel() <=4)? 2 : 3);
+        int t = 0;
+        QTimer* timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, [=]() mutable {
+            if(t < MyPokemon->GetSpecialatk(Special).at(1)){
+            MyPokemon->TakeDamage(EnemyPokemon.GetDamage(myPokemon, -1 ,Special));
+            UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+            qDebug()<< MyPokemon->GetCurrentHp() ;
+            }
+            t++;
+            if(t >= MyPokemon->GetSpecialatk(Special).at(1)){
+                timer->stop();
+                timer->deleteLater();
+                emit Attack_Dialog(1, Special, true);
+            }
+
+        });
+        timer->start(1000);
+
+
+        break;
+    }
+    case 2: break;
+    }
+
+
 
 }
 void BattleScene::Player_turn(){
@@ -761,7 +923,6 @@ void BattleScene::Player_turn(){
 
 bool BattleScene::eventFilter(QObject* obj, QEvent* event) {
     if (event->type() == QEvent::Enter) {
-         qDebug() << "Enter event triggered";
         for (int i = 0; i < Buttons[0].size(); ++i) { // Skill menu
                     if (obj == Buttons[0][i] && i <= 3) {
                         SkillInfo_SkillMenu->setText(QString::number(MyPokemon->GetCurrentPP(i)) + " / " + QString::number(MyPokemon->GetMaxPP(i)));
@@ -777,7 +938,6 @@ bool BattleScene::eventFilter(QObject* obj, QEvent* event) {
                     }
                 }
     } else if (event->type() == QEvent::Leave) {
-        qDebug() << "Leave event triggered";
         SkillInfo_SkillMenu->hide();
         SkillInfo_PPMenu->hide();
     }
@@ -810,7 +970,6 @@ void BattleScene::Pokeball_Animation_Start() {
             double scale = 1.0 - (frame - 100) / 40.0;
             int newW = static_cast<int>(originalW * scale);
             int newH = static_cast<int>(originalH * scale);
-            qDebug() << "Scale:" << scale << "Size:" << newW << "x" << newH;
             EnemyImage->setGeometry(315, 54, newW, newH);
             EnemyImage->setScaledContents(true);
         }

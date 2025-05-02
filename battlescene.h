@@ -41,7 +41,7 @@ public:
 signals:
     void BattleEnd(bool playerWon);
 
-    void Attack_Dialog(int Who,int MoveID); // attack id =0 , move1 id =1, move2 id =2
+    void Attack_Dialog(int Who,int MoveID, bool special = false); // attack id =0 , move1 id =1, move2 id =2
     void Items_Dialog(int ItemID); // pokball = 0 , potion =1 , ether = 2
     //void Pokemon_Switch_Dialog(int PokemonID); // pokball = 0 , potion =1 , ether = 2
 
@@ -49,7 +49,7 @@ signals:
 
     void GameOver();
 public slots:
-    void Attack_Dialog_slot(int Who,int MoveID);
+    void Attack_Dialog_slot(int Who,int MoveID, bool special = false);
     void Items_Dialog_slot(int ItemID);
     void Pokemon_Switch_Dialog_slot(int Seletion);
     void Pokemon_Dead_Dialog_slot();
@@ -76,7 +76,7 @@ private:
     QToolButton *runButton;
 
     int currentSkillIndex = 0;
-    QList<QList<QToolButton*>> Buttons;//0 => Move ,1=> MovePP, 2=>Item, 3=> Pokemon
+    QList<QList<QToolButton*>> Buttons;//0 => Move ,1=> MovePP,2 => SpecialATK, 3=>Item, => Pokemon
 
 
 
@@ -109,6 +109,7 @@ private:
     QWidget* ItemBagMenu;
     QWidget* Restore_PP_Menu;
     QWidget* PokemonMenu;
+    QWidget* SpecialMenu;
     QLabel* SkillInfo_SkillMenu;
     QLabel* SkillInfo_PPMenu;
     QList<QLabel*> Type_SkillMenu;
