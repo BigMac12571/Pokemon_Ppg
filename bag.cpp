@@ -123,9 +123,9 @@ void Bag::Remove_Pokemon(int id) {
         }
 }
 
-int Bag::GetNextAlivePokemonID(int dead_location) {
+int Bag::GetNextAlivePokemonID() {
     for (int i = 0; i < Pokemon_List.size(); ++i) {
-        if (Pokemon_List[i].GetCurrentHp() > 0 && Pokemon_List[i].GetID() != -1 && i != dead_location)
+        if (Pokemon_List[i].GetCurrentHp() > 0 && Pokemon_List[i].GetID() != -1 )
             return i;
     }
     return -1; // 代表沒有存活的

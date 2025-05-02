@@ -28,6 +28,7 @@ public:
     int GetCurrentHp() const { return current_hp;}
     int GetMaxHp() const { return max_hp; }
     int GetLevel() const { return level_; }
+    int GetType() const { return type; }
     int GetCurrentPP(int pp) const { return  (pp == 0)? current_pp.at(0): (pp == 1)? current_pp.at(1): (pp == 2)? current_pp.at(2): (pp == 3)? current_pp.at(3): 0;}
     int GetMaxPP(int pp) const { return  (pp == 0)? pp0: (pp == 1)? pp1: (pp == 2)? pp2: (pp == 3)? pp3: 0;}
     QString GetImagePath() const { return ImagePath; }
@@ -69,6 +70,7 @@ private:
     int pp1;
     int pp2;
     int pp3;
+    int type;
     QString ImagePath;
     QString BackImagePath;
 
@@ -89,6 +91,7 @@ private:
         int pp1;
         int pp2;
         int pp3;
+        int type;
         QString imagePath;
         QString BackImagePath;
         };

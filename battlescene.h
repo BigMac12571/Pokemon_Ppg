@@ -111,6 +111,8 @@ private:
     QWidget* PokemonMenu;
     QLabel* SkillInfo_SkillMenu;
     QLabel* SkillInfo_PPMenu;
+    QList<QLabel*> Type_SkillMenu;
+    QList<QLabel*> Type_PPMenu;
 
     QWidget* Pokeball_Animation;
 

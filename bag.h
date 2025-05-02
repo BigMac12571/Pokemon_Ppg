@@ -31,7 +31,7 @@ public:
     //void Capture_Pokemon(PokemonData* NewPokemon);
 
     void Remove_Pokemon(int id);
-    int  GetNextAlivePokemonID(int dead_location = -1);
+    int  GetNextAlivePokemonID();
     void ClearBag();
 
 

@@ -149,6 +149,37 @@ void BattleScene::SetupUI() {
     SkillInfo_PPMenu->hide();
     SkillInfo_PPMenu->setWordWrap(true);
 
+    for(int i = 0 ; i < 3; i++){
+        QLabel* Type = new QLabel(SkillMenu);
+        Type->setGeometry(420, 59, 40,40);
+        Type->setStyleSheet("background-color: transparent; border: none");
+
+        QPixmap Type_image;
+        switch(i){
+        case 0: Type_image.load(":/new/prefix1/Dataset/Image/type/Grass.jpg"); break;
+        case 1: Type_image.load(":/new/prefix1/Dataset/Image/type/Water.jpg"); break;
+        case 2: Type_image.load(":/new/prefix1/Dataset/Image/type/Fire.jpg"); break;
+        }
+
+        Type->setPixmap(Type_image.scaled(Type->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        Type_SkillMenu.push_back(Type);
+    }
+
+    for(int i = 0 ; i < 3; i++){
+        QLabel* Type = new QLabel(Restore_PP_Menu);
+        Type->setGeometry(420, 59, 40,40);
+        Type->setStyleSheet("background-color: transparent; border: none");
+
+        QPixmap Type_image;
+        switch(i){
+        case 0: Type_image.load(":/new/prefix1/Dataset/Image/type/Grass.jpg"); break;
+        case 1: Type_image.load(":/new/prefix1/Dataset/Image/type/Water.jpg"); break;
+        case 2: Type_image.load(":/new/prefix1/Dataset/Image/type/Fire.jpg"); break;
+        }
+
+        Type->setPixmap(Type_image.scaled(Type->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        Type_PPMenu.push_back(Type);
+    }
     Pokeball_Animation = new QWidget(this);
     Pokeball_Animation->setGeometry(212,54,364-141,244-46);
     Pokeball_Animation->hide();
@@ -192,6 +223,16 @@ void BattleScene::StartBattle() {
     MyHp->setFixedWidth(100);
     MyHp->setStyleSheet("font-weight: bold; font-size: 20px;");
     MyHp->show();
+
+    for(int i = 0 ; i < 3; i++){
+        if(i == MyPokemon->GetType()) {
+            Type_SkillMenu.at(MyPokemon->GetType())->show();
+            Type_PPMenu.at(MyPokemon->GetType())->show();
+        }else{
+        Type_SkillMenu.at(i)->hide();
+        Type_PPMenu.at(i)->hide();
+        }
+    }
 
 
     EnemyImage = new QLabel(this);
@@ -259,6 +300,17 @@ void BattleScene::UpdateBattleInfo() {
     MyPokemonName->setText(MyPokemon->GetName());
     MyLevel->setText("Lv:"+QString::number(MyPokemon->GetLevel()));
     MyHp->setText(QString::number(MyPokemon->GetCurrentHp()) + " / " + QString::number(MyPokemon->GetMaxHp()));
+
+    for(int i = 0 ; i < 3; i++){
+        if(i == MyPokemon->GetType()) {
+            Type_SkillMenu.at(MyPokemon->GetType())->show();
+            Type_SkillMenu.at(MyPokemon->GetType())->raise();
+            Type_PPMenu.at(MyPokemon->GetType())->show();
+        }else{
+            Type_SkillMenu.at(i)->hide();
+            Type_PPMenu.at(i)->hide();
+            }
+    }
 
 
     // 檢查敵人或玩家血量
@@ -678,14 +730,13 @@ void BattleScene::ShowNextDialog() {
         }
     }else if (!Pokemon_Dead_Dialogs.isEmpty()){
         if (CurrentDialogIndex < Pokemon_Dead_Dialogs[0].size()) {
-            if((Pokemon_Dead_Dialogs[0][CurrentDialogIndex] == "Cherish UR Pokemon ,idiot.")&& bag->GetNextAlivePokemonID() == -1) CurrentDialogIndex++;
+            if((Pokemon_Dead_Dialogs[0][CurrentDialogIndex] == "Cherish UR Pokemon , idiot.")&& bag->GetNextAlivePokemonID() == -1) CurrentDialogIndex++;
             Dialog->setText(Pokemon_Dead_Dialogs[0][CurrentDialogIndex]);
             Timer->start(2000); // 繼續計時下一句
         } else {
             Pokemon_Dead_Dialogs.clear();
             Dialog->hide();
-            Dead_And_SwitchToAnotherPokemon();
-            emit DialogFinished(); // 若有需要可加上
+            Dead_And_SwitchToAnotherPokemon(); // 若有需要可加上
         }
     }else{
         AttackDialogs.clear();
@@ -785,19 +836,18 @@ void BattleScene::Dead_And_SwitchToAnotherPokemon() {
 
     bag->Remove_Pokemon(BagLocation);
 
-    int nextId = bag->GetNextAlivePokemonID(BagLocation);
-    if (nextId != -1) {
+    int nextId = bag->GetNextAlivePokemonID();
+    qDebug() << "nexId is " << nextId;
+    if (nextId == -1) {
+        emit GameOver();
+
+
+    } else {
         MyPokemon = GetPokemon_From_List(nextId);
         UpdateBattleInfo();
         UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+        emit DialogFinished();
 
-    } else {
-        emit GameOver();
     }
-
-
-
-
-
 
 }

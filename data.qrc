@@ -46,5 +46,9 @@
         <file>Dataset/Image/scene/lab.png</file>
         <file>Dataset/Image/scene/start_menu.png</file>
         <file>Dataset/Image/scene/Town.png</file>
+        <file>Dataset/Image/type/Fire.jpg</file>
+        <file>Dataset/Image/type/Water.jpg</file>
+        <file>Dataset/Image/type/Grass.jpg</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>
