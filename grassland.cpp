@@ -52,7 +52,9 @@ Grassland::Grassland(Bag *mybag,QWidget *parent)
     Exit_Zone = QRect(500, 1642, 84, 24); // 自己依照背景圖微調
     Talk_With_Sign.append(QRect(374,1294,42,50)); //高草旁Sign
 
-
+    battleFlashTimer = new QTimer(this);
+    connect(battleFlashTimer, &QTimer::timeout, this, &Grassland::handleBattleFlashTimeout);
+    battleFlashTimer->setSingleShot(false); // 不是單次觸發
 
 
 
@@ -88,7 +90,7 @@ void Grassland::clearPressedKeys() {
 
 void Grassland::keyPressEvent(QKeyEvent *event)
 {
-    if (mainPlayer == nullptr) return;
+    if (mainPlayer == nullptr|| isBattleFlashing) return;
 
     int key = event->key();
 
@@ -331,7 +333,8 @@ void Grassland::EncounterBattle(){
             int random = QRandomGenerator::global()->generate() % 50;
             if (random == 0) {
                 //qDebug() << "fight!!!";
-                emit Battle();
+                //emit Battle();
+                startBattleFlash(); // 觸發閃爍效果
                 Last_Map_Offset = Map_Offset;
                 Last_Player_Pos = mainPlayer->pos();
                 mainPlayer->stopWalking();
@@ -352,5 +355,41 @@ void Grassland::SetLastPosition() {
 
     if (mainPlayer && Last_Player_Pos != QPoint()) {
         mainPlayer->move(Last_Player_Pos);
+    }
+}
+
+void Grassland::startBattleFlash()
+{
+    if (isBattleFlashing) return;
+
+    isBattleFlashing = true;
+    battleFlashCount = 0;
+    battleFlashInterval = 150; // 閃爍間隔 200 毫秒
+
+    originalBackgroundPixmap = *background->pixmap();
+
+    // 創建閃爍效果的背景 (這裡簡單地讓背景稍微變暗)
+    flashBackgroundPixmap = originalBackgroundPixmap;
+    QPainter painter(&flashBackgroundPixmap);
+    painter.fillRect(flashBackgroundPixmap.rect(), QColor(0, 0, 0, 90)); // 疊加半透明黑色
+    painter.end();
+
+    battleFlashTimer->start(battleFlashInterval);
+}
+
+void Grassland::handleBattleFlashTimeout()
+{
+    if (battleFlashCount % 2 == 0) {
+        background->setPixmap(flashBackgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    } else {
+        background->setPixmap(originalBackgroundPixmap.scaled(size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    }
+
+    battleFlashCount++;
+
+    if (battleFlashCount >= 8) { // 閃爍 5 次
+        battleFlashTimer->stop();
+        isBattleFlashing = false;
+        emit Battle(); // 發出開始戰鬥的訊號
     }
 }
