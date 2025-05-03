@@ -204,18 +204,19 @@ void BattleScene::StartBattle() {
     Capture = false;
     MainMenu->hide();
 
-
-
+    qDebug() <<"創建MyPokemon當掉";
     if (MyPokemon == nullptr) {
         MyPokemon = GetPokemon_From_List(0);  // 只初始化一次
     }
-
-    for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
+     qDebug() <<"創建MyPokemon當掉";
+    //for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
     MyPokemon->SetSpec();
-    for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
+    //for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
 
+    for(int i=0; i< 5; i++) MyPokemon->LevelUp();
+    qDebug() <<"創建EnemyPokemon當掉";
     EnemyPokemon = GenerateRandomEnemy();
-
+    qDebug() <<"創建EnemyPokemon當掉";
     MyPokemonImage = new QLabel(this);
     MyImage = QPixmap(MyPokemon->GetBackImagaePath());
     MyPokemonImage->setPixmap(MyImage.scaled(150, 150, Qt::KeepAspectRatio));
@@ -713,17 +714,29 @@ void BattleScene::ShowBattleMessage(const QString &msg) {
 PokemonData BattleScene::GenerateRandomEnemy() {
     int EnemyId = QRandomGenerator::global()->bounded(0, 3); // 假設 0~2 是合法寶可夢ID
     //int EnemyLevel = 1; //初始皆為1級
+    qDebug() <<"創建EnemyID當掉";
+    qDebug() <<"創建EnemyLevel當掉";
+    int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-2 >= 1)? MyPokemon->GetLevel()-2 : 1, MyPokemon->GetLevel());
+    qDebug() <<"創建EnemyLevel當掉";
+    qDebug() << EnemyLevel ;
+    PokemonData Enemy;
+    if(EnemyLevel>5){
+        PokemonData enemy(EnemyId, 5);
+        for(int level = 5 ; level < EnemyLevel; level++){
+            qDebug()<< level ;
+            qDebug()<< EnemyLevel ;
+            enemy.LevelUp();
+        }
+        Enemy = enemy;
+    }else{
+
+        PokemonData enemy(EnemyId, EnemyLevel);
+        Enemy = enemy;
+    }
 
 
-    int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-3>=1)? MyPokemon->GetLevel()-3:1, (MyPokemon->GetLevel()+2 <= 5)? MyPokemon->GetLevel()+2: 5);
-    PokemonData enemy(EnemyId, EnemyLevel);
-    if(MyPokemon->GetLevel()>=5){
-    for(int level = 5 ; level < QRandomGenerator::global()->bounded(MyPokemon->GetLevel()-3, MyPokemon->GetLevel()+2); level++){
-        enemy.LevelUp();
-    }
-    }
     qDebug() << "🎯 生成敵人 ID:" << EnemyId << " Level:" << EnemyLevel;
-    return enemy;
+    return Enemy;
 }
 
 PokemonData* BattleScene::GetPokemon_From_List(int id)
