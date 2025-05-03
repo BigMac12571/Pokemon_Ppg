@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QPixmap>
+#include <QSoundEffect>
 #include "pokemondata.h"
 #include "bag.h"
 
@@ -70,6 +71,7 @@ private:
     QLabel *enemyInfo;
     QLabel *messageBox;
 
+
     QToolButton *fightButton;
     QToolButton *bagButton;
     QToolButton *pokemonButton;
@@ -128,6 +130,8 @@ private:
     bool Capture;
     QList<QStringList> Pokemon_Switch_Dialogs;
     QList<QStringList> Pokemon_Dead_Dialogs;
+
+    QSoundEffect* battleSound;
 };
 
 #endif // BATTLESCENE_H
