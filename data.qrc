@@ -50,5 +50,7 @@
         <file>Dataset/Image/type/Water.jpg</file>
         <file>Dataset/Image/type/Grass.jpg</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/new/prefix2">
+        <file>Dataset/sound/Battle.mp3</file>
+    </qresource>
 </RCC>
