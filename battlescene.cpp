@@ -322,7 +322,7 @@ void BattleScene::StartBattle() {
         Dialog->show();
         Dialog->setText(MyPokemon->GetName() + "'s Speed("+QString::number(MyPokemon->GetSpeed())+ ") is greater than (or equal to) " +EnemyPokemon.GetName()+"'s Speed("+ QString::number(EnemyPokemon.GetSpeed())+")");
         QTimer::singleShot(4000, this, [this]() {
-            Dialog->setText("Player turn");
+            Dialog->setText("Your turn");
             QTimer::singleShot(2000, this, [this]() {
                 Dialog->hide();
                 Player_turn();
