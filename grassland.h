@@ -14,6 +14,7 @@
 #include <QMediaPlayer>
 #include <QUrl>
 #include <QMediaContent>
+#include <QSoundEffect>
 
 #include "player.h"
 #include "bag.h"
@@ -24,6 +25,7 @@ class Grassland: public QWidget
 
 public:
     explicit Grassland(Bag* mybag,QWidget *parent = nullptr);
+    ~Grassland();
 
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
@@ -37,6 +39,7 @@ public:
     void SetLastPosition();
 public slots:
     void clearPressedKeys();
+
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -88,7 +91,8 @@ private:
     QList<QRect> TallGrasses;// 草叢區域（進入會觸發戰鬥）
     QList<QRect> Talk_With_Sign;
 
-
+    QMediaPlayer *backgroundMusicPlayer;
+    bool LoopMusic = true;
 
     QRect Exit_Zone;
 

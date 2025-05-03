@@ -9,6 +9,9 @@
 //#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QMediaPlayer>
+#include <QUrl>
+#include <QMediaContent>
 
 #include "player.h"
 #include "bag.h"
@@ -21,6 +24,7 @@ class Laboratory: public QWidget
 
 public:
     explicit Laboratory(QWidget *parent = nullptr);
+    ~Laboratory();
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
     void Add_NPC_To_Scene(NPC *npc); //按下Press start 後將角色放入視窗
@@ -75,9 +79,13 @@ private:
     QRect Exit_Zone;
     QRect Talk_With_Oak ;
 
+    QMediaPlayer *backgroundMusicPlayer;
+    bool LoopMusic = true;
+
 
     QList<QRect> Pick_Pokeballs_area; //撿寶貝球的區域
     QList<bool>picked;
+
 };
 #endif // TITLESCREEN_H
 

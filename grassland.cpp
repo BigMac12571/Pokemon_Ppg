@@ -62,12 +62,34 @@ Grassland::Grassland(Bag *mybag,QWidget *parent)
 
     setFocusPolicy(Qt::StrongFocus);
 }
+
+Grassland::~Grassland(){
+    if (backgroundMusicPlayer) {
+        backgroundMusicPlayer->stop();
+        delete backgroundMusicPlayer;
+        backgroundMusicPlayer = nullptr;
+    }
+}
 void Grassland::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
 {
     player->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Town）的 widget 裡，這樣它才會顯示在畫面上。
     player->setGeometry(Player_Center_X, Player_Center_Y, 35, 48);
     player->show();
     player->raise(); // 確保角色在背景上方
+
+    backgroundMusicPlayer = new QMediaPlayer(this);
+    QUrl musicUrl = QUrl("qrc:/new/prefix2/Dataset/sound/GRASSLAND.wav");
+    backgroundMusicPlayer->setMedia(QMediaContent(musicUrl));
+    backgroundMusicPlayer->setVolume(15);
+    backgroundMusicPlayer->play();
+    LoopMusic = true;
+
+    connect(backgroundMusicPlayer, &QMediaPlayer::stateChanged, this,
+            [this](QMediaPlayer::State newState){
+        if (newState == QMediaPlayer::StoppedState && LoopMusic) {
+            backgroundMusicPlayer->play(); // 播放結束後重新開始
+        }
+    });
 
 }
 
@@ -150,6 +172,10 @@ void Grassland::keyPressEvent(QKeyEvent *event)
         QRect Real_coodinate = playerRect.translated(Map_Offset); // 角色在地圖中的實際位置
 
         if (Exit_Zone.intersects(Real_coodinate)) {
+            if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+                LoopMusic = false;
+                backgroundMusicPlayer->stop();
+            }
             emit Exit_Grassland();
         }
         mainPlayer->setDirection(DOWN);
@@ -334,6 +360,10 @@ void Grassland::EncounterBattle(){
             if (random == 0) {
                 //qDebug() << "fight!!!";
                 //emit Battle();
+                if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+                    LoopMusic = false;
+                    backgroundMusicPlayer->stop();
+                }
                 startBattleFlash(); // 觸發閃爍效果
                 Last_Map_Offset = Map_Offset;
                 Last_Player_Pos = mainPlayer->pos();
@@ -376,19 +406,13 @@ void Grassland::startBattleFlash()
 
     battleFlashTimer->start(battleFlashInterval);
 
-    QMediaPlayer *battleSoundPlayer = new QMediaPlayer(this);
-        QUrl soundUrl = QUrl::fromLocalFile("/path/to/your/battle_start.m4a"); // 將副檔名改為 .m4a
-        // 如果你的音效在資源檔中：
-        // QUrl soundUrl = QUrl("qrc:/sounds/battle_start.m4a");
-        battleSoundPlayer->setMedia(QMediaContent(soundUrl));
-        battleSoundPlayer->setVolume(100);
-        battleSoundPlayer->play();
+    QSoundEffect *battleSoundEffect = new QSoundEffect(this);
 
-        connect(battleSoundPlayer, &QMediaPlayer::stateChanged, this, [battleSoundPlayer](QMediaPlayer::State state){
-            if (state == QMediaPlayer::StoppedState) {
-                battleSoundPlayer->deleteLater();
-            }
-        });
+    QUrl soundUrl = QUrl("qrc:/new/prefix2/Dataset/sound/Encountered.wav");
+    battleSoundEffect->setSource(soundUrl);
+    battleSoundEffect->setVolume(0.5f); // 設定音量 (0.0f - 1.0f)
+    battleSoundEffect->play();
+
 }
 
 void Grassland::handleBattleFlashTimeout()
@@ -407,3 +431,5 @@ void Grassland::handleBattleFlashTimeout()
         emit Battle(); // 發出開始戰鬥的訊號
     }
 }
+
+

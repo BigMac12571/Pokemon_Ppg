@@ -9,7 +9,9 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QPixmap>
-#include <QSoundEffect>
+#include <QMediaPlayer>
+#include <QUrl>
+#include <QMediaContent>
 #include "pokemondata.h"
 #include "bag.h"
 
@@ -19,7 +21,7 @@ class BattleScene : public QWidget
 
 public:
     explicit BattleScene(Bag *mybag,QWidget *parent = nullptr);
-
+    ~BattleScene();
     void StartBattle();
     void UpdateBattleInfo();
     void RebuildAllButtons();
@@ -57,6 +59,7 @@ public slots:
 
     void Enemy_turn();
     void Player_turn();
+
 
 
 protected:
@@ -131,7 +134,8 @@ private:
     QList<QStringList> Pokemon_Switch_Dialogs;
     QList<QStringList> Pokemon_Dead_Dialogs;
 
-    QSoundEffect* battleSound;
+    QMediaPlayer *backgroundMusicPlayer;
+    bool LoopMusic = true;
 };
 
 #endif // BATTLESCENE_H

@@ -5,6 +5,9 @@
 #include <QStackedWidget>
 #include <QKeyEvent>
 #include <QStackedWidget>
+#include <QMediaPlayer>
+#include <QUrl>
+#include <QMediaContent>
 #include "titlescreen.h"
 #include "laboratory.h"
 #include "town.h"
@@ -90,7 +93,6 @@ private:
 
     QPoint LastMapOffset;
     QPoint PlayPosition;
-
 
 };
 #endif // MAINWINDOW_H

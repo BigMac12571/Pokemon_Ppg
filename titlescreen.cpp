@@ -63,9 +63,44 @@ TitleScreen::TitleScreen(QWidget *parent)
 
     ///////////////////////傳送按鈕指令/////////////////////////
     connect(press_start, &QPushButton::clicked, this, [=]() {
+        if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+            LoopMusic = false;
+            backgroundMusicPlayer->stop();
+        }
         emit Game_Start();  // ✅ 發出 signal
     });
     ///////////////////////傳送按鈕指令/////////////////////////
+    // 初始化背景音樂播放器和播放列表
+//        backgroundMusicPlayer = new QMediaPlayer(this);
+//        QMediaPlaylist *playlist = new QMediaPlaylist(this);
+//        QUrl musicUrl = QUrl("qrc:/new/prefix2/Dataset/sound/1-Trimmed by FlexClip.mp3");
+//        playlist->addMedia(QMediaContent(musicUrl));
+//        playlist->setPlaybackMode(QMediaPlaylist::Loop); // 設定循環播放模式
+//        backgroundMusicPlayer->setPlaylist(playlist);
+//        backgroundMusicPlayer->setVolume(50); // 設定音量 (可調整)
+//        backgroundMusicPlayer->play();
 
+        backgroundMusicPlayer = new QMediaPlayer(this);
+        QUrl musicUrl = QUrl("qrc:/new/prefix2/Dataset/sound/Title.mp3");
+        backgroundMusicPlayer->setMedia(QMediaContent(musicUrl));
+        backgroundMusicPlayer->setVolume(15);
+        backgroundMusicPlayer->play();
+
+        connect(backgroundMusicPlayer, &QMediaPlayer::stateChanged, this,
+                [this](QMediaPlayer::State newState){
+            if (newState == QMediaPlayer::StoppedState && LoopMusic) {
+                backgroundMusicPlayer->play(); // 播放結束後重新開始
+            }
+        });
+
+}
+
+TitleScreen::~TitleScreen()
+{
+    if (backgroundMusicPlayer) {
+        backgroundMusicPlayer->stop();
+        delete backgroundMusicPlayer;
+        backgroundMusicPlayer = nullptr;
+    }
 }
 

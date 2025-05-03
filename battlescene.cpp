@@ -16,6 +16,14 @@ BattleScene::BattleScene(Bag *myBag, QWidget *parent)
     SetupUI();
 }
 
+BattleScene::~BattleScene(){
+    if (backgroundMusicPlayer) {
+        backgroundMusicPlayer->stop();
+        delete backgroundMusicPlayer;
+        backgroundMusicPlayer = nullptr;
+    }
+}
+
 void BattleScene::SetupUI() {
     background = new QLabel(this);
     background->setPixmap(QPixmap(":/new/prefix1/Dataset/Image/battle/battle_scene.png"));
@@ -196,16 +204,6 @@ void BattleScene::SetupUI() {
     Pokeball_Animation->hide();
     Pokeball_Animation->setStyleSheet("background-color: transparent;");
 
-
-    battleSound = new QSoundEffect(this);
-    battleSound->setSource(QUrl::fromLocalFile("C:/Qt/pokemon/Pokemon_Ppg/battle_start.wav"));
-    battleSound->setLoopCount(1);
-    battleSound->setVolume(0.5);
-
-    connect(battleSound, &QSoundEffect::statusChanged, this, [=]() {
-        qDebug() << "Sound status:" << battleSound->status();
-    });
-
 }
 
 void BattleScene::StartBattle() {
@@ -225,13 +223,24 @@ void BattleScene::StartBattle() {
     MyPokemon->SetSpec();
     //for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
 
-    for(int i=0; i< 5; i++) MyPokemon->LevelUp();
-    qDebug() <<"創建EnemyPokemon當掉";
+    //for(int i=0; i< 5; i++) MyPokemon->LevelUp();
+    //qDebug() <<"創建EnemyPokemon當掉";
     EnemyPokemon = GenerateRandomEnemy();
     qDebug() <<"創建EnemyPokemon當掉";
 
+    backgroundMusicPlayer = new QMediaPlayer(this);
+    QUrl musicUrl = QUrl("qrc:/new/prefix2/Dataset/sound/Battle.mp3");
+    backgroundMusicPlayer->setMedia(QMediaContent(musicUrl));
+    backgroundMusicPlayer->setVolume(15);
+    backgroundMusicPlayer->play();
+    LoopMusic = true;
 
-    battleSound->play();
+    connect(backgroundMusicPlayer, &QMediaPlayer::stateChanged, this,
+            [this](QMediaPlayer::State newState){
+        if (newState == QMediaPlayer::StoppedState && LoopMusic) {
+            backgroundMusicPlayer->play(); // 播放結束後重新開始
+        }
+    });
 
 
 
@@ -389,6 +398,10 @@ void BattleScene::UpdateBattleInfo() {
         if(!Capture) MyPokemon->LevelUp();
         ResetBattleScene();
         End = true; //不要讓敵人下次一進場就攻擊
+        if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+            LoopMusic = false;
+            backgroundMusicPlayer->stop();
+        }
         emit BattleEnd(true);   // 玩家贏了
     }
 
@@ -720,6 +733,10 @@ void BattleScene::RunAway() {
     // 模擬逃跑動畫延遲或提示
     QTimer::singleShot(500, this,[this]() {
         ResetBattleScene();
+        if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+            LoopMusic = false;
+            backgroundMusicPlayer->stop();
+        }
         emit BattleEnd(false); // false = 沒有贏，是逃跑
     });
 }
@@ -739,7 +756,7 @@ PokemonData BattleScene::GenerateRandomEnemy() {
     //int EnemyLevel = 1; //初始皆為1級
     qDebug() <<"創建EnemyID當掉";
     qDebug() <<"創建EnemyLevel當掉";
-    int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-2 >= 1)? MyPokemon->GetLevel()-2 : 1, MyPokemon->GetLevel());
+    int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-2 >= 1)? MyPokemon->GetLevel()-2 : 1, MyPokemon->GetLevel() + 1);
     qDebug() <<"創建EnemyLevel當掉";
     qDebug() << EnemyLevel ;
     PokemonData Enemy;
@@ -1024,6 +1041,15 @@ void BattleScene::Pokeball_Animation_Start() {
 void BattleScene::CapturePokemon(){
     bag->Add_Pokemon(EnemyPokemon);
     Capture = true;
+    if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+        LoopMusic = false;
+        backgroundMusicPlayer->stop();
+    }
+    backgroundMusicPlayer = new QMediaPlayer(this);
+    QUrl musicUrl = QUrl("qrc:/new/prefix2/Dataset/sound/capture.wav");
+    backgroundMusicPlayer->setMedia(QMediaContent(musicUrl));
+    backgroundMusicPlayer->setVolume(15);
+    backgroundMusicPlayer->play();
     emit Items_Dialog(0);
 }
 void BattleScene::Dead_And_SwitchToAnotherPokemon() {
@@ -1034,6 +1060,16 @@ void BattleScene::Dead_And_SwitchToAnotherPokemon() {
     int nextId = bag->GetNextAlivePokemonID();
     qDebug() << "nexId is " << nextId;
     if (nextId == -1) {
+        if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+            LoopMusic = false;
+            backgroundMusicPlayer->stop();
+        }
+
+        backgroundMusicPlayer = new QMediaPlayer(this);
+        QUrl musicUrl = QUrl("qrc:/new/prefix2/Dataset/sound/Gameover.mp3");
+        backgroundMusicPlayer->setMedia(QMediaContent(musicUrl));
+        backgroundMusicPlayer->setVolume(15);
+        backgroundMusicPlayer->play();
         emit GameOver();
 
 
@@ -1046,3 +1082,4 @@ void BattleScene::Dead_And_SwitchToAnotherPokemon() {
     }
 
 }
+

@@ -10,6 +10,9 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QRandomGenerator>
+#include <QMediaPlayer>
+#include <QUrl>
+#include <QMediaContent>
 
 #include "player.h"
 #include "bag.h"
@@ -22,6 +25,7 @@ class Town: public QWidget
 
 public:
     explicit Town(QWidget *parent = nullptr);
+    ~Town();
 
     void Add_Player_To_Scene(QWidget *player); //按下Press start 後將角色放入視窗
 
@@ -34,6 +38,7 @@ public:
     bool CanMoveToDirection(Direction dir); // 為障礙物設計
 public slots:
     void clearPressedKeys();
+
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -73,6 +78,9 @@ private:
     QRect Enter_Laboratory_Trigger; //進入實驗室
     QRect Enter_Grassland_Trigger; //進入草地區
     QList<QRect> Talk_With_Sign;
+    QMediaPlayer *backgroundMusicPlayer;
+    bool LoopMusic = true;
+
 };
 
 #endif // TOWN_H

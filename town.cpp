@@ -62,6 +62,17 @@ Town::Town(QWidget *parent)
     for (int i = 0; i < numberOfBoxes; ++i) {
         spawnBox();
     }
+
+
+
+}
+
+Town::~Town(){
+    if (backgroundMusicPlayer) {
+        backgroundMusicPlayer->stop();
+        delete backgroundMusicPlayer;
+        backgroundMusicPlayer = nullptr;
+    }
 }
 void Town::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
 {
@@ -69,6 +80,20 @@ void Town::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Pla
     player->setGeometry(Player_Center_X, Player_Center_Y, 35, 48);
     player->show();
     player->raise(); // 確保角色在背景上方
+
+    backgroundMusicPlayer = new QMediaPlayer(this);
+    QUrl musicUrl = QUrl("qrc:/new/prefix2/Dataset/sound/TOWN.wav");
+    backgroundMusicPlayer->setMedia(QMediaContent(musicUrl));
+    backgroundMusicPlayer->setVolume(15);
+    backgroundMusicPlayer->play();
+    LoopMusic = true;
+
+    connect(backgroundMusicPlayer, &QMediaPlayer::stateChanged, this,
+            [this](QMediaPlayer::State newState){
+        if (newState == QMediaPlayer::StoppedState && LoopMusic) {
+            backgroundMusicPlayer->play(); // 播放結束後重新開始
+        }
+    });
 
 }
 
@@ -142,9 +167,17 @@ void Town::keyPressEvent(QKeyEvent *event)
         QRect Real_coodinate = playerRect.translated(Map_Offset); // 角色在地圖中的實際位置
 
         if (Enter_Laboratory_Trigger.intersects(Real_coodinate)) {
+            if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+                LoopMusic = false;
+                backgroundMusicPlayer->stop();
+            }
             emit Enter_Laboratory();
         }
         if (Enter_Grassland_Trigger.intersects(Real_coodinate)) {
+            if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+                LoopMusic = false;
+                backgroundMusicPlayer->stop();
+            }
             emit Enter_Grassland();
         }
 
@@ -409,5 +442,6 @@ bool Town::isPositionValid(const QRect& rect) {
     }
     return true;
 }
+
 
 

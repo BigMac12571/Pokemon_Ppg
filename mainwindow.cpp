@@ -92,6 +92,8 @@ MainWindow::MainWindow(QWidget *parent)
         Scene_stack->setCurrentIndex(1); // 進入 Town 畫面
         switch_windowtitle(1); // 換window title
 
+
+
         town->Add_Player_To_Scene(player);
         town->SetMainPlayer(player); // <--- 指定主角
 

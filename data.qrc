@@ -1,4 +1,14 @@
 <RCC>
+    <qresource prefix="/new/prefix2">
+        <file>Dataset/sound/Encountered.wav</file>
+        <file>Dataset/sound/Title.mp3</file>
+        <file>Dataset/sound/GRASSLAND.wav</file>
+        <file>Dataset/sound/LABORATORY.wav</file>
+        <file>Dataset/sound/TOWN.wav</file>
+        <file>Dataset/sound/Battle.mp3</file>
+        <file>Dataset/sound/Gameover.mp3</file>
+        <file>Dataset/sound/capture.wav</file>
+    </qresource>
     <qresource prefix="/new/prefix1">
         <file>Dataset/Image/bag.png</file>
         <file>Dataset/Image/ball.png</file>
@@ -47,10 +57,7 @@
         <file>Dataset/Image/scene/start_menu.png</file>
         <file>Dataset/Image/scene/Town.png</file>
         <file>Dataset/Image/type/Fire.jpg</file>
-        <file>Dataset/Image/type/Water.jpg</file>
         <file>Dataset/Image/type/Grass.jpg</file>
-    </qresource>
-    <qresource prefix="/new/prefix2">
-        <file>Dataset/sound/Battle.mp3</file>
+        <file>Dataset/Image/type/Water.jpg</file>
     </qresource>
 </RCC>
