@@ -49,7 +49,10 @@ void BattleScene::SetupUI() {
 
 
 
-    connect(runButton, &QPushButton::clicked, this, &BattleScene::RunAway);
+    connect(runButton, &QPushButton::clicked, this,[=](){
+        ResetBattleScene();
+        emit BattleEnd(false);
+    });
     connect(fightButton, &QPushButton::clicked,this, [=]() {
         qDebug() << "選擇 FIGHT";
         MainMenu->hide();
@@ -213,7 +216,7 @@ void BattleScene::StartBattle() {
     MyPokemon->SetSpec();
     //for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
 
-    for(int i=0; i< 5; i++) MyPokemon->LevelUp();
+    //for(int i=0; i< 5; i++) MyPokemon->LevelUp();
     qDebug() <<"創建EnemyPokemon當掉";
     EnemyPokemon = GenerateRandomEnemy();
     qDebug() <<"創建EnemyPokemon當掉";
@@ -684,39 +687,13 @@ void BattleScene::RebuildAllButtons() {
 
 
 }
-void BattleScene::UseMove(int moveIndex) {
-    Q_UNUSED(moveIndex);
-}
-
-void BattleScene::UseItem(int itemIndex) {
-    Q_UNUSED(itemIndex);
-}
-
-void BattleScene::RunAway() {
-
-    // 模擬逃跑動畫延遲或提示
-    QTimer::singleShot(500, this,[this]() {
-        ResetBattleScene();
-        emit BattleEnd(false); // false = 沒有贏，是逃跑
-    });
-}
-
-
-void BattleScene::paintEvent(QPaintEvent *event) {
-    QWidget::paintEvent(event);
-}
-
-void BattleScene::ShowBattleMessage(const QString &msg) {
-    Q_UNUSED(msg);
-    // 未使用訊息框，保留未來可加入
-}
 
 PokemonData BattleScene::GenerateRandomEnemy() {
     int EnemyId = QRandomGenerator::global()->bounded(0, 3); // 假設 0~2 是合法寶可夢ID
     //int EnemyLevel = 1; //初始皆為1級
     qDebug() <<"創建EnemyID當掉";
     qDebug() <<"創建EnemyLevel當掉";
-    int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-2 >= 1)? MyPokemon->GetLevel()-2 : 1, MyPokemon->GetLevel());
+    int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-2 >= 1)? MyPokemon->GetLevel()-2 : 1, MyPokemon->GetLevel() + 1);
     qDebug() <<"創建EnemyLevel當掉";
     qDebug() << EnemyLevel ;
     PokemonData Enemy;
@@ -729,7 +706,7 @@ PokemonData BattleScene::GenerateRandomEnemy() {
         }
         Enemy = enemy;
     }else{
-
+        qDebug()<< EnemyLevel ;
         PokemonData enemy(EnemyId, EnemyLevel);
         Enemy = enemy;
     }
