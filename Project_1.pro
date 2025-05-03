@@ -60,6 +60,4 @@ RESOURCES += \
     data.qrc
 
 DISTFILES += \
-    ../Pokemon Battle  Encounter Sound Effect (generation 1).mp3 \
-    ../battle_start.mp3 \
-    ../battle_start.wav.mp3
+

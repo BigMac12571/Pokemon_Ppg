@@ -11,6 +11,9 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QTimer>
+#include <QMediaPlayer>
+#include <QUrl>
+#include <QMediaContent>
 
 #include "player.h"
 #include "bag.h"

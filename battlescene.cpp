@@ -1,6 +1,8 @@
 ﻿#include "battlescene.h"
 #include <QDebug>
 #include <QTimer>
+#include <QSoundEffect>
+
 
 BattleScene::BattleScene(Bag *myBag, QWidget *parent)
     : QWidget(parent), bag(myBag) , PlayerTurn(true),MyPokemon(nullptr),EnemyPokemon(0,1)
@@ -197,6 +199,16 @@ void BattleScene::SetupUI() {
     Pokeball_Animation->hide();
     Pokeball_Animation->setStyleSheet("background-color: transparent;");
 
+
+    battleSound = new QSoundEffect(this);
+    battleSound->setSource(QUrl::fromLocalFile("C:/Qt/pokemon/Pokemon_Ppg/battle_start.wav"));
+    battleSound->setLoopCount(1);
+    battleSound->setVolume(0.5);
+
+    connect(battleSound, &QSoundEffect::statusChanged, this, [=]() {
+        qDebug() << "Sound status:" << battleSound->status();
+    });
+
 }
 
 void BattleScene::StartBattle() {
@@ -220,6 +232,12 @@ void BattleScene::StartBattle() {
     qDebug() <<"創建EnemyPokemon當掉";
     EnemyPokemon = GenerateRandomEnemy();
     qDebug() <<"創建EnemyPokemon當掉";
+
+
+    battleSound->play();
+
+
+
     MyPokemonImage = new QLabel(this);
     MyImage = QPixmap(MyPokemon->GetBackImagaePath());
     MyPokemonImage->setPixmap(MyImage.scaled(150, 150, Qt::KeepAspectRatio));
@@ -310,6 +328,11 @@ void BattleScene::StartBattle() {
                 RebuildAllButtons();
             });
         });
+
+
+
+
+
 
 
     }

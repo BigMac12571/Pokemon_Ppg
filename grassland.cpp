@@ -375,6 +375,20 @@ void Grassland::startBattleFlash()
     painter.end();
 
     battleFlashTimer->start(battleFlashInterval);
+
+    QMediaPlayer *battleSoundPlayer = new QMediaPlayer(this);
+        QUrl soundUrl = QUrl::fromLocalFile("/path/to/your/battle_start.m4a"); // 將副檔名改為 .m4a
+        // 如果你的音效在資源檔中：
+        // QUrl soundUrl = QUrl("qrc:/sounds/battle_start.m4a");
+        battleSoundPlayer->setMedia(QMediaContent(soundUrl));
+        battleSoundPlayer->setVolume(100);
+        battleSoundPlayer->play();
+
+        connect(battleSoundPlayer, &QMediaPlayer::stateChanged, this, [battleSoundPlayer](QMediaPlayer::State state){
+            if (state == QMediaPlayer::StoppedState) {
+                battleSoundPlayer->deleteLater();
+            }
+        });
 }
 
 void Grassland::handleBattleFlashTimeout()
