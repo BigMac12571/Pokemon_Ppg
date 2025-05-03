@@ -864,7 +864,7 @@ void BattleScene::Pokemon_Switch_Dialog_slot(int Seletion) {
     if (!Pokemon_Switch_Dialogs.isEmpty()) {
         Dialog->setText(Pokemon_Switch_Dialogs[0][CurrentDialogIndex]);
         Dialog->show();
-        Timer->start(3000);
+        Timer->start(2000);
     }
 }
 
@@ -882,7 +882,7 @@ void BattleScene::Pokemon_Dead_Dialog_slot() {
     if (!Pokemon_Dead_Dialogs.isEmpty()) {
         Dialog->setText(Pokemon_Dead_Dialogs[0][CurrentDialogIndex]);
         Dialog->show();
-        Timer->start(3000);
+        Timer->start(2000);
     }
 }
 
