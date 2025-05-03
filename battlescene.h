@@ -27,7 +27,6 @@ public:
     void RebuildAllButtons();
     void UseMove(int moveIndex);
     void UseItem(int itemIndex);
-    void RunAway();
 
     PokemonData GenerateRandomEnemy();
     PokemonData* GetPokemon_From_List(int id);
@@ -63,16 +62,12 @@ public slots:
 
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
+
 //    void keyPressEvent(QKeyEvent *event) override;
     bool eventFilter(QObject* obj, QEvent* event) override;
 private:
     QLabel *background;
-    QLabel *playerLabel;
-    QLabel *enemyLabel;
-    QLabel *playerInfo;
-    QLabel *enemyInfo;
-    QLabel *messageBox;
+
 
 
     QToolButton *fightButton;
@@ -91,7 +86,7 @@ private:
     bool End;
 
     void SetupUI();
-    void ShowBattleMessage(const QString &msg);
+
 
 
     PokemonData *MyPokemon;

@@ -410,7 +410,7 @@ void Grassland::startBattleFlash()
 
     QUrl soundUrl = QUrl("qrc:/new/prefix2/Dataset/sound/Encountered.wav");
     battleSoundEffect->setSource(soundUrl);
-    battleSoundEffect->setVolume(0.5f); // 設定音量 (0.0f - 1.0f)
+    battleSoundEffect->setVolume(0.25f); // 設定音量 (0.0f - 1.0f)
     battleSoundEffect->play();
 
 }

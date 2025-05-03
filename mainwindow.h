@@ -89,7 +89,7 @@ private:
 
 
     Bag *mybag;
-    QList<QLabel*> Pokemon_List;
+
 
     QPoint LastMapOffset;
     QPoint PlayPosition;
