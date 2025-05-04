@@ -59,5 +59,17 @@
         <file>Dataset/Image/type/Fire.jpg</file>
         <file>Dataset/Image/type/Grass.jpg</file>
         <file>Dataset/Image/type/Water.jpg</file>
+        <file>Dataset/Image/NPC/Npc_B.png</file>
+        <file>Dataset/Image/NPC/Npc_BW1.png</file>
+        <file>Dataset/Image/NPC/Npc_BW2.png</file>
+        <file>Dataset/Image/NPC/Npc_F.png</file>
+        <file>Dataset/Image/NPC/Npc_FW1.png</file>
+        <file>Dataset/Image/NPC/Npc_FW2.png</file>
+        <file>Dataset/Image/NPC/Npc_L.png</file>
+        <file>Dataset/Image/NPC/Npc_LW1.png</file>
+        <file>Dataset/Image/NPC/Npc_LW2.png</file>
+        <file>Dataset/Image/NPC/Npc_R.png</file>
+        <file>Dataset/Image/NPC/Npc_RW1.png</file>
+        <file>Dataset/Image/NPC/Npc_RW2.png</file>
     </qresource>
 </RCC>

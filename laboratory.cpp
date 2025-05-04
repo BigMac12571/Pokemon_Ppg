@@ -34,12 +34,12 @@ Laboratory::Laboratory(QWidget *parent)
     Barriers.append(QRect(960, 687, 1132-960 , 733-687)); //右下一坨
     Barriers.append(QRect(678, 817, 713-678 , 876-817)); //左下花盆一坨
     Barriers.append(QRect(1101, 817, 713-678 , 876-817)); //左下花盆一坨
-    Barriers.append(QRect(893, 508, 27, 44)); //Oak哥
+    //Barriers.append(QRect(893, 508, 27, 44)); //Oak哥
 
 
     Exit_Zone = QRect(904, 863, 4, 30); // 自己依照背景圖微調
 
-    Talk_With_Oak =QRect(889,508,27, 64);
+    //Talk_With_Oak =QRect(ProfessorOak->getMapPosition().x()-10,ProfessorOak->getMapPosition().y()-10,55, 68);
 
     Pick_Pokeballs_area.append(QRect(974,575,2,60));
     Pick_Pokeballs_area.append(QRect(1012,575,2,60));
@@ -84,11 +84,16 @@ void Laboratory::Add_Player_To_Scene(QWidget *player) //可以同時出現Lab �
 void Laboratory::Add_NPC_To_Scene(NPC *npc) //可以同時出現Lab 與 NPC
 {
     npc->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Lab）的 widget 裡，這樣它才會顯示在畫面上。
-    npc->setGeometry(-Map_Offset.x()+889, -Map_Offset.x()+508, 35, 48);
+    //npc->setGeometry(-Map_Offset.x()+889, -Map_Offset.x()+508, 35, 48);
+    ProfessorOak = npc;
+
+    ProfessorOak->setMapPosition(lastNpcPosition);
+    startNpcMovement();
+
+    npc->setGeometry(-Map_Offset.x() + npc->mapPosition.x(), -Map_Offset.y() + npc->mapPosition.y(), 35, 48);
     npc->show();
     npc->raise(); // 確保角色在背景上方
     mainPlayer->raise();
-    ProfessorOak = npc;
 
 }
 void Laboratory::Add_Pokeball_To_Scene(int id,Pokeball *pokeballx){ //存取pokeball 的座標
@@ -196,6 +201,7 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
                 LoopMusic = false;
                 backgroundMusicPlayer->stop();
             }
+            stopNpcMovement();
             emit Exit_Laboratory();
         }
         mainPlayer->setDirection(DOWN);
@@ -244,6 +250,16 @@ void Laboratory::keyPressEvent(QKeyEvent *event)
         QRect playerRect = mainPlayer->geometry();
         QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
             if (Talk_With_Oak.intersects(Real_coodinate)) {
+                stopNpcMovement();
+                if(mainPlayer->getDirection() == UP){
+                    ProfessorOak->setDirection(down);
+                }else if(mainPlayer->getDirection() == DOWN){
+                    ProfessorOak->setDirection(up);
+                }else if(mainPlayer->getDirection() == LEFT){
+                    ProfessorOak->setDirection(right1);
+                }else if(mainPlayer->getDirection() == RIGHT){
+                    ProfessorOak->setDirection(left1);
+                }
                 emit Open_Dialog_Oak();  // 觸發對話 signal
                 mainPlayer->stopWalking();
                 //qDebug() << "Player rect: " << Real_coodinate << " Talk zone: " << Talk_With_Oak;
@@ -319,12 +335,85 @@ void Laboratory::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
+void Laboratory::startNpcMovement()
+{
+    if (!ProfessorOak || npcMoving) return; // 如果 NPC 不存在或已經在移動，則不啟動
+
+    npcMoveTimer = new QTimer(this);
+    connect(npcMoveTimer, &QTimer::timeout, this, [this]() {
+        if (ProfessorOak) {
+            int step = 15;
+            int dir = QRandomGenerator::global()->generate() % 4;
+            DirectionNPC moveDirection;
+            QPoint nextMapPosition = ProfessorOak->getMapPosition();
+
+            switch (dir) {
+            case 0: moveDirection = up; nextMapPosition.ry() -= step; break;
+            case 1: moveDirection = down; nextMapPosition.ry() += step; break;
+            case 2: moveDirection = left1; nextMapPosition.rx() -= step; break;
+            case 3: moveDirection = right1; nextMapPosition.rx() += step; break;
+            default: return;
+            }
+
+            QRect movedRect(nextMapPosition, QSize(ProfessorOak->width(), ProfessorOak->height()));
+            movedRect.adjust(2, 2, -2, -2);
+
+            bool canMove = true;
+            for (const QRect &barrier : Barriers) {
+                if (movedRect.intersects(barrier)) {
+                    canMove = false;
+                    break;
+                }
+            }
+            QRect playerRect = mainPlayer->geometry();
+            QRect Real_coodinate = playerRect.translated(Map_Offset);
+            if(movedRect.intersects(Real_coodinate)){
+                canMove = false;
+            }
+
+            //qDebug() << "NPC 嘗試移動到：" << nextMapPosition << "，CanMove：" << canMove;
+
+            if (canMove) {
+                ProfessorOak->setMapPosition(nextMapPosition);
+                ProfessorOak->setDirection(moveDirection);
+                ProfessorOak->startWalking();
+                UpdateScene();
+                lastNpcPosition = ProfessorOak->getMapPosition(); // 更新最後位置
+                Talk_With_Oak =QRect(ProfessorOak->getMapPosition().x()-10,ProfessorOak->getMapPosition().y()-10,55, 68);
+            }
+            ProfessorOak->stopWalking();
+        }
+    });
+    npcMoveTimer->start(500);
+    npcMoving = true;
+
+}
+
+void Laboratory::stopNpcMovement()
+{
+    if (npcMoveTimer) {
+        npcMoveTimer->stop();
+        npcMoveTimer->deleteLater();
+        npcMoveTimer = nullptr;
+        npcMoving = false;
+        if (ProfessorOak) {
+            ProfessorOak->stopWalking();
+            lastNpcPosition = ProfessorOak->getMapPosition(); // 記錄停止時的位置
+        }
+    }
+}
+
 void Laboratory::UpdateScene()
 {
     background->move(-Map_Offset.x(), -Map_Offset.y()); // 移動背景
+//    if (ProfessorOak) {
+//            ProfessorOak->move(-Map_Offset.x()+889, -Map_Offset.y()+508);
+//        }
     if (ProfessorOak) {
-            ProfessorOak->move(-Map_Offset.x()+889, -Map_Offset.y()+508);
-        }
+        ProfessorOak->setGeometry(-Map_Offset.x() + ProfessorOak->getMapPosition().x(),
+                                  -Map_Offset.y() + ProfessorOak->getMapPosition().y(),
+                                  ProfessorOak->width(), ProfessorOak->height());
+    }
     for (int i = 0; i < pokeball.size(); i++) {
         if (!pokeball[i]) continue; // 保險一點，避免 nullptr crash
         switch(i){
@@ -358,8 +447,13 @@ bool Laboratory::CanMoveToDirection(Direction dir)
             return false;
         }
     }
+    QRect NPCRect = ProfessorOak->geometry();
+    QRect Real_coodinate = NPCRect.translated(Map_Offset); // 真實地圖上的位置
+
+    if(movedRect.intersects(Real_coodinate)){
+        return false;
+    }
 
     return true;
 }
-
 

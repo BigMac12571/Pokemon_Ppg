@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
+#include <QRandomGenerator>
 //#include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
@@ -30,6 +31,8 @@ public:
     void Add_NPC_To_Scene(NPC *npc); //按下Press start 後將角色放入視窗
     void Add_Pokeball_To_Scene(int id,Pokeball *pokeballx);
     void Pokeball_get_picked(Pokeball *pokeballx);
+    void startNpcMovement();
+    void stopNpcMovement();
 
     void SetMainPlayer(Player *p); //
     void UpdateScene() ;//背景移動
@@ -57,6 +60,9 @@ private:
     NPC *ProfessorOak = nullptr ; //存取Oak座標
     //Dialog *dialog = nullptr;
     QList<Pokeball*> pokeball; //存取寶貝球座標
+    QTimer *npcMoveTimer = nullptr; // 用於控制 NPC 移動的定時器
+    bool npcMoving = false;         // 標記 NPC 是否正在移動
+    QPoint lastNpcPosition = QPoint(889, 508);       // 記錄 NPC 最後的地圖位置
 
 
 

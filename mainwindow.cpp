@@ -296,6 +296,7 @@ void MainWindow::Close_Dialog(){
     dialog->Reset_Dialog_State();
     dialog->close();
     player->stopWalking();
+    laboratory->startNpcMovement();
 
 
 

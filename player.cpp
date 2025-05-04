@@ -48,6 +48,10 @@ void Player::setDirection(Direction dir) { //改變方向，
     }
 }
 
+Direction Player::getDirection(){
+    return currentDirection;
+}
+
 void Player::nextWalkFrame() {
     if (walkFrame == stop) {   // 從 stop 進入走路階段，交替使用 walk1 和 walk2
         walkFrame = (lastWalk == walk1) ? walk2 : walk1;
