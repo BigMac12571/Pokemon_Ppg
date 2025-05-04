@@ -86,10 +86,8 @@ void Laboratory::Add_NPC_To_Scene(NPC *npc) //可以同時出現Lab 與 NPC
     npc->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Lab）的 widget 裡，這樣它才會顯示在畫面上。
     //npc->setGeometry(-Map_Offset.x()+889, -Map_Offset.x()+508, 35, 48);
     ProfessorOak = npc;
-
     ProfessorOak->setMapPosition(lastNpcPosition);
     startNpcMovement();
-
     npc->setGeometry(-Map_Offset.x() + npc->mapPosition.x(), -Map_Offset.y() + npc->mapPosition.y(), 35, 48);
     npc->show();
     npc->raise(); // 確保角色在背景上方
