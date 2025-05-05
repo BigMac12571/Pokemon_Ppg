@@ -333,29 +333,149 @@ void Laboratory::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
+//void Laboratory::startNpcMovement()
+//{
+//    if (!ProfessorOak || npcMoving) return; // 如果 NPC 不存在或已經在移動，則不啟動
+
+//    npcMoveTimer = new QTimer(this);
+//    connect(npcMoveTimer, &QTimer::timeout, this, [this]() {
+//        if (ProfessorOak) {
+//            int step = 30;
+//            int dir = QRandomGenerator::global()->generate() % 4;
+//            DirectionNPC moveDirection;
+//            QPoint nextMapPosition = ProfessorOak->getMapPosition();
+
+//            switch (dir) {
+//            case 0:
+//                moveDirection = up;
+//                nextMapPosition.ry() -= step;
+//                break;
+//            case 1:
+//                moveDirection = down;
+//                nextMapPosition.ry() -= step;
+//                break;
+//            case 2:
+//                moveDirection = left1;
+//                nextMapPosition.ry() -= step;
+//                break;
+//            case 3:
+//                moveDirection = right1;
+//                nextMapPosition.ry() -= step;
+//                break;
+//            default: return;
+//            }
+
+//            QRect movedRect(nextMapPosition, QSize(ProfessorOak->width(), ProfessorOak->height()));
+//            movedRect.adjust(2, 2, -2, -2);
+
+//            bool canMove = true;
+//            for (const QRect &barrier : Barriers) {
+//                if (movedRect.intersects(barrier)) {
+//                    canMove = false;
+//                    break;
+//                }
+//            }
+//            QRect playerRect = mainPlayer->geometry();
+//            QRect Real_coodinate = playerRect.translated(Map_Offset);
+//            if(movedRect.intersects(Real_coodinate)){
+//                canMove = false;
+//            }
+
+//            //qDebug() << "NPC 嘗試移動到：" << nextMapPosition << "，CanMove：" << canMove;
+
+//            if (canMove) {
+//                ProfessorOak->setMapPosition(nextMapPosition);
+//                ProfessorOak->setDirection(moveDirection);
+//                ProfessorOak->startWalking();
+//                UpdateScene();
+//                lastNpcPosition = ProfessorOak->getMapPosition(); // 更新最後位置
+//                Talk_With_Oak =QRect(ProfessorOak->getMapPosition().x()-10,ProfessorOak->getMapPosition().y()-10,55, 68);
+//            }
+//            ProfessorOak->stopWalking();
+//        }
+//    });
+//    npcMoveTimer->start(1000);
+//    npcMoving = true;
+
+//}
+
+//void Laboratory::stopNpcMovement()
+//{
+//    if (npcMoveTimer) {
+//        npcMoveTimer->stop();
+//        npcMoveTimer->deleteLater();
+//        npcMoveTimer = nullptr;
+//        npcMoving = false;
+//        if (ProfessorOak) {
+//            ProfessorOak->stopWalking();
+//            lastNpcPosition = ProfessorOak->getMapPosition(); // 記錄停止時的位置
+//        }
+//    }
+//}
 void Laboratory::startNpcMovement()
 {
-    if (!ProfessorOak || npcMoving) return; // 如果 NPC 不存在或已經在移動，則不啟動
+    if (!ProfessorOak || npcMoving) return;
 
+    npcMoving = true;
     npcMoveTimer = new QTimer(this);
     connect(npcMoveTimer, &QTimer::timeout, this, [this]() {
-        if (ProfessorOak) {
-            int step = 15;
+        if (ProfessorOak && !isMovingStep) { // 只有當不在步進移動時才計算新的目標
+            int stepSize = 60; // 決定下一個目標點的移動距離
             int dir = QRandomGenerator::global()->generate() % 4;
             DirectionNPC moveDirection;
-            QPoint nextMapPosition = ProfessorOak->getMapPosition();
+            QPoint targetMapPosition = ProfessorOak->getMapPosition();
 
             switch (dir) {
-            case 0: moveDirection = up; nextMapPosition.ry() -= step; break;
-            case 1: moveDirection = down; nextMapPosition.ry() += step; break;
-            case 2: moveDirection = left1; nextMapPosition.rx() -= step; break;
-            case 3: moveDirection = right1; nextMapPosition.rx() += step; break;
+            case 0: moveDirection = up; targetMapPosition.ry() -= stepSize; break;
+            case 1: moveDirection = down; targetMapPosition.ry() += stepSize; break;
+            case 2: moveDirection = left1; targetMapPosition.rx() -= stepSize; break;
+            case 3: moveDirection = right1; targetMapPosition.rx() += stepSize; break;
             default: return;
             }
 
-            QRect movedRect(nextMapPosition, QSize(ProfessorOak->width(), ProfessorOak->height()));
-            movedRect.adjust(2, 2, -2, -2);
+            QRect targetRect(targetMapPosition, ProfessorOak->size());
+            targetRect.adjust(2, 2, -2, -2);
+            bool canMoveToTarget = true;
+            for (const QRect &barrier : Barriers) {
+                if (targetRect.intersects(barrier)) {
+                    canMoveToTarget = false;
+                    break;
+                }
+            }
+            QRect playerRect = mainPlayer->geometry();
+            QRect Real_coodinate = playerRect.translated(Map_Offset);
+            if (targetRect.intersects(Real_coodinate)) {
+                canMoveToTarget = false;
+            }
 
+            if (canMoveToTarget) {
+                startSmoothMove(targetMapPosition);
+            }
+        }
+    });
+    npcMoveTimer->start(1000); // 決定多久選擇下一個目標點
+}
+
+void Laboratory::startSmoothMove(QPoint target)
+{
+    if (!ProfessorOak || isMovingStep) return;
+
+    isMovingStep = true;
+    smoothMoveTarget = target;
+    smoothMoveStartPosition = ProfessorOak->getMapPosition();
+    totalSmoothMoveSteps = 50; // 平滑移動的總步數
+    currentSmoothMoveStep = 0;
+    smoothMoveInterval = 20; // 每一步的時間間隔
+
+    stepTimer = new QTimer(this);
+    connect(stepTimer, &QTimer::timeout, this, [this]() {
+        if (ProfessorOak && currentSmoothMoveStep <= totalSmoothMoveSteps) {
+            qreal progress = static_cast<qreal>(currentSmoothMoveStep) / totalSmoothMoveSteps;
+            QPointF interpolatedPosition = QPointF(smoothMoveStartPosition) + (QPointF(smoothMoveTarget) - QPointF(smoothMoveStartPosition)) * progress;
+            QPoint nextPosition = interpolatedPosition.toPoint();
+
+            QRect movedRect(nextPosition, ProfessorOak->size());
+            movedRect.adjust(2, 2, -2, -2);
             bool canMove = true;
             for (const QRect &barrier : Barriers) {
                 if (movedRect.intersects(barrier)) {
@@ -365,26 +485,40 @@ void Laboratory::startNpcMovement()
             }
             QRect playerRect = mainPlayer->geometry();
             QRect Real_coodinate = playerRect.translated(Map_Offset);
-            if(movedRect.intersects(Real_coodinate)){
+            if (movedRect.intersects(Real_coodinate)) {
                 canMove = false;
             }
 
-            //qDebug() << "NPC 嘗試移動到：" << nextMapPosition << "，CanMove：" << canMove;
-
             if (canMove) {
-                ProfessorOak->setMapPosition(nextMapPosition);
-                ProfessorOak->setDirection(moveDirection);
+                ProfessorOak->setMapPosition(nextPosition);
+                // 根據移動方向設定動畫 (需要你在計算目標時記錄方向)
+                QPointF delta = QPointF(smoothMoveTarget - smoothMoveStartPosition);
+                if (qAbs(delta.x()) > qAbs(delta.y())) {
+                    ProfessorOak->setDirection(delta.x() > 0 ? right1 : left1);
+                } else if (qAbs(delta.y()) > 0) {
+                    ProfessorOak->setDirection(delta.y() > 0 ? down : up);
+                }
                 ProfessorOak->startWalking();
                 UpdateScene();
-                lastNpcPosition = ProfessorOak->getMapPosition(); // 更新最後位置
-                Talk_With_Oak =QRect(ProfessorOak->getMapPosition().x()-10,ProfessorOak->getMapPosition().y()-10,55, 68);
+                lastNpcPosition = ProfessorOak->getMapPosition();
+                Talk_With_Oak = QRect(ProfessorOak->getMapPosition().x() - 10, ProfessorOak->getMapPosition().y() - 10, 55, 68);
+            } else {
+                ProfessorOak->stopWalking();
+                stepTimer->stop();
+                stepTimer->deleteLater();
+                stepTimer = nullptr;
+                isMovingStep = false;
             }
+            currentSmoothMoveStep++;
+        } else {
             ProfessorOak->stopWalking();
+            stepTimer->stop();
+            stepTimer->deleteLater();
+            stepTimer = nullptr;
+            isMovingStep = false;
         }
     });
-    npcMoveTimer->start(500);
-    npcMoving = true;
-
+    stepTimer->start(smoothMoveInterval);
 }
 
 void Laboratory::stopNpcMovement()
@@ -393,13 +527,20 @@ void Laboratory::stopNpcMovement()
         npcMoveTimer->stop();
         npcMoveTimer->deleteLater();
         npcMoveTimer = nullptr;
-        npcMoving = false;
-        if (ProfessorOak) {
-            ProfessorOak->stopWalking();
-            lastNpcPosition = ProfessorOak->getMapPosition(); // 記錄停止時的位置
-        }
+    }
+    if (stepTimer) {
+        stepTimer->stop();
+        stepTimer->deleteLater();
+        stepTimer = nullptr;
+    }
+    npcMoving = false;
+    isMovingStep = false;
+    if (ProfessorOak) {
+        ProfessorOak->stopWalking();
+        lastNpcPosition = ProfessorOak->getMapPosition();
     }
 }
+
 
 void Laboratory::UpdateScene()
 {

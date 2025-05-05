@@ -22,7 +22,7 @@ NPC::NPC(QWidget *parent) : QLabel(parent)
     NPC_photo->show();
 
     walkTimer = new QTimer(this); //走路換動畫計時器
-    walkTimer->setInterval(200);
+    walkTimer->setInterval(500);
     walkTimer->start();
     connect(walkTimer, &QTimer::timeout, this, &NPC::updateWalkFrame);
 

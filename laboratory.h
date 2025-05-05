@@ -32,6 +32,7 @@ public:
     void Add_Pokeball_To_Scene(int id,Pokeball *pokeballx);
     void Pokeball_get_picked(Pokeball *pokeballx);
     void startNpcMovement();
+    void startSmoothMove(QPoint target);
     void stopNpcMovement();
 
     void SetMainPlayer(Player *p); //
@@ -60,9 +61,7 @@ private:
     NPC *ProfessorOak = nullptr ; //存取Oak座標
     //Dialog *dialog = nullptr;
     QList<Pokeball*> pokeball; //存取寶貝球座標
-    QTimer *npcMoveTimer = nullptr; // 用於控制 NPC 移動的定時器
-    bool npcMoving = false;         // 標記 NPC 是否正在移動
-    QPoint lastNpcPosition = QPoint(889, 508);       // 記錄 NPC 最後的地圖位置
+
 
 
 
@@ -91,6 +90,23 @@ private:
 
     QList<QRect> Pick_Pokeballs_area; //撿寶貝球的區域
     QList<bool>picked;
+
+
+    QTimer *npcMoveTimer = nullptr; // 用於控制 NPC 移動的定時器
+    QTimer *StepTimer = nullptr;
+    bool npcMoving = false;         // 標記 NPC 是否正在移動
+    QPoint lastNpcPosition = QPoint(889, 508);       // 記錄 NPC 最後的地圖位置
+
+    //QTimer *npcMoveTimer = nullptr;
+        QTimer *stepTimer = nullptr;
+        //bool npcMoving = false;
+        bool isMovingStep = false;
+        //QPoint lastNpcPosition;
+        QPoint smoothMoveTarget;
+        QPoint smoothMoveStartPosition;
+        int totalSmoothMoveSteps;
+        int currentSmoothMoveStep;
+        int smoothMoveInterval;
 
 };
 #endif // TITLESCREEN_H
