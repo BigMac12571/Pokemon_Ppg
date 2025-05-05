@@ -35,6 +35,7 @@ public:
     void setImage(const QString &path);
 
     void setDirection(Direction dir);
+    Direction getDirection();
     void nextWalkFrame(); // 換走路動畫圖
     void startWalking(); //開始走路(用於動畫)
     void stopWalking(); //停止走路(用於動畫)
