@@ -17,11 +17,11 @@ BattleScene::BattleScene(Bag *myBag, QWidget *parent)
 }
 
 BattleScene::~BattleScene(){
-    if (backgroundMusicPlayer) {
-        backgroundMusicPlayer->stop();
-        delete backgroundMusicPlayer;
-        backgroundMusicPlayer = nullptr;
-    }
+//    if (backgroundMusicPlayer) {
+//        backgroundMusicPlayer->stop();
+//        delete backgroundMusicPlayer;
+//        backgroundMusicPlayer = nullptr;
+//    }
 }
 
 void BattleScene::SetupUI() {
@@ -212,6 +212,9 @@ void BattleScene::SetupUI() {
     Pokeball_Animation->setStyleSheet("background-color: transparent;");
 
 }
+void BattleScene::EncounterBoss(){
+    boss = true;
+}
 
 void BattleScene::StartBattle() {
 
@@ -221,18 +224,15 @@ void BattleScene::StartBattle() {
     Capture = false;
     MainMenu->hide();
 
-    qDebug() <<"創建MyPokemon當掉";
+
     if (MyPokemon == nullptr) {
         MyPokemon = GetPokemon_From_List(0);  // 只初始化一次
     }
-     qDebug() <<"創建MyPokemon當掉";
-    //for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
+
     MyPokemon->SetSpec();
-    //for(int i=0; i< 3; i++) qDebug() <<MyPokemon->GetCurrentSpecialatk_remaing_times(i);
 
-    //for(int i=0; i< 5; i++) MyPokemon->LevelUp();
 
-    //qDebug() <<"創建EnemyPokemon當掉";
+
 
     EnemyPokemon = GenerateRandomEnemy();
     qDebug() <<"創建EnemyPokemon當掉";
@@ -429,6 +429,7 @@ void BattleScene::ResetBattleScene() {
     //RebuildAllButtons();
     PlayerTurn = true;
     Capture = false;
+    boss = false;
     //EnemyPokemon.Reset();
 
     // 隱藏 Dialog 與選單區塊
@@ -491,6 +492,7 @@ void BattleScene::RebuildAllButtons() {
                             UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), EnemyPokemon.GetMaxHp(), QSize(108, 10));
                             MyPokemon->UseMove(ButtonType);
                             SkillMenu->hide();
+                            Take_Attack_Animation_Start(EnemyImage);
                             emit Attack_Dialog(0, ButtonType);
                         }
                     });
@@ -582,6 +584,7 @@ void BattleScene::RebuildAllButtons() {
                             connect(timer, &QTimer::timeout, SpecialMenu, [=]() mutable {
 
                                 EnemyPokemon.TakeDamage(MyPokemon->GetDamage(EnemyPokemon, -1 ,ButtonType));
+                                Take_Attack_Animation_Start(EnemyImage);
                                 UpdateHPBar(EnemyHpBarLabel,EnemyPokemon.GetCurrentHp(), EnemyPokemon.GetMaxHp(), QSize(108, 10));
                                 qDebug()<< EnemyPokemon.GetCurrentHp() ;
 
@@ -729,13 +732,13 @@ void BattleScene::RebuildAllButtons() {
 
 
 }
-void BattleScene::UseMove(int moveIndex) {
-    Q_UNUSED(moveIndex);
-}
+//void BattleScene::UseMove(int moveIndex) {
+//    Q_UNUSED(moveIndex);
+//}
 
-void BattleScene::UseItem(int itemIndex) {
-    Q_UNUSED(itemIndex);
-}
+//void BattleScene::UseItem(int itemIndex) {
+//    Q_UNUSED(itemIndex);
+//}
 
 //void BattleScene::RunAway() {
 
@@ -762,24 +765,28 @@ void BattleScene::UseItem(int itemIndex) {
 
 
 PokemonData BattleScene::GenerateRandomEnemy() {
+
     int EnemyId = QRandomGenerator::global()->bounded(0, 3); // 假設 0~2 是合法寶可夢ID
     //int EnemyLevel = 1; //初始皆為1級
-    qDebug() <<"創建EnemyID當掉";
-    qDebug() <<"創建EnemyLevel當掉";
+
     int EnemyLevel = QRandomGenerator::global()->bounded((MyPokemon->GetLevel()-2 >= 1)? MyPokemon->GetLevel()-2 : 1, MyPokemon->GetLevel() + 1);
-    qDebug() <<"創建EnemyLevel當掉";
-    qDebug() << EnemyLevel ;
+
     PokemonData Enemy;
-    if(EnemyLevel>5){
-        PokemonData enemy(EnemyId, 5);
-        for(int level = 5 ; level < EnemyLevel; level++){
-            qDebug()<< level ;
-            qDebug()<< EnemyLevel ;
-            enemy.LevelUp();
+    if(!boss) {
+        if(EnemyLevel>5){
+            PokemonData enemy(EnemyId, 5);
+            for(int level = 5 ; level < EnemyLevel; level++){
+
+                enemy.LevelUp();
+            }
+            Enemy = enemy;
+        }else{
+            PokemonData enemy(EnemyId, EnemyLevel);
+            Enemy = enemy;
         }
-        Enemy = enemy;
     }else{
-        qDebug()<< EnemyLevel ;
+        EnemyId = 666;
+        EnemyLevel = 1;
         PokemonData enemy(EnemyId, EnemyLevel);
         Enemy = enemy;
     }
@@ -944,7 +951,9 @@ void BattleScene::Enemy_turn(){
     case 0:{
         int Enemy_move = QRandomGenerator::global()->bounded(0, 1);
          MyPokemon->TakeDamage(EnemyPokemon.GetDamage(myPokemon,Enemy_move));
+         Take_Attack_Animation_Start(MyPokemonImage);
          UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
+
 
          emit Attack_Dialog(1,Enemy_move);
 
@@ -957,6 +966,7 @@ void BattleScene::Enemy_turn(){
         connect(timer, &QTimer::timeout, this, [=]() mutable {
             if(t < MyPokemon->GetSpecialatk(Special).at(1)){
             MyPokemon->TakeDamage(EnemyPokemon.GetDamage(myPokemon, -1 ,Special));
+            Take_Attack_Animation_Start(MyPokemonImage);
             UpdateHPBar(MyHpBarLabel,MyPokemon->GetCurrentHp(), MyPokemon->GetMaxHp(), QSize(108, 10));
             qDebug()<< MyPokemon->GetCurrentHp() ;
             }
@@ -1047,6 +1057,34 @@ void BattleScene::Pokeball_Animation_Start() {
     });
 
     timer->start(16);
+}
+void BattleScene::Take_Attack_Animation_Start(QLabel* Pokemon_Image){
+    int x = Pokemon_Image->pos().x();
+    int y = Pokemon_Image->pos().y();
+    int step = 5;
+
+    QTimer* timer = new QTimer(this);
+    int counter = 0;
+
+    connect(timer, &QTimer::timeout, this, [=]() mutable {
+            counter++;
+            switch(counter) {
+                case 1: Pokemon_Image->move(x + step, y); break;
+                case 2: Pokemon_Image->move(x, y); break;
+                case 3: Pokemon_Image->move(x - step, y); break;
+                case 4: Pokemon_Image->move(x, y); break;
+                case 5: Pokemon_Image->move(x + step, y); break;
+                case 6: Pokemon_Image->move(x, y); break;
+                case 7:
+                    timer->stop();
+                    timer->deleteLater();
+                    break;
+            }
+        });
+
+        timer->start(50); // 可調整速度
+
+
 }
 void BattleScene::CapturePokemon(){
     bag->Add_Pokemon(EnemyPokemon);

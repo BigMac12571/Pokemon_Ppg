@@ -53,11 +53,11 @@ Laboratory::Laboratory(QWidget *parent)
 }
 
 Laboratory::~Laboratory(){
-    if (backgroundMusicPlayer) {
-        backgroundMusicPlayer->stop();
-        delete backgroundMusicPlayer;
-        backgroundMusicPlayer = nullptr;
-    }
+//    if (backgroundMusicPlayer) {
+//        backgroundMusicPlayer->stop();
+//        delete backgroundMusicPlayer;
+//        backgroundMusicPlayer = nullptr;
+//    }
 }
 void Laboratory::Add_Player_To_Scene(QWidget *player) //可以同時出現Lab 與 Player
 {

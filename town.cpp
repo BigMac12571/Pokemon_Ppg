@@ -68,11 +68,11 @@ Town::Town(QWidget *parent)
 }
 
 Town::~Town(){
-    if (backgroundMusicPlayer) {
-        backgroundMusicPlayer->stop();
-        delete backgroundMusicPlayer;
-        backgroundMusicPlayer = nullptr;
-    }
+//    if (backgroundMusicPlayer) {
+//        backgroundMusicPlayer->stop();
+//        delete backgroundMusicPlayer;
+//        backgroundMusicPlayer = nullptr;
+//    }
 }
 void Town::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
 {

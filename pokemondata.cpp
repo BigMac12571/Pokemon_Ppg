@@ -35,6 +35,11 @@ void PokemonData::InitializeBaseData()
     baseDataMap[qMakePair(2, 3)] = {"Charmeleon", 10, 10, 80, "Scratch", "Growl", "Scary face", "x",10, 20, 25,0, 20,20,15, 0,2,{"Flame Charge","Flame Burst",""},{{5,3,2},{10,3,1},{0,0,0}},75,65,70,":/new/prefix1/Dataset/Image/battle/charmeleon.png",":/new/prefix1/Dataset/Image/battle/charmeleon_back.png"};
     baseDataMap[qMakePair(2, 4)] = {"Charmeleon", 10, 10, 80, "Scratch", "Growl", "Scary face", "Flare Blitz", 10, 15, 20, 25, 20,20,15, 5, 2,{"Flame Charge","Flame Burst",""},{{5,3,2},{10,3,1},{0,0,0}},75,65,70,":/new/prefix1/Dataset/Image/battle/charmeleon.png",":/new/prefix1/Dataset/Image/battle/charmeleon_back.png"};
     baseDataMap[qMakePair(2, 5)] = {"Charizard", 15, 15, 100, "Scratch", "Growl", "Scary face", "Flare Blitz", 10, 15, 20, 25, 20,20,15, 5, 2,{"Flame Charge","Flame Burst","Fire Blast"},{{5,3,2},{10,3,1},{20,3,1}},90,80,100,":/new/prefix1/Dataset/Image/battle/charizard.png",":/new/prefix1/Dataset/Image/battle/charizard_back.png"};
+
+
+
+
+    baseDataMap[qMakePair(666, 1)] = {"Tung", 999, 999, 9999, "Tung", "Sahur", "tung tung tung", "You are handsome", 999, 999, 999, 999, 999,999,999, 999, 666,{"tung","",""},{{999,5,999},{0,0,0},{0,0,0}},999,999,1,":/new/prefix1/Dataset/Image/battle/tung_tung_tung_sahur-removebg-preview.png",":/new/prefix1/Dataset/Image/battle/tung_tung_backimage-removebg-preview.png"};
 }
 void PokemonData::LevelUp()
 {   int before_hp = GetCurrentHp();

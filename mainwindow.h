@@ -43,7 +43,7 @@ public slots:
     void Switch_TownToGrassland();
     void Switch_GrasslandToTown();
 
-    void Switch_GrasslandToBattle();
+    void Switch_GrasslandToBattle(bool boss);
     void Switch_BattelToGrassland(bool win);
 
     void Oak_Dialog();

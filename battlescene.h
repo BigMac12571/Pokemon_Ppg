@@ -25,8 +25,8 @@ public:
     void StartBattle();
     void UpdateBattleInfo();
     void RebuildAllButtons();
-    void UseMove(int moveIndex);
-    void UseItem(int itemIndex);
+//    void UseMove(int moveIndex);
+//    void UseItem(int itemIndex);
 
     PokemonData GenerateRandomEnemy();
     PokemonData* GetPokemon_From_List(int id);
@@ -38,8 +38,11 @@ public:
     void ShowNextDialog();
 
     void Pokeball_Animation_Start();
+    void Take_Attack_Animation_Start(QLabel* Pokemon_Image);
     void CapturePokemon();
     void Dead_And_SwitchToAnotherPokemon();
+
+    void EncounterBoss();
 signals:
     void BattleEnd(bool playerWon);
 
@@ -131,6 +134,9 @@ private:
 
     QMediaPlayer *backgroundMusicPlayer;
     bool LoopMusic = true;
+
+
+    bool boss = false;
 };
 
 #endif // BATTLESCENE_H

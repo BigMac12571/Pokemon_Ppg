@@ -71,5 +71,7 @@
         <file>Dataset/Image/NPC/Npc_R.png</file>
         <file>Dataset/Image/NPC/Npc_RW1.png</file>
         <file>Dataset/Image/NPC/Npc_RW2.png</file>
+        <file>Dataset/Image/battle/tung_tung_backimage-removebg-preview.png</file>
+        <file>Dataset/Image/battle/tung_tung_tung_sahur-removebg-preview.png</file>
     </qresource>
 </RCC>

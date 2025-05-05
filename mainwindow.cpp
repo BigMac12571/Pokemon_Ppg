@@ -210,18 +210,20 @@ void MainWindow::Switch_GrasslandToTown() {
 
 }
 
-void MainWindow::Switch_GrasslandToBattle(){
+void MainWindow::Switch_GrasslandToBattle(bool boss){
     //要觸發戰鬥至少要有一隻寶可夢
-    if(!mybag->Pokemon_List.isEmpty()){
+    //if(!mybag->Pokemon_List.isEmpty()){
     Scene_stack->setCurrentIndex(4); // 進入battle
     switch_windowtitle(4);
+    if(boss) battlescene->EncounterBoss();
+
     battlescene->StartBattle();
 
 
 
 
 
-    }
+    //}
 }
 
 void MainWindow::Switch_BattelToGrassland(bool win){

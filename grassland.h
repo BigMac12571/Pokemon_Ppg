@@ -53,7 +53,7 @@ signals:
 
     void Refresh_bag();
 
-    void Battle(); // 在草叢裡遇到敵人時觸發
+    void Battle(bool boss = false); // 在草叢裡遇到敵人時觸發
 
 
 private:
@@ -91,6 +91,8 @@ private:
     QList<QRect> TallGrasses;// 草叢區域（進入會觸發戰鬥）
     QList<QRect> Talk_With_Sign;
 
+
+
     QMediaPlayer *backgroundMusicPlayer;
     bool LoopMusic = true;
 
@@ -98,6 +100,11 @@ private:
 
     QPoint Last_Map_Offset;
     QPoint Last_Player_Pos;
+
+    QLabel* tung_tung_tung_sahur;
+    QRect tung;
+    bool fight_with_tung;
+    int tung_times;
 
 private slots:
     void handleBattleFlashTimeout();

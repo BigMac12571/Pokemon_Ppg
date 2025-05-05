@@ -97,10 +97,6 @@ TitleScreen::TitleScreen(QWidget *parent)
 
 TitleScreen::~TitleScreen()
 {
-    if (backgroundMusicPlayer) {
-        backgroundMusicPlayer->stop();
-        delete backgroundMusicPlayer;
-        backgroundMusicPlayer = nullptr;
-    }
+
 }
 

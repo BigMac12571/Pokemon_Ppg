@@ -56,20 +56,29 @@ Grassland::Grassland(Bag *mybag,QWidget *parent)
     connect(battleFlashTimer, &QTimer::timeout, this, &Grassland::handleBattleFlashTimeout);
     battleFlashTimer->setSingleShot(false); // 不是單次觸發
 
+    tung_tung_tung_sahur = new QLabel(this);
+    QPixmap tung_image(":/new/prefix1/Dataset/Image/battle/tung_tung_tung_sahur-removebg-preview.png");
+    tung_tung_tung_sahur->setPixmap(tung_image.scaled(40, 50, Qt::KeepAspectRatio));
+    tung_tung_tung_sahur->setGeometry(472-Map_Offset.x(),31-Map_Offset.y(), 40, 50);
+    tung_tung_tung_sahur->show();
+    tung_tung_tung_sahur->raise();
+    fight_with_tung = false;
+    tung_times = 0;
 
-
+    tung = QRect(472, 31,40,50);
 
 
     setFocusPolicy(Qt::StrongFocus);
 }
 
 Grassland::~Grassland(){
-    if (backgroundMusicPlayer) {
-        backgroundMusicPlayer->stop();
-        delete backgroundMusicPlayer;
-        backgroundMusicPlayer = nullptr;
-    }
+//    if (backgroundMusicPlayer) {
+//        backgroundMusicPlayer->stop();
+//        delete backgroundMusicPlayer;
+//        backgroundMusicPlayer = nullptr;
+//    }
 }
+
 void Grassland::Add_Player_To_Scene(QWidget *player) //可以同時出現Town 與 Player
 {
     player->setParent(this); //設定 player 的父元件 //player 會被加到 this（也就是 Town）的 widget 裡，這樣它才會顯示在畫面上。
@@ -304,6 +313,8 @@ void Grassland::keyReleaseEvent(QKeyEvent *event){
 void Grassland::UpdateScene()
 {
     background->move(-Map_Offset.x(), -Map_Offset.y()); // 移動背景
+
+    if(tung_tung_tung_sahur) tung_tung_tung_sahur->move(472-Map_Offset.x(),31-Map_Offset.y());
 }
 bool Grassland::CanMoveToDirection(Direction dir)
 {
@@ -339,41 +350,48 @@ bool Grassland::CanMoveToDirection(Direction dir)
 }
 
 void Grassland::EncounterBattle(){
+    if(!bag->Pokemon_List.isEmpty()){
 
-    QRect playerRect = mainPlayer->geometry();
-    QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
+        QRect playerRect = mainPlayer->geometry();
+        QRect Real_coodinate = playerRect.translated(Map_Offset); // 真實地圖上的位置
 
-    if(mainPlayer->isWalking()){
+        if(mainPlayer->isWalking()){
 
-        bool isInGrass = false;
-        for (const QRect &tallgrass : TallGrasses) {
-            if (tallgrass.intersects(Real_coodinate)) {
-                isInGrass = true;
-                break; // 只要與任何一個草叢相交，就認為在草叢中
-            }
-        }
-
-        if (isInGrass && !Encountered) {
-            Grass = true;
-            //2%觸發戰鬥
-            int random = QRandomGenerator::global()->generate() % 50;
-            if (random == 0) {
-                //qDebug() << "fight!!!";
-                //emit Battle();
-                if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
-                    LoopMusic = false;
-                    backgroundMusicPlayer->stop();
+            bool isInGrass = false;
+            for (const QRect &tallgrass : TallGrasses) {
+                if (tallgrass.intersects(Real_coodinate)) {
+                    isInGrass = true;
+                    break; // 只要與任何一個草叢相交，就認為在草叢中
                 }
-                startBattleFlash(); // 觸發閃爍效果
-                Last_Map_Offset = Map_Offset;
-                Last_Player_Pos = mainPlayer->pos();
-                mainPlayer->stopWalking();
-                Encountered = true;
-                return; // 觸發戰鬥後直接返回，避免在同一步中多次觸發
             }
-        } else if (!isInGrass && Grass) {
-            Encountered = false;
-            Grass = false;
+            if(tung.intersects(Real_coodinate)){
+                fight_with_tung = true;
+            }
+            if ((fight_with_tung ||isInGrass) && !Encountered) {
+                Grass = true;
+                //2%觸發戰鬥
+                int random = QRandomGenerator::global()->generate() % 50;
+                if(fight_with_tung) random =0 ;
+                if (random == 0) {
+                    //qDebug() << "fight!!!";
+                    //emit Battle();
+                    if (backgroundMusicPlayer && backgroundMusicPlayer->state() == QMediaPlayer::PlayingState) {
+                        LoopMusic = false;
+                        backgroundMusicPlayer->stop();
+                    }
+                    startBattleFlash(); // 觸發閃爍效果
+                    Last_Map_Offset = Map_Offset;
+                    Last_Player_Pos = mainPlayer->pos();
+                    mainPlayer->stopWalking();
+                    Encountered = true;
+                    return; // 觸發戰鬥後直接返回，避免在同一步中多次觸發
+                }
+            } else if (!isInGrass && Grass) {
+                fight_with_tung = false;
+                Encountered = false;
+                Grass = false;
+            }
+
         }
     }
 }
@@ -428,7 +446,15 @@ void Grassland::handleBattleFlashTimeout()
     if (battleFlashCount >= 8) { // 閃爍 5 次
         battleFlashTimer->stop();
         isBattleFlashing = false;
-        emit Battle(); // 發出開始戰鬥的訊號
+        if(fight_with_tung){
+
+        emit Battle(true); // 發出開始戰鬥的訊號
+            tung_times++;
+            if(tung_times == 2){
+        delete tung_tung_tung_sahur;
+        tung = QRect(0, 0,0,0);
+            }
+        } else emit Battle();
     }
 }
 
