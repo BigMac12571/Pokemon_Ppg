@@ -326,6 +326,7 @@ void BattleScene::StartBattle() {
             QTimer::singleShot(2000, this, [this]() {
                 Dialog->hide();
                 Player_turn();
+                PlayerTurn = true;
                 RebuildAllButtons();
             });
         });
@@ -340,6 +341,7 @@ void BattleScene::StartBattle() {
             QTimer::singleShot(2000, this, [this]() {
                 Dialog->hide();
                 Enemy_turn();
+                PlayerTurn = false;
                 RebuildAllButtons();
             });
         });

@@ -6,49 +6,49 @@ Bag::Bag(QWidget *parent) : QWidget(parent)
     this->setFixedSize(296, 378);
     bag_image.load(":/new/prefix1/Dataset/Image/bag.png");
     this->move(115, 36);
-
-    MenuContainer = new QWidget(this);
-    MenuContainer->setGeometry(0, 0, width(), height()); // 讓它跟 Bag 一樣大
-
-    // 然後再把 GridLayout 用在 MenuContainer 上
-    Menu = new QGridLayout(MenuContainer);
-    Menu->setHorizontalSpacing(14);
-    Menu->setVerticalSpacing(12);
-    Menu->setContentsMargins(16,94 ,16, 14);
-    //Menu->setContentsMargins(0,0 ,0, 0);
-    // 使用 MenuContainer 作為 layout
-    MenuContainer->setLayout(Menu);
-
     open = false;
+//    MenuContainer = new QWidget(this);
+//    MenuContainer->setGeometry(0, 0, width(), height()); // 讓它跟 Bag 一樣大
 
-    // 創建 4x3 的透明QLabel
-    for (int row = 0; row < 4; ++row) {
-        QList<QWidget*> rowPlaceholders;
-        QList<QLabel*> rowImageLabels;
-        QList<QLabel*> rowNameLabels;
-        QList<QLabel*> rowLevelLabels;
-        for (int col = 0; col < 3; ++col) {
-            QWidget* placeholder = new QWidget(this);
-            placeholder->setStyleSheet("background: transparent;");
-            Menu->addWidget(placeholder, row, col);
-            rowPlaceholders.append(placeholder);
-            rowImageLabels.append(nullptr);
-            rowNameLabels.append(nullptr);
-            rowLevelLabels.append(nullptr);
-        }
-        pokemonPlaceholders.append(rowPlaceholders);
-        ImageLabel.append(rowImageLabels);
-        NameLabel.append(rowNameLabels);
-        LevelLabel.append(rowLevelLabels);
-    }
+//    // 然後再把 GridLayout 用在 MenuContainer 上
+//    Menu = new QGridLayout(MenuContainer);
+//    Menu->setHorizontalSpacing(14);
+//    Menu->setVerticalSpacing(12);
+//    Menu->setContentsMargins(16,94 ,16, 14);
+//    //Menu->setContentsMargins(0,0 ,0, 0);
+//    // 使用 MenuContainer 作為 layout
+//    MenuContainer->setLayout(Menu);
+
+//    open = false;
+
+//    // 創建 4x3 的透明QLabel
+//    for (int row = 0; row < 4; ++row) {
+//        QList<QWidget*> rowPlaceholders;
+//        QList<QLabel*> rowImageLabels;
+//        QList<QLabel*> rowNameLabels;
+//        QList<QLabel*> rowLevelLabels;
+//        for (int col = 0; col < 3; ++col) {
+//            QWidget* placeholder = new QWidget(this);
+//            placeholder->setStyleSheet("background: transparent;");
+//            Menu->addWidget(placeholder, row, col);
+//            rowPlaceholders.append(placeholder);
+//            rowImageLabels.append(nullptr);
+//            rowNameLabels.append(nullptr);
+//            rowLevelLabels.append(nullptr);
+//        }
+//        pokemonPlaceholders.append(rowPlaceholders);
+//        ImageLabel.append(rowImageLabels);
+//        NameLabel.append(rowNameLabels);
+//        LevelLabel.append(rowLevelLabels);
+//    }
 
 
-    //    for(int i = 0; i< 4 ; i++){
-    //        Pokemon_image.append(new QLabel(this));
-    //        Pokemon_name.append(new QLabel(this));
-    //        Menu->addWidget(Pokemon_image.at(i), i, 0);
-    //        Menu->addWidget(Pokemon_name.at(i), i, 1);
-    //    }
+//    //    for(int i = 0; i< 4 ; i++){
+//    //        Pokemon_image.append(new QLabel(this));
+//    //        Pokemon_name.append(new QLabel(this));
+//    //        Menu->addWidget(Pokemon_image.at(i), i, 0);
+//    //        Menu->addWidget(Pokemon_name.at(i), i, 1);
+//    //    }
 }
 
 Bag::~Bag() {

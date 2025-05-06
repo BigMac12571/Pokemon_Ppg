@@ -55,14 +55,14 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 private:
     QPixmap bag_image;
-    QWidget* MenuContainer;
+//    QWidget* MenuContainer;
 
 
-    QList<QLabel*> Pokemon_image;
-    QList<QLabel*> Pokemon_name;
+//    QList<QLabel*> Pokemon_image;
+//    QList<QLabel*> Pokemon_name;
 
-    QGridLayout *Menu ;
-    QList<QList<QWidget*>> pokemonPlaceholders;
+//    QGridLayout *Menu ;
+//    QList<QList<QWidget*>> pokemonPlaceholders;
 
     const int View_Width = 525; // 視窗寬度
     const int View_Height = 450; // 視窗高度
@@ -74,9 +74,9 @@ private:
     QLabel* etherLabel = nullptr;
     QLabel* maxPokeballLabel = nullptr;
 
-    QList<QList<QLabel*>> ImageLabel;
-    QList<QList<QLabel*>> NameLabel;
-    QList<QList<QLabel*>> LevelLabel;
+//    QList<QList<QLabel*>> ImageLabel;
+//    QList<QList<QLabel*>> NameLabel;
+//    QList<QList<QLabel*>> LevelLabel;
 
     QList<QToolButton*> bag;
 

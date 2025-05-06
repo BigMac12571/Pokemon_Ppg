@@ -451,7 +451,7 @@ void Grassland::handleBattleFlashTimeout()
         emit Battle(true); // 發出開始戰鬥的訊號
             tung_times++;
             if(tung_times == 2){
-        delete tung_tung_tung_sahur;
+        tung_tung_tung_sahur->hide();
         tung = QRect(0, 0,0,0);
             }
         } else emit Battle();
